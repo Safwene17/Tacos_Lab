@@ -1,0 +1,39 @@
+<article
+  class="group relative overflow-hidden rounded-2xl border border-brand-gold/20 bg-black/35 p-6 shadow-[0_18px_60px_rgba(0,0,0,0.32)] backdrop-blur-md transition duration-300 hover:-translate-y-1 hover:border-brand-gold/45 hover:bg-brand-gold/[0.045] hover:shadow-[0_24px_75px_rgba(0,0,0,0.45)]"
+>
+  <div
+    class="absolute -right-12 -top-12 h-28 w-28 rounded-full bg-brand-gold/10 blur-2xl transition group-hover:bg-brand-gold/20"
+  ></div>
+
+  <div class="relative z-10 flex items-start justify-between gap-4">
+    <div>
+      @if (item().isPopular) {
+        <span
+          class="mb-4 inline-flex rounded-full border border-brand-gold/30 bg-brand-gold/10 px-3 py-1 text-xs font-black text-brand-yellow"
+        >
+          ⭐ Popular
+        </span>
+      }
+
+      <h3 class="font-display text-3xl leading-none text-brand-white">
+        {{ item().name }}
+      </h3>
+
+      <p class="mt-3 text-sm font-semibold uppercase tracking-[0.2em] text-white/45">
+        {{ item().weight }}
+      </p>
+    </div>
+
+    <div
+      class="rounded-full bg-brand-gold px-4 py-2 text-sm font-black text-brand-black shadow-[0_12px_35px_rgba(255,210,48,0.22)]"
+    >
+      {{ item().price }} RON
+    </div>
+  </div>
+
+  <div class="relative z-10 mt-6 h-px bg-gradient-to-r from-brand-gold/55 to-transparent"></div>
+
+  <p class="relative z-10 mt-5 text-sm leading-6 text-white/55">
+    Melted cheese, crispy fries, grilled meat, and signature sauce inside a warm French tacos wrap.
+  </p>
+</article>

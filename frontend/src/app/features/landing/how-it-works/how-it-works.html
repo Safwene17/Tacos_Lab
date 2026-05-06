@@ -1,0 +1,32 @@
+<section id="how-it-works" class="relative overflow-hidden bg-brand-black px-6 py-24 sm:px-12 lg:px-24">
+  <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(255,210,48,0.08),transparent_34%)]"></div>
+
+  <div class="relative z-10 mx-auto max-w-7xl">
+    <app-section-title
+      title="How to order?"
+      subtitle="Simple, fast, and generous — your French tacos is only a few clicks away."
+    />
+
+    <div class="relative grid grid-cols-1 gap-6 md:grid-cols-3">
+      <div
+        class="absolute left-[28%] right-[28%] top-1/2 hidden h-px -translate-y-1/2 bg-gradient-to-r from-brand-gold/0 via-brand-gold/45 to-brand-gold/0 md:block"
+        aria-hidden="true"
+      ></div>
+
+      @for (step of steps; track step.step; let index = $index) {
+        <div
+          appScrollReveal
+          [appScrollRevealDelay]="revealDelay(index)"
+          class="relative z-10"
+        >
+          <app-step-card
+            [step]="step.step"
+            [icon]="step.icon"
+            [title]="step.title"
+            [description]="step.description"
+          />
+        </div>
+      }
+    </div>
+  </div>
+</section>

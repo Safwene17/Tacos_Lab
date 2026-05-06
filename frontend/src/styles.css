@@ -1,0 +1,77 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+@import "tailwindcss";
+@config "../tailwind.config.ts";
+
+@theme {
+  --color-brand-black: #050505;
+  --color-brand-charcoal: #111111;
+  --color-brand-softblack: #181818;
+  --color-brand-gold: #FFD230;
+  --color-brand-yellow: #FFE16A;
+  --color-brand-cream: #FFF4C2;
+  --color-brand-muted: #B8B8B8;
+  --color-brand-white: #FAFAFA;
+
+  --font-display: "Bebas Neue", sans-serif;
+  --font-body: "Inter", sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #050505;
+  color: #FAFAFA;
+  font-family: "Inter", sans-serif;
+}
+
+::selection {
+  background: #FFD230;
+  color: #050505;
+}
+
+canvas {
+  display: block;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(26px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes softGlow {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.85;
+    transform: scale(1.04);
+  }
+}
+
+@keyframes floatSlow {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}

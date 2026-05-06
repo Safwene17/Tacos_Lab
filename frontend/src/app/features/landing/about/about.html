@@ -1,0 +1,66 @@
+<section id="about" class="relative overflow-hidden bg-brand-softblack px-6 py-24 sm:px-12 lg:px-24">
+  <div class="absolute inset-0 bg-[radial-gradient(circle_at_15%_20%,rgba(255,210,48,0.08),transparent_28%),radial-gradient(circle_at_85%_70%,rgba(255,225,106,0.06),transparent_30%)]"></div>
+
+  <div class="relative z-10 mx-auto grid max-w-7xl items-center gap-14 lg:grid-cols-2 lg:gap-16">
+    <div appScrollReveal>
+      <app-section-title
+        title="Born in France, served in Timișoara"
+        subtitle="A bold French tacos experience built around generous portions, melted cheese, crispy fries, and grilled meats."
+        align="left"
+      />
+
+      <div class="space-y-6 text-base leading-8 text-white/66 sm:text-lg">
+        <p>
+          Le Tacos brings the modern French tacos experience to Timișoara:
+          a warm grilled wrap loaded with crispy fries, rich cheese sauce,
+          flavorful meats, and bold sauces made for serious cravings.
+        </p>
+
+        <p>
+          Whether you want a quick lunch, a late-night comfort meal, or a big
+          order with friends, our tacos are designed to feel generous, satisfying,
+          and easy to order through Wolt.
+        </p>
+      </div>
+
+      <div class="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2">
+        @for (stat of stats; track stat.label) {
+          <div
+            class="group rounded-2xl border border-brand-gold/20 bg-black/35 p-5 shadow-[0_16px_50px_rgba(0,0,0,0.28)] backdrop-blur-md transition duration-300 hover:-translate-y-0.5 hover:border-brand-gold/40 hover:bg-brand-gold/[0.045]"
+          >
+            <p class="text-3xl">{{ stat.icon }}</p>
+            <p class="mt-3 font-bold text-brand-yellow">
+              {{ stat.label }}
+            </p>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div appScrollReveal [appScrollRevealDelay]="160" class="relative lg:pl-4">
+      <div class="absolute inset-6 rounded-full bg-brand-gold/12 blur-3xl"></div>
+
+      <div
+        class="relative mx-auto w-full max-w-[560px] overflow-hidden rounded-[2rem] border border-brand-gold/25 bg-black/35 shadow-[0_24px_90px_rgba(0,0,0,0.45)] backdrop-blur-md"
+      >
+        <div class="absolute inset-0 opacity-[0.08] mix-blend-soft-light [background-image:radial-gradient(rgba(255,255,255,0.28)_1px,transparent_1px)] [background-size:18px_18px]"></div>
+
+        <div class="relative h-[320px] sm:h-[380px] lg:h-[430px]">
+          <img
+            [src]="aboutImage"
+            alt="Le Tacos grilled French tacos"
+            class="h-full w-full object-cover object-center transition duration-500 hover:scale-[1.03]"
+          />
+        </div>
+
+        <div class="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/65 to-transparent"></div>
+
+        <div class="absolute bottom-0 left-0 right-0 p-5 sm:p-6">
+          <div class="inline-flex rounded-full border border-brand-gold/25 bg-black/45 px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-brand-yellow backdrop-blur-md">
+            Signature grilled French tacos
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

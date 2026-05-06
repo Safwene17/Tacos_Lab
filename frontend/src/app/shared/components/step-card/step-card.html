@@ -1,0 +1,21 @@
+<article
+  class="relative overflow-hidden rounded-2xl border border-brand-gold/20 bg-black/35 p-8 text-center shadow-[0_18px_60px_rgba(0,0,0,0.32)] backdrop-blur-md transition duration-300 hover:-translate-y-1 hover:border-brand-gold/45 hover:bg-brand-gold/[0.045] hover:shadow-[0_24px_75px_rgba(0,0,0,0.45)]"
+>
+  <div class="absolute -right-10 -top-10 h-28 w-28 rounded-full bg-brand-gold/10 blur-2xl"></div>
+
+  <p class="relative z-10 font-display text-6xl leading-none text-brand-gold/35">
+    {{ paddedStep() }}
+  </p>
+
+  <div class="relative z-10 mt-4 text-5xl">
+    {{ icon() }}
+  </div>
+
+  <h3 class="relative z-10 mt-6 font-display text-3xl leading-none text-brand-yellow">
+    {{ title() }}
+  </h3>
+
+  <p class="relative z-10 mt-4 text-sm leading-7 text-white/60">
+    {{ description() }}
+  </p>
+</article>
