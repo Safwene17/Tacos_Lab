@@ -1,19 +1,21 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
+import { I18n } from '../../../core/i18n/i18n';
+import { Icon } from '../icon/icon';
 
 interface NavLink {
-  label: string;
+  labelKey: string;
   href: string;
 }
 
-const WOLT_URL =
-  'https://wolt.com/en/rou/timisoara/restaurant/le-tacos-67e2deb28fc8436783be3e23';
+const WOLT_URL = 'https://wolt.com/en/rou/timisoara/restaurant/le-tacos-67e2deb28fc8436783be3e23';
 
 const LOGO_IMAGE = '/assets/images/logo-le-tacos.jpg';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
+  imports: [Icon],
   templateUrl: './navbar.html',
   animations: [
     trigger('slideDown', [
@@ -44,22 +46,28 @@ const LOGO_IMAGE = '/assets/images/logo-le-tacos.jpg';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Navbar {
+  readonly i18n = inject(I18n);
+
   readonly menuOpen = signal(false);
   readonly woltUrl = WOLT_URL;
   readonly logoImage = LOGO_IMAGE;
 
-  readonly navLinks: readonly NavLink[] = [
-    { label: 'Menu', href: '#menu' },
-    { label: 'About', href: '#about' },
-    { label: 'How it works', href: '#how-it-works' },
-    { label: 'Contact', href: '#contact' },
-  ];
-
+readonly navLinks: readonly NavLink[] = [
+  { labelKey: 'nav.menu', href: '#menu' },
+  { labelKey: 'nav.about', href: '#about' },
+  { labelKey: 'nav.how', href: '#how-it-works' },
+  { labelKey: 'nav.location', href: '#location' },
+  { labelKey: 'nav.contact', href: '#contact' },
+];
   toggleMenu(): void {
     this.menuOpen.update((open) => !open);
   }
 
   closeMenu(): void {
     this.menuOpen.set(false);
+  }
+
+  toggleLanguage(): void {
+    this.i18n.toggleLanguage();
   }
 }

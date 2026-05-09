@@ -1,15 +1,17 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import type { MenuItem } from '../../../features/landing/data/menu.data';
+import { Icon } from '../icon/icon';
+import { I18n } from '../../../core/i18n/i18n';
 
 @Component({
   selector: 'app-menu-card',
   standalone: true,
+  imports: [Icon],
   templateUrl: './menu-card.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MenuCard {
-  /**
-   * Menu item rendered by the card.
-   */
+  readonly i18n = inject(I18n);
+
   readonly item = input.required<MenuItem>();
 }

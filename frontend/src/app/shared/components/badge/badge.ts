@@ -9,14 +9,7 @@ export type BadgeVariant = 'gold' | 'yellow' | 'ghost';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Badge {
-  /**
-   * Text displayed inside the badge.
-   */
   readonly label = input.required<string>();
-
-  /**
-   * Visual badge style.
-   */
   readonly variant = input<BadgeVariant>('gold');
 
   readonly classes = computed(() => {

@@ -1,14 +1,8 @@
 <header
   class="fixed left-0 right-0 top-0 z-50 border-b border-brand-gold/10 bg-black/55 shadow-[0_18px_60px_rgba(0,0,0,0.35)] backdrop-blur-xl"
 >
-  <nav
-    class="mx-auto flex max-w-7xl items-center justify-between px-6 py-3.5 sm:px-12 lg:px-24"
-  >
-    <a
-      href="#hero"
-      class="group flex items-center gap-3"
-      aria-label="Le Tacos home"
-    >
+  <nav class="mx-auto flex max-w-7xl items-center justify-between px-6 py-3.5 sm:px-12 lg:px-24">
+    <a href="#hero" class="group flex items-center gap-3" aria-label="Le Tacos home">
       <img
         [src]="logoImage"
         alt="Le Tacos logo"
@@ -20,10 +14,8 @@
           Le Tacos
         </span>
 
-        <span
-          class="hidden text-[10px] font-black uppercase tracking-[0.24em] text-brand-gold/80 sm:block"
-        >
-          Original French Tacos
+        <span class="hidden text-[10px] font-black uppercase tracking-[0.24em] text-brand-gold/80 sm:block">
+          {{ i18n.t('nav.logoSubtitle') }}
         </span>
       </div>
     </a>
@@ -34,7 +26,7 @@
           [href]="link.href"
           class="group relative text-[13px] font-extrabold uppercase tracking-[0.16em] text-white/62 transition duration-300 hover:text-brand-yellow"
         >
-          {{ link.label }}
+          {{ i18n.t(link.labelKey) }}
 
           <span
             class="absolute -bottom-2 left-1/2 h-px w-0 -translate-x-1/2 bg-brand-gold transition-all duration-300 group-hover:w-full"
@@ -43,14 +35,26 @@
       }
     </div>
 
-    <a
-      [href]="woltUrl"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="hidden rounded-full bg-brand-gold px-5 py-3 text-[12px] font-black uppercase tracking-[0.16em] text-black shadow-[0_12px_35px_rgba(255,210,48,0.18)] transition duration-300 hover:-translate-y-0.5 hover:bg-brand-yellow hover:shadow-[0_16px_45px_rgba(255,210,48,0.30)] lg:inline-flex"
-    >
-      Order on Wolt →
-    </a>
+    <div class="hidden items-center gap-3 lg:flex">
+      <button
+        type="button"
+        class="inline-flex items-center gap-2 rounded-full border border-brand-gold/25 bg-black/25 px-4 py-3 text-[12px] font-black uppercase tracking-[0.16em] text-brand-yellow shadow-[0_12px_35px_rgba(0,0,0,0.35)] backdrop-blur-md transition duration-300 hover:-translate-y-0.5 hover:border-brand-gold/60 hover:bg-brand-gold/10"
+        (click)="toggleLanguage()"
+        [attr.aria-label]="'Switch language to ' + i18n.nextLanguageLabel()"
+      >
+        <app-icon name="globe" size="sm" />
+        {{ i18n.nextLanguageLabel() }}
+      </button>
+
+      <a
+        [href]="woltUrl"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="rounded-full bg-brand-gold px-5 py-3 text-[12px] font-black uppercase tracking-[0.16em] text-black shadow-[0_12px_35px_rgba(255,210,48,0.18)] transition duration-300 hover:-translate-y-0.5 hover:bg-brand-yellow hover:shadow-[0_16px_45px_rgba(255,210,48,0.30)]"
+      >
+        {{ i18n.t('nav.order') }}
+      </a>
+    </div>
 
     <button
       type="button"
@@ -79,9 +83,18 @@
             class="text-sm font-black uppercase tracking-[0.2em] text-white/72 transition hover:text-brand-yellow"
             (click)="closeMenu()"
           >
-            {{ link.label }}
+            {{ i18n.t(link.labelKey) }}
           </a>
         }
+
+        <button
+          type="button"
+          class="inline-flex items-center justify-center gap-2 rounded-full border border-brand-gold/25 bg-black/25 px-6 py-4 text-sm font-black uppercase tracking-[0.16em] text-brand-yellow"
+          (click)="toggleLanguage()"
+        >
+          <app-icon name="globe" size="sm" />
+          {{ i18n.nextLanguageLabel() }}
+        </button>
 
         <a
           [href]="woltUrl"
@@ -90,7 +103,7 @@
           class="mt-2 rounded-full bg-brand-gold px-6 py-4 text-center text-sm font-black uppercase tracking-[0.16em] text-black shadow-[0_16px_45px_rgba(255,210,48,0.25)]"
           (click)="closeMenu()"
         >
-          Order on Wolt →
+          {{ i18n.t('nav.order') }}
         </a>
       </div>
     </div>

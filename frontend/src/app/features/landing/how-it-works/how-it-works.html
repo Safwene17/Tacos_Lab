@@ -3,8 +3,8 @@
 
   <div class="relative z-10 mx-auto max-w-7xl">
     <app-section-title
-      title="How to order?"
-      subtitle="Simple, fast, and generous — your French tacos is only a few clicks away."
+      [title]="i18n.t('how.title')"
+      [subtitle]="i18n.t('how.subtitle')"
     />
 
     <div class="relative grid grid-cols-1 gap-6 md:grid-cols-3">
@@ -22,8 +22,8 @@
           <app-step-card
             [step]="step.step"
             [icon]="step.icon"
-            [title]="step.title"
-            [description]="step.description"
+            [title]="i18n.t(step.titleKey)"
+            [description]="i18n.t(step.descriptionKey)"
           />
         </div>
       }

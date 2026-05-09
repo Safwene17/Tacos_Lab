@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { SectionTitle } from '../../../shared/components/section-title/section-title';
 import { MenuCard } from '../../../shared/components/menu-card/menu-card';
 import { ScrollReveal } from '../../../core/directives/scroll-reveal';
 import { MENU_ITEMS, MENU_TABS, type MenuCategory } from '../data/menu.data';
+import { I18n } from '../../../core/i18n/i18n';
 
 type SelectedCategory = MenuCategory | 'all';
 
@@ -14,6 +15,8 @@ type SelectedCategory = MenuCategory | 'all';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Menu {
+  readonly i18n = inject(I18n);
+
   readonly tabs = MENU_TABS;
   readonly selectedCategory = signal<SelectedCategory>('all');
 

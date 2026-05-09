@@ -7,7 +7,6 @@
     <div
       class="flex flex-col items-center justify-between gap-10 text-center lg:flex-row lg:items-start lg:text-left"
     >
-      <!-- Brand -->
       <div class="max-w-sm">
         <a
           href="#hero"
@@ -17,21 +16,38 @@
           <span
             class="bg-gradient-to-r from-brand-gold via-brand-yellow to-brand-cream bg-clip-text font-display text-4xl leading-none text-transparent sm:text-5xl"
           >
-            🌮 Le Tacos
+            Le Tacos
           </span>
         </a>
 
         <p class="mt-4 text-sm font-semibold leading-6 text-white/55 sm:text-base">
-          Original French Tacos • Timișoara 🇫🇷
+          {{ i18n.t('footer.tagline') }}
         </p>
 
-        <p class="mt-3 text-sm leading-6 text-white/38">
-          Loaded French tacos with melted cheese, crispy fries, grilled meats,
-          and bold sauces.
+        <div class="mt-4 flex flex-col items-center gap-3 text-sm text-white/45 lg:items-start">
+          <div class="flex items-center gap-2">
+            <span class="text-brand-yellow">
+              <app-icon name="location" size="sm" />
+            </span>
+            <span>{{ i18n.t('footer.location') }}</span>
+          </div>
+
+          <a
+            [href]="mapsUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 text-brand-yellow/80 transition hover:text-brand-yellow"
+          >
+            <app-icon name="arrowRight" size="sm" />
+            {{ i18n.t('footer.maps') }}
+          </a>
+        </div>
+
+        <p class="mt-4 text-sm leading-6 text-white/38">
+          {{ i18n.t('footer.description') }}
         </p>
       </div>
 
-      <!-- Links -->
       <nav
         class="flex w-full flex-col items-center gap-4 sm:w-auto sm:flex-row sm:flex-wrap sm:justify-center lg:justify-end"
         aria-label="Footer navigation"
@@ -41,18 +57,17 @@
             [href]="link.href"
             class="w-full rounded-full border border-white/10 bg-white/[0.03] px-5 py-3 text-center text-xs font-black uppercase tracking-[0.18em] text-white/60 transition duration-300 hover:-translate-y-0.5 hover:border-brand-gold/30 hover:bg-brand-gold/10 hover:text-brand-yellow sm:w-auto"
           >
-            {{ link.label }}
+            {{ i18n.t(link.labelKey) }}
           </a>
         }
       </nav>
     </div>
 
-    <!-- Bottom bar -->
     <div
       class="mt-10 flex flex-col items-center justify-center gap-4 border-t border-white/10 pt-6 text-center text-xs text-white/35 sm:text-sm"
     >
       <p>
-        © 2026 Le Tacos. All rights reserved.
+        {{ i18n.t('footer.rights') }}
       </p>
     </div>
   </div>

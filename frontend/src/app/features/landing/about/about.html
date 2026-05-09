@@ -4,33 +4,27 @@
   <div class="relative z-10 mx-auto grid max-w-7xl items-center gap-14 lg:grid-cols-2 lg:gap-16">
     <div appScrollReveal>
       <app-section-title
-        title="Born in France, served in Timișoara"
-        subtitle="A bold French tacos experience built around generous portions, melted cheese, crispy fries, and grilled meats."
+        [title]="i18n.t('about.title')"
+        [subtitle]="i18n.t('about.subtitle')"
         align="left"
       />
 
       <div class="space-y-6 text-base leading-8 text-white/66 sm:text-lg">
-        <p>
-          Le Tacos brings the modern French tacos experience to Timișoara:
-          a warm grilled wrap loaded with crispy fries, rich cheese sauce,
-          flavorful meats, and bold sauces made for serious cravings.
-        </p>
-
-        <p>
-          Whether you want a quick lunch, a late-night comfort meal, or a big
-          order with friends, our tacos are designed to feel generous, satisfying,
-          and easy to order through Wolt.
-        </p>
+        <p>{{ i18n.t('about.p1') }}</p>
+        <p>{{ i18n.t('about.p2') }}</p>
       </div>
 
       <div class="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2">
-        @for (stat of stats; track stat.label) {
+        @for (stat of stats; track stat.labelKey) {
           <div
             class="group rounded-2xl border border-brand-gold/20 bg-black/35 p-5 shadow-[0_16px_50px_rgba(0,0,0,0.28)] backdrop-blur-md transition duration-300 hover:-translate-y-0.5 hover:border-brand-gold/40 hover:bg-brand-gold/[0.045]"
           >
-            <p class="text-3xl">{{ stat.icon }}</p>
+            <div class="text-brand-yellow">
+              <app-icon [name]="stat.icon" size="lg" />
+            </div>
+
             <p class="mt-3 font-bold text-brand-yellow">
-              {{ stat.label }}
+              {{ i18n.t(stat.labelKey) }}
             </p>
           </div>
         }
@@ -56,8 +50,9 @@
         <div class="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/65 to-transparent"></div>
 
         <div class="absolute bottom-0 left-0 right-0 p-5 sm:p-6">
-          <div class="inline-flex rounded-full border border-brand-gold/25 bg-black/45 px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-brand-yellow backdrop-blur-md">
-            Signature grilled French tacos
+          <div class="inline-flex items-center gap-2 rounded-full border border-brand-gold/25 bg-black/45 px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-brand-yellow backdrop-blur-md">
+            <app-icon name="taco" size="sm" />
+            {{ i18n.t('about.imageLabel') }}
           </div>
         </div>
       </div>

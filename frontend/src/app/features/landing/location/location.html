@@ -1,0 +1,111 @@
+<section
+  id="location"
+  class="relative overflow-hidden bg-brand-softblack px-6 py-24 sm:px-12 lg:px-24"
+>
+  <div
+    class="absolute inset-0 bg-[radial-gradient(circle_at_70%_20%,rgba(255,210,48,0.09),transparent_34%),radial-gradient(circle_at_10%_80%,rgba(255,225,106,0.05),transparent_28%)]"
+  ></div>
+
+  <div class="relative z-10 mx-auto max-w-7xl">
+    <app-section-title
+      [title]="i18n.t('location.title')"
+      [subtitle]="i18n.t('location.subtitle')"
+    />
+
+    <div class="grid items-stretch gap-6 lg:grid-cols-[0.9fr_1.4fr]">
+      <div
+        appScrollReveal
+        class="rounded-[2rem] border border-brand-gold/20 bg-black/35 p-7 shadow-[0_24px_80px_rgba(0,0,0,0.38)] backdrop-blur-xl"
+      >
+        <div
+          class="flex h-14 w-14 items-center justify-center rounded-2xl border border-brand-gold/25 bg-brand-gold/10 text-brand-yellow shadow-[0_16px_45px_rgba(255,210,48,0.12)]"
+        >
+          <app-icon name="location" size="lg" />
+        </div>
+
+        <h3 class="mt-7 font-display text-4xl leading-none text-brand-yellow">
+          {{ i18n.t('location.cardTitle') }}
+        </h3>
+
+        <p class="mt-4 text-base leading-8 text-white/65">
+          {{ i18n.t('location.description') }}
+        </p>
+
+        <div class="mt-7 space-y-4">
+          <div class="flex items-start gap-3 text-white/65">
+            <span class="mt-1 text-brand-yellow">
+              <app-icon name="location" size="sm" />
+            </span>
+
+            <div>
+              <p class="font-bold text-brand-cream">
+                {{ i18n.t('location.addressTitle') }}
+              </p>
+              <p class="mt-1 text-sm text-white/55">
+                {{ i18n.t('location.addressText') }}
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-3 text-white/65">
+            <span class="mt-1 text-brand-yellow">
+              <app-icon name="delivery" size="sm" />
+            </span>
+
+            <div>
+              <p class="font-bold text-brand-cream">
+                {{ i18n.t('location.deliveryTitle') }}
+              </p>
+              <p class="mt-1 text-sm text-white/55">
+                {{ i18n.t('location.deliveryText') }}
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-3 text-white/65">
+            <span class="mt-1 text-brand-yellow">
+              <app-icon name="clock" size="sm" />
+            </span>
+
+            <div>
+              <p class="font-bold text-brand-cream">
+                {{ i18n.t('location.hoursTitle') }}
+              </p>
+              <p class="mt-1 text-sm text-white/55">
+                {{ i18n.t('location.hoursText') }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <a
+          [href]="mapsUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="mt-8 inline-flex w-full items-center justify-center rounded-full bg-brand-gold px-7 py-4 text-sm font-black uppercase tracking-[0.16em] text-brand-black shadow-[0_16px_50px_rgba(255,210,48,0.22)] transition duration-300 hover:-translate-y-0.5 hover:bg-brand-yellow hover:shadow-[0_20px_65px_rgba(255,210,48,0.32)] sm:w-auto"
+        >
+          {{ i18n.t('location.mapsCta') }}
+        </a>
+      </div>
+
+      <div
+        appScrollReveal
+        [appScrollRevealDelay]="140"
+        class="relative min-h-[360px] overflow-hidden rounded-[2rem] border border-brand-gold/20 bg-black/35 shadow-[0_24px_80px_rgba(0,0,0,0.42)] backdrop-blur-xl lg:min-h-[500px]"
+      >
+        <iframe
+          [src]="mapEmbedUrl"
+          class="h-full min-h-[360px] w-full grayscale-[0.18] contrast-[1.05] lg:min-h-[500px]"
+          loading="lazy"
+          allowfullscreen
+          referrerpolicy="no-referrer-when-downgrade"
+          [title]="i18n.t('location.mapTitle')"
+        ></iframe>
+
+        <div
+          class="pointer-events-none absolute inset-0 rounded-[2rem] ring-1 ring-inset ring-brand-gold/10"
+        ></div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -9,18 +9,18 @@ export interface MenuItem {
 }
 
 export interface MenuTab {
-  label: string;
+  labelKey: string;
   value: MenuCategory | 'all';
 }
 
 export const MENU_TABS: readonly MenuTab[] = [
-  { label: 'All', value: 'all' },
-  { label: 'M (350g)', value: 'm' },
-  { label: 'L (450g)', value: 'l' },
-  { label: 'XL', value: 'xl' },
-  { label: 'Bowls', value: 'bowls' },
-  { label: 'Sides', value: 'sides' },
-  { label: 'Drinks', value: 'drinks' },
+  { labelKey: 'menu.tabAll', value: 'all' },
+  { labelKey: 'menu.tabM', value: 'm' },
+  { labelKey: 'menu.tabL', value: 'l' },
+  { labelKey: 'menu.tabXL', value: 'xl' },
+  { labelKey: 'menu.tabBowls', value: 'bowls' },
+  { labelKey: 'menu.tabSides', value: 'sides' },
+  { labelKey: 'menu.tabDrinks', value: 'drinks' },
 ];
 
 export const MENU_ITEMS: readonly MenuItem[] = [
