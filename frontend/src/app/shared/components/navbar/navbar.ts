@@ -52,13 +52,14 @@ export class Navbar {
   readonly woltUrl = WOLT_URL;
   readonly logoImage = LOGO_IMAGE;
 
-readonly navLinks: readonly NavLink[] = [
-  { labelKey: 'nav.menu', href: '#menu' },
-  { labelKey: 'nav.about', href: '#about' },
-  { labelKey: 'nav.how', href: '#how-it-works' },
-  { labelKey: 'nav.location', href: '#location' },
-  { labelKey: 'nav.contact', href: '#contact' },
-];
+  readonly navLinks: readonly NavLink[] = [
+    { labelKey: 'nav.menu', href: '#menu' },
+    { labelKey: 'nav.how', href: '#how-it-works' },
+
+    { labelKey: 'nav.about', href: '#about' },
+    { labelKey: 'nav.location', href: '#location' },
+    { labelKey: 'nav.contact', href: '#contact' },
+  ];
   toggleMenu(): void {
     this.menuOpen.update((open) => !open);
   }
