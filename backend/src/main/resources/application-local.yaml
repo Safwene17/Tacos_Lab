@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/le_tacos
+    username: postgres
+    password: safwene17
+
+  jpa:
+    show-sql: true
+
+app:
+  cors:
+    allowed-origins:
+      - http://localhost:4200
+
+  admin:
+    email: admin@letacos.local
+    initial-password: Admin12345
+
+  security:
+    jwt:
+      secret: local-dev-secret-local-dev-secret-32bytes-minimum
+      access-token-minutes: 20
+      refresh-token-days: 7
+      issuer: le-tacos-api
+    refresh-cookie:
+      secure: false
+      same-site: Lax

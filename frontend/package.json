@@ -6,7 +6,9 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "api:generate": "openapi-generator-cli generate -i http://localhost:8080/v3/api-docs -g typescript-angular -o src/app/core/api --additional-properties=ngVersion=21.0.0,providedInRoot=true,withInterfaces=true,modelSuffix=Dto,serviceSuffix=ApiService"
+
   },
   "prettier": {
     "printWidth": 100,
@@ -39,6 +41,7 @@
     "@angular/build": "^21.1.1",
     "@angular/cli": "^21.1.1",
     "@angular/compiler-cli": "^21.1.0",
+    "@openapitools/openapi-generator-cli": "^2.32.0",
     "@tailwindcss/postcss": "^4.1.12",
     "@types/three": "^0.184.0",
     "jsdom": "^27.1.0",
