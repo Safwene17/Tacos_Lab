@@ -1,3 +1,90 @@
 spring:
   application:
-    name: backend
+    name: le-tacos-backend
+  servlet:
+    multipart:
+      max-file-size: 50MB          # Maximum size per file
+      max-request-size: 100MB      # Maximum size per request
+      file-size-threshold: 2MB
+
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE}
+
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          time_zone: UTC
+
+  flyway:
+    enabled: true
+    locations: classpath:migration
+
+server:
+  port: ${SERVER_PORT}
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+  openapi:
+    info:
+      title: Le Tacos Backend API
+      description: Admin and public REST API for Le Tacos restaurant platform.
+      version: 1.0.0
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+app:
+  security:
+    jwt:
+      secret: ${JWT_SECRET}
+      access-token-minutes: ${JWT_ACCESS_TOKEN_MINUTES}
+      refresh-token-days: ${JWT_REFRESH_TOKEN_DAYS}
+      issuer: ${JWT_ISSUER}
+    refresh-cookie:
+      name: ${REFRESH_COOKIE_NAME}
+      path: ${REFRESH_COOKIE_PATH}
+      http-only: true
+      secure: ${REFRESH_COOKIE_SECURE}
+      same-site: ${REFRESH_COOKIE_SAME_SITE}
+
+  cors:
+    allowed-origins:
+      - ${CORS_ALLOWED_ORIGIN}
+    allowed-methods:
+      - GET
+      - POST
+      - PUT
+      - PATCH
+      - DELETE
+      - OPTIONS
+    allowed-headers:
+      - Authorization
+      - Content-Type
+      - Accept
+    allow-credentials: true
+
+  admin:
+    email: ${ADMIN_EMAIL}
+    initial-password: ${ADMIN_INITIAL_PASSWORD}
+
+  cloudinary:
+    cloud-name: ${CLOUDINARY_CLOUD_NAME}
+    api-key: ${CLOUDINARY_API_KEY}
+    api-secret: ${CLOUDINARY_API_SECRET}
+    folder: ${CLOUDINARY_FOLDER}
