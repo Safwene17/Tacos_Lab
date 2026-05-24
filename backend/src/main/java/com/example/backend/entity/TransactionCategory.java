@@ -5,6 +5,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +15,14 @@ import lombok.Setter;
 @Setter
 @Entity
 @NoArgsConstructor
-@Table(name = "transaction_categories")
+@Table(
+        name = "transaction_categories",
+        indexes = {
+                @Index(name = "idx_transaction_categories_type", columnList = "type"),
+                @Index(name = "idx_transaction_categories_active", columnList = "active"),
+                @Index(name = "idx_transaction_categories_system_key", columnList = "systemKey", unique = true)
+        }
+)
 public class TransactionCategory extends BaseEntity {
 
     @Enumerated(EnumType.STRING)

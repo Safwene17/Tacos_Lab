@@ -1,52 +1,71 @@
-<div class="overflow-hidden rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
-  <div class="px-5 py-4 sm:px-6">
-    <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90">
-      Recent Performance
-    </h3>
+<div
+  class="overflow-hidden rounded-2xl border border-gray-200 bg-white px-4 pb-3 pt-4 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6"
+>
+  <div class="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+    <div>
+      <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90">
+        Recent Transactions
+      </h3>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <button
+        class="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200"
+      >
+        See all
+      </button>
+    </div>
   </div>
 
   <div class="max-w-full overflow-x-auto">
-    <table class="min-w-full">
-      <thead>
-        <tr class="border-y border-gray-100 dark:border-gray-800">
-          <th class="px-5 py-3 text-left text-theme-xs font-medium text-gray-500 dark:text-gray-400 sm:px-6">
-            Period
-          </th>
-          <th class="px-5 py-3 text-left text-theme-xs font-medium text-gray-500 dark:text-gray-400">
-            Income
-          </th>
-          <th class="px-5 py-3 text-left text-theme-xs font-medium text-gray-500 dark:text-gray-400">
-            Expenses
-          </th>
-          <th class="px-5 py-3 text-left text-theme-xs font-medium text-gray-500 dark:text-gray-400">
-            Net Profit
-          </th>
+    <table class="w-full text-left">
+      <thead class="border-y border-gray-100 dark:border-gray-800">
+        <tr>
+          <th class="py-3 font-medium text-gray-500 text-theme-xs dark:text-gray-400">Date</th>
+          <th class="py-3 font-medium text-gray-500 text-theme-xs dark:text-gray-400">Category</th>
+          <th class="py-3 font-medium text-gray-500 text-theme-xs dark:text-gray-400">Method</th>
+          <th class="py-3 font-medium text-gray-500 text-theme-xs dark:text-gray-400">Amount</th>
+          <th class="py-3 font-medium text-gray-500 text-theme-xs dark:text-gray-400">Type</th>
         </tr>
       </thead>
 
-      <tbody>
-        @for (item of weeklyStats(); track item.period) {
-          <tr class="border-b border-gray-100 last:border-b-0 dark:border-gray-800">
-            <td class="px-5 py-4 text-sm font-medium text-gray-800 dark:text-white/90 sm:px-6">
-              {{ item.period }}
+      <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+        @for (transaction of transactions(); track transaction.id) {
+          <tr>
+            <td class="py-3 text-gray-500 text-theme-sm dark:text-gray-400">
+              {{ transaction.transactionDate }}
             </td>
 
-            <td class="px-5 py-4 text-sm text-success-600 dark:text-success-500">
-              {{ money(item.income ?? 0) }}
+            <td class="py-3">
+              <p class="font-medium text-gray-800 text-theme-sm dark:text-white/90">
+                {{ transaction.categoryName ?? 'Unknown' }}
+              </p>
+              <span class="text-gray-500 text-theme-xs dark:text-gray-400">
+                {{ transaction.notes ?? 'No notes' }}
+              </span>
             </td>
 
-            <td class="px-5 py-4 text-sm text-error-600 dark:text-error-500">
-              {{ money(item.expenses ?? 0) }}
+            <td class="py-3 text-gray-500 text-theme-sm dark:text-gray-400">
+              {{ transaction.paymentMethod }}
             </td>
 
-            <td
-              class="px-5 py-4 text-sm font-semibold"
-              [class.text-success-600]="(item.netProfit ?? 0) >= 0"
-              [class.text-error-600]="(item.netProfit ?? 0) < 0"
-              [class.dark:text-success-500]="(item.netProfit ?? 0) >= 0"
-              [class.dark:text-error-500]="(item.netProfit ?? 0) < 0"
-            >
-              {{ money(item.netProfit ?? 0) }}
+            <td class="py-3 text-gray-500 text-theme-sm dark:text-gray-400">
+              {{ money(transaction.amount ?? 0) }}
+            </td>
+
+            <td class="py-3">
+              <span
+                class="inline-flex rounded-full px-2.5 py-0.5 text-theme-xs font-medium"
+                [class]="badgeClass(transaction.type)"
+              >
+                {{ transaction.type }}
+              </span>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="5" class="py-8 text-center text-theme-sm text-gray-500 dark:text-gray-400">
+              No recent transactions yet.
             </td>
           </tr>
         }

@@ -1,0 +1,310 @@
+<div class="space-y-6">
+  <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div>
+      <h1 class="text-title-sm font-semibold text-gray-800 dark:text-white/90">
+        Transactions
+      </h1>
+
+      <p class="mt-1 text-theme-sm text-gray-500 dark:text-gray-400">
+        Track restaurant income, expenses, payroll-linked payments, and manual entries.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="inline-flex items-center justify-center rounded-lg bg-admin-brand-500 px-4 py-2.5 text-theme-sm font-medium text-white shadow-theme-xs hover:bg-admin-brand-600"
+      (click)="createTransaction()"
+    >
+      Add Transaction
+    </button>
+  </div>
+
+  <div class="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] sm:p-6">
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-5">
+      <label class="block">
+        <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">
+          Type
+        </span>
+
+        <select
+          class="mt-1 h-11 w-full rounded-lg border border-gray-300 bg-white px-4 text-theme-sm text-gray-800 outline-none transition focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+          [ngModel]="type()"
+          (ngModelChange)="type.set($event)"
+        >
+          <option value="">All</option>
+          <option [value]="TransactionResponseDto.TypeEnum.Income">INCOME</option>
+          <option [value]="TransactionResponseDto.TypeEnum.Expense">EXPENSE</option>
+        </select>
+      </label>
+
+      <label class="block">
+        <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">
+          Payment Method
+        </span>
+
+        <select
+          class="mt-1 h-11 w-full rounded-lg border border-gray-300 bg-white px-4 text-theme-sm text-gray-800 outline-none transition focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+          [ngModel]="paymentMethod()"
+          (ngModelChange)="paymentMethod.set($event)"
+        >
+          <option value="">All</option>
+          <option [value]="TransactionResponseDto.PaymentMethodEnum.Cash">CASH</option>
+          <option [value]="TransactionResponseDto.PaymentMethodEnum.Card">CARD</option>
+          <option [value]="TransactionResponseDto.PaymentMethodEnum.Wolt">WOLT</option>
+          <option [value]="TransactionResponseDto.PaymentMethodEnum.BankTransfer">
+            BANK_TRANSFER
+          </option>
+          <option [value]="TransactionResponseDto.PaymentMethodEnum.Other">OTHER</option>
+        </select>
+      </label>
+
+      <label class="block">
+        <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">
+          From
+        </span>
+
+        <input
+          type="date"
+          class="mt-1 h-11 w-full rounded-lg border border-gray-300 bg-white px-4 text-theme-sm text-gray-800 outline-none transition focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+          [ngModel]="from()"
+          (ngModelChange)="from.set($event)"
+        />
+      </label>
+
+      <label class="block">
+        <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">
+          To
+        </span>
+
+        <input
+          type="date"
+          class="mt-1 h-11 w-full rounded-lg border border-gray-300 bg-white px-4 text-theme-sm text-gray-800 outline-none transition focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+          [ngModel]="to()"
+          (ngModelChange)="to.set($event)"
+        />
+      </label>
+
+      <div class="flex items-end gap-3">
+        <button
+          type="button"
+          class="h-11 flex-1 rounded-lg bg-admin-brand-500 px-4 text-theme-sm font-medium text-white shadow-theme-xs hover:bg-admin-brand-600"
+          (click)="applyFilters()"
+        >
+          Filter
+        </button>
+
+        <button
+          type="button"
+          class="h-11 rounded-lg border border-gray-300 bg-white px-4 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03]"
+          (click)="resetFilters()"
+        >
+          Reset
+        </button>
+      </div>
+    </div>
+  </div>
+
+  @if (error()) {
+    <div
+      class="rounded-2xl border border-error-500/20 bg-error-50 p-5 dark:border-error-500/30 dark:bg-error-500/10"
+    >
+      <p class="text-theme-sm font-medium text-error-700 dark:text-error-500">
+        {{ error() }}
+      </p>
+
+      <button
+        type="button"
+        class="mt-4 rounded-lg bg-error-600 px-4 py-2 text-theme-sm font-medium text-white hover:bg-error-700"
+        (click)="loadTransactions()"
+      >
+        Retry
+      </button>
+    </div>
+  }
+
+  <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white px-4 pb-3 pt-4 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6">
+    <div class="flex flex-col gap-2 mb-4 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90">
+          Transaction History
+        </h3>
+
+        <p class="mt-1 text-theme-sm text-gray-500 dark:text-gray-400">
+          {{ totalElements() }} records
+        </p>
+      </div>
+    </div>
+
+    <div class="max-w-full overflow-x-auto">
+      <table class="w-full text-left">
+        <thead class="border-y border-gray-100 dark:border-gray-800">
+          <tr>
+            <th class="py-3 pr-5 text-theme-xs font-medium text-gray-500 dark:text-gray-400">
+              Date
+            </th>
+
+            <th class="py-3 pr-5 text-theme-xs font-medium text-gray-500 dark:text-gray-400">
+              Type
+            </th>
+
+            <th class="py-3 pr-5 text-theme-xs font-medium text-gray-500 dark:text-gray-400">
+              Category
+            </th>
+
+            <th class="py-3 pr-5 text-theme-xs font-medium text-gray-500 dark:text-gray-400">
+              Amount
+            </th>
+
+            <th class="py-3 pr-5 text-theme-xs font-medium text-gray-500 dark:text-gray-400">
+              Payment
+            </th>
+
+            <th class="py-3 pr-5 text-theme-xs font-medium text-gray-500 dark:text-gray-400">
+              Employee
+            </th>
+
+            <th class="py-3 pr-5 text-theme-xs font-medium text-gray-500 dark:text-gray-400">
+              Notes
+            </th>
+
+            <th class="py-3 pr-5 text-right text-theme-xs font-medium text-gray-500 dark:text-gray-400">
+              Actions
+            </th>
+          </tr>
+        </thead>
+
+        <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+          @if (loading()) {
+            @for (_ of [1, 2, 3, 4, 5]; track $index) {
+              <tr>
+                @for (__ of [1, 2, 3, 4, 5, 6, 7, 8]; track $index) {
+                  <td class="py-4 pr-5">
+                    <div class="h-4 w-24 animate-pulse rounded bg-gray-200 dark:bg-gray-800"></div>
+                  </td>
+                }
+              </tr>
+            }
+          } @else if (transactions().length === 0) {
+            <tr>
+              <td
+                colspan="8"
+                class="py-10 text-center text-theme-sm text-gray-500 dark:text-gray-400"
+              >
+                No transactions found.
+              </td>
+            </tr>
+          } @else {
+            @for (transaction of transactions(); track transaction.id) {
+              <tr>
+                <td class="py-4 pr-5 text-theme-sm text-gray-700 dark:text-gray-300">
+                  {{ date(transaction.transactionDate) }}
+                </td>
+
+                <td class="py-4 pr-5">
+                  <span
+                    class="inline-flex rounded-full px-2.5 py-0.5 text-theme-xs font-medium"
+                    [class]="typeBadgeClass(transaction.type)"
+                  >
+                    {{ transaction.type }}
+                  </span>
+                </td>
+
+                <td class="py-4 pr-5 text-theme-sm text-gray-700 dark:text-gray-300">
+                  {{ value(transaction.categoryName) }}
+                </td>
+
+                <td class="py-4 pr-5 text-theme-sm font-medium text-gray-800 dark:text-white/90">
+                  {{ money(transaction.amount, transaction.currency ?? 'RON') }}
+                </td>
+
+                <td class="py-4 pr-5 text-theme-sm text-gray-700 dark:text-gray-300">
+                  {{ value(transaction.paymentMethod) }}
+                </td>
+
+                <td class="py-4 pr-5 text-theme-sm text-gray-700 dark:text-gray-300">
+                  {{ value(transaction.employeeName) }}
+                </td>
+
+                <td class="py-4 pr-5 text-theme-sm text-gray-500 dark:text-gray-400">
+                  {{ value(transaction.notes) }}
+                </td>
+
+                <td class="py-4 pr-5 text-right">
+                  <div class="flex items-center justify-end gap-2">
+                    <button
+                      type="button"
+                      class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-theme-xs font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03]"
+                      [disabled]="!!transaction.payrollRecordId"
+                      (click)="editTransaction(transaction)"
+                    >
+                      Edit
+                    </button>
+
+                    <button
+                      type="button"
+                      class="rounded-lg border border-error-300 bg-white px-3 py-2 text-theme-xs font-medium text-error-600 shadow-theme-xs hover:bg-error-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-error-500/30 dark:bg-gray-800 dark:text-error-500 dark:hover:bg-error-500/10"
+                      [disabled]="!!transaction.payrollRecordId"
+                      (click)="deleteTransaction(transaction)"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+
+    @if (totalPages() > 1) {
+      <div
+        class="mt-5 flex flex-col gap-3 border-t border-gray-100 pt-5 dark:border-gray-800 sm:flex-row sm:items-center sm:justify-between"
+      >
+        <p class="text-theme-sm text-gray-500 dark:text-gray-400">
+          Page {{ page() + 1 }} of {{ totalPages() }}
+        </p>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03]"
+            [disabled]="page() === 0 || loading()"
+            (click)="previousPage()"
+          >
+            Previous
+          </button>
+
+          @for (pageNumber of pages(); track pageNumber) {
+            <button
+              type="button"
+              class="rounded-lg px-3 py-2 text-theme-sm font-medium"
+              [class.bg-admin-brand-500]="pageNumber === page()"
+              [class.text-white]="pageNumber === page()"
+              [class.border]="pageNumber !== page()"
+              [class.border-gray-300]="pageNumber !== page()"
+              [class.bg-white]="pageNumber !== page()"
+              [class.text-gray-700]="pageNumber !== page()"
+              [class.dark:border-gray-700]="pageNumber !== page()"
+              [class.dark:bg-gray-800]="pageNumber !== page()"
+              [class.dark:text-gray-400]="pageNumber !== page()"
+              [disabled]="loading()"
+              (click)="goToPage(pageNumber)"
+            >
+              {{ pageNumber + 1 }}
+            </button>
+          }
+
+          <button
+            type="button"
+            class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03]"
+            [disabled]="page() + 1 >= totalPages() || loading()"
+            (click)="nextPage()"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+</div>

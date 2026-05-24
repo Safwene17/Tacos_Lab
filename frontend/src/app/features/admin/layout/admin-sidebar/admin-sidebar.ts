@@ -28,7 +28,7 @@ export class AdminSidebar {
     },
     {
       label: 'Menu',
-      path: '/admin/menu',
+      path: '/admin/menus',
       icon: 'menu',
     },
     {
@@ -46,6 +46,11 @@ export class AdminSidebar {
       path: '/admin/settings',
       icon: 'settings',
     },
+    {
+      label: 'Transactions',
+      path: '/admin/transactions',
+      icon: 'transactions',
+    }
   ];
 
   iconPath(icon: string): string {

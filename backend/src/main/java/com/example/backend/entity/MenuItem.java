@@ -3,12 +3,16 @@ package com.example.backend.entity;
 import com.example.backend.constant.AppConstants;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.math.BigDecimal;
 
@@ -16,11 +20,20 @@ import java.math.BigDecimal;
 @Setter
 @Entity
 @NoArgsConstructor
-@Table(name = "menu_items")
+@Table(
+        name = "menu_items",
+        indexes = {
+                @Index(name = "idx_menu_items_category_id", columnList = "category_id"),
+                @Index(name = "idx_menu_items_active", columnList = "active"),
+                @Index(name = "idx_menu_items_display_order", columnList = "category_id, displayOrder")
+        }
+)
 public class MenuItem extends BaseEntity {
 
-    @ManyToOne(optional = false)
+    // DB-level cascade: deleting a Category deletes all its MenuItems
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "category_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Category category;
 
     @Column(nullable = false, length = 180)

@@ -26,4 +26,18 @@
       {{ payroll()?.payrollTransactionsCount ?? 0 }}
     </p>
   </div>
+
+  <div class="mt-5 space-y-3">
+    @for (method of paymentMethods(); track method.paymentMethod) {
+      <div class="flex items-center justify-between rounded-xl border border-gray-100 px-4 py-3 dark:border-gray-800">
+        <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">
+          {{ method.paymentMethod }}
+        </span>
+
+        <span class="text-theme-sm font-semibold text-gray-800 dark:text-white/90">
+          {{ money(method.total ?? 0) }}
+        </span>
+      </div>
+    }
+  </div>
 </div>

@@ -13,8 +13,8 @@ import lombok.Setter;
 @Setter
 @Entity
 @NoArgsConstructor
-@Table(name = "admin_users")
 @AllArgsConstructor
+@Table(name = "admin_users")
 public class AdminUser extends BaseEntity {
 
     @Column(nullable = false, unique = true)
