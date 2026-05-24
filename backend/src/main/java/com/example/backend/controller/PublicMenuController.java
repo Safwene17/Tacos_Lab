@@ -6,6 +6,7 @@ import com.example.backend.dto.response.PublicMenuItemResponse;
 import com.example.backend.dto.response.PublicMenuResponse;
 import com.example.backend.service.MenuService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,7 +14,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/public")
+@RequestMapping(value = "/api/public", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PublicMenuController {
 
     private final MenuService menuService;

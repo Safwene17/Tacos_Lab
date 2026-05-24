@@ -1,0 +1,86 @@
+<aside
+  class="fixed left-0 top-0 z-50 flex h-screen flex-col border-r border-gray-200 bg-white px-5 text-gray-900 transition-all duration-300 ease-in-out dark:border-gray-800 dark:bg-gray-900 lg:translate-x-0"
+  [ngClass]="{
+    'w-[290px]': sidebar.isDesktopExpanded(),
+    'w-[90px]': !sidebar.isDesktopExpanded(),
+    'translate-x-0': sidebar.isMobileOpen(),
+    '-translate-x-full': !sidebar.isMobileOpen()
+  }"
+  (mouseenter)="sidebar.setHovered(true)"
+  (mouseleave)="sidebar.setHovered(false)"
+>
+  <div
+    class="flex h-[72px] items-center border-b border-gray-100 dark:border-gray-800"
+    [ngClass]="{
+      'justify-start': sidebar.isDesktopExpanded(),
+      'justify-center': !sidebar.isDesktopExpanded()
+    }"
+  >
+    <a routerLink="/admin/dashboard" class="flex items-center gap-3">
+      <div
+        class="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-900 text-sm font-bold text-white dark:bg-white dark:text-gray-900"
+      >
+        LT
+      </div>
+
+      @if (sidebar.isDesktopExpanded()) {
+        <div class="leading-tight">
+          <p class="text-base font-semibold text-gray-900 dark:text-white">
+            Le Tacos
+          </p>
+          <p class="text-xs text-gray-500 dark:text-gray-400">
+            Admin Panel
+          </p>
+        </div>
+      }
+    </a>
+  </div>
+
+  <div class="flex flex-1 flex-col overflow-y-auto py-6">
+    @if (sidebar.isDesktopExpanded()) {
+      <p class="mb-4 px-3 text-xs font-medium uppercase tracking-[0.14em] text-gray-400">
+        Menu
+      </p>
+    }
+
+    <nav class="space-y-1">
+      @for (item of navItems; track item.path) {
+        <a
+          [routerLink]="item.path"
+          routerLinkActive="bg-admin-brand-50 text-admin-brand-500 dark:bg-admin-brand-500/[0.12] dark:text-admin-brand-400"
+          [routerLinkActiveOptions]="{ exact: item.path === '/admin/dashboard' }"
+          class="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-white/5 dark:hover:text-white"
+          [ngClass]="{
+            'justify-center': !sidebar.isDesktopExpanded(),
+            'justify-start': sidebar.isDesktopExpanded()
+          }"
+          (click)="sidebar.closeMobileSidebar()"
+        >
+          <svg
+            class="h-5 w-5 shrink-0"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path [attr.d]="iconPath(item.icon)" />
+          </svg>
+
+          @if (sidebar.isDesktopExpanded()) {
+            <span>{{ item.label }}</span>
+          }
+        </a>
+      }
+    </nav>
+  </div>
+
+  @if (sidebar.isDesktopExpanded()) {
+    <div class="mb-6 rounded-2xl bg-gray-50 p-4 dark:bg-white/[0.04]">
+      <p class="text-sm font-semibold text-gray-900 dark:text-white">
+        Need updates?
+      </p>
+      <p class="mt-1 text-xs leading-5 text-gray-500 dark:text-gray-400">
+        Dashboard data will connect to your Spring Boot API next.
+      </p>
+    </div>
+  }
+</aside>

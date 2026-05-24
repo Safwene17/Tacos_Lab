@@ -1,5 +1,4 @@
 .gitignore
-.openapi-generator-ignore
 README.md
 api.base.service.ts
 api.module.ts
@@ -46,7 +45,6 @@ model/apiResponsePayrollSummaryResponse.ts
 model/apiResponsePublicMenuResponse.ts
 model/apiResponseTransactionCategoryResponse.ts
 model/apiResponseTransactionResponse.ts
-model/apiResponseVoid.ts
 model/authResponse.ts
 model/categoryBreakdownResponse.ts
 model/categoryRequest.ts

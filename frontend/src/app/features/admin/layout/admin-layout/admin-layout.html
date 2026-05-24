@@ -1,0 +1,21 @@
+<div class="min-h-screen bg-gray-50 font-outfit text-gray-700 dark:bg-gray-900 dark:text-gray-200">
+  <div class="min-h-screen xl:flex">
+    <app-admin-sidebar />
+    <app-admin-backdrop />
+
+    <div
+      class="flex-1 transition-all duration-300 ease-in-out"
+      [ngClass]="{
+        'xl:ml-[290px]': sidebar.isDesktopExpanded(),
+        'xl:ml-[90px]': !sidebar.isDesktopExpanded(),
+        'ml-0': sidebar.isMobileOpen()
+      }"
+    >
+      <app-admin-header />
+
+      <main class="mx-auto max-w-(--breakpoint-2xl) p-4 md:p-6">
+        <router-outlet />
+      </main>
+    </div>
+  </div>
+</div>

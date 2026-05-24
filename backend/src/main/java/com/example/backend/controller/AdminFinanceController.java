@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +26,7 @@ import java.util.UUID;
 @Validated
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/admin")
+@RequestMapping(value = "/api/admin" , produces = MediaType.APPLICATION_JSON_VALUE)
 public class AdminFinanceController {
 
     private final FinanceService financeService;
@@ -55,7 +56,7 @@ public class AdminFinanceController {
             @Valid @RequestBody TransactionCategoryRequest request
     ) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.ok("Transaction category created successfully",
+                .body(ApiResponse.created("Transaction category created successfully",
                         financeService.createCategory(request)));
     }
 
@@ -71,9 +72,9 @@ public class AdminFinanceController {
     }
 
     @DeleteMapping("/transaction-categories/{id}")
-    public ResponseEntity<ApiResponse<Void>> deleteCategory(@PathVariable UUID id) {
+    public ResponseEntity<Void> deleteCategory(@PathVariable UUID id) {
         financeService.deleteCategory(id);
-        return ResponseEntity.ok(ApiResponse.ok("Transaction category deleted successfully", null));
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/transactions")
@@ -104,7 +105,7 @@ public class AdminFinanceController {
             @Valid @RequestBody TransactionRequest request
     ) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.ok("Transaction created successfully",
+                .body(ApiResponse.created("Transaction created successfully",
                         financeService.createTransaction(request)));
     }
 
@@ -120,9 +121,9 @@ public class AdminFinanceController {
     }
 
     @DeleteMapping("/transactions/{id}")
-    public ResponseEntity<ApiResponse<Void>> deleteTransaction(@PathVariable UUID id) {
+    public ResponseEntity<Void> deleteTransaction(@PathVariable UUID id) {
         financeService.deleteTransaction(id);
-        return ResponseEntity.ok(ApiResponse.ok("Transaction deleted successfully", null));
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/dashboard/summary")

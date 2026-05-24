@@ -8,7 +8,6 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "api:generate": "openapi-generator-cli generate -i http://localhost:8080/v3/api-docs -g typescript-angular -o src/app/core/api --additional-properties=ngVersion=21.0.0,providedInRoot=true,withInterfaces=true,modelSuffix=Dto,serviceSuffix=ApiService"
-
   },
   "prettier": {
     "printWidth": 100,
@@ -25,7 +24,10 @@
   "private": true,
   "packageManager": "npm@11.5.2",
   "dependencies": {
+    "@amcharts/amcharts5": "^5.17.2",
+    "@amcharts/amcharts5-geodata": "^5.1.5",
     "@angular/animations": "^21.2.11",
+    "@angular/cdk": "^21.2.12",
     "@angular/common": "^21.1.0",
     "@angular/compiler": "^21.1.0",
     "@angular/core": "^21.1.0",
@@ -33,6 +35,10 @@
     "@angular/platform-browser": "^21.1.0",
     "@angular/router": "^21.1.0",
     "@tailwindcss/vite": "^4.2.4",
+    "apexcharts": "^5.13.0",
+    "flatpickr": "^4.6.13",
+    "ng-apexcharts": "^2.4.0",
+    "ngx-sonner": "^3.1.0",
     "rxjs": "~7.8.0",
     "three": "^0.184.0",
     "tslib": "^2.3.0"
@@ -47,6 +53,7 @@
     "jsdom": "^27.1.0",
     "postcss": "^8.5.3",
     "tailwindcss": "^4.2.4",
+    "tailwindcss-animate": "^1.0.7",
     "typescript": "~5.9.2",
     "vitest": "^4.0.8"
   }
