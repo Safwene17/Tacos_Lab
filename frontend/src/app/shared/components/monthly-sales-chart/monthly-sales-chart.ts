@@ -2,15 +2,15 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 import {
   ApexAxisChartSeries,
   ApexChart,
-  ApexXAxis,
-  ApexPlotOptions,
   ApexDataLabels,
-  ApexStroke,
-  ApexLegend,
-  ApexYAxis,
-  ApexGrid,
   ApexFill,
+  ApexGrid,
+  ApexLegend,
+  ApexPlotOptions,
+  ApexStroke,
   ApexTooltip,
+  ApexXAxis,
+  ApexYAxis,
   NgApexchartsModule,
 } from 'ng-apexcharts';
 
@@ -39,14 +39,14 @@ export class MonthlySalesChartComponent {
     axisTicks: { show: false },
   }));
 
-  public chart: ApexChart = {
+  readonly chart: ApexChart = {
     fontFamily: 'Outfit, sans-serif',
     type: 'bar',
     height: 180,
     toolbar: { show: false },
   };
 
-  public plotOptions: ApexPlotOptions = {
+  readonly plotOptions: ApexPlotOptions = {
     bar: {
       horizontal: false,
       columnWidth: '39%',
@@ -55,57 +55,40 @@ export class MonthlySalesChartComponent {
     },
   };
 
-  public dataLabels: ApexDataLabels = { enabled: false };
+  readonly dataLabels: ApexDataLabels = { enabled: false };
 
-  public stroke: ApexStroke = {
+  readonly stroke: ApexStroke = {
     show: true,
     width: 4,
     colors: ['transparent'],
   };
 
-  public legend: ApexLegend = {
+  readonly legend: ApexLegend = {
     show: true,
     position: 'top',
     horizontalAlign: 'left',
     fontFamily: 'Outfit',
   };
 
-  public yaxis: ApexYAxis = {
+  readonly yaxis: ApexYAxis = {
     title: { text: undefined },
-    labels: {
-      formatter: (value) => `${Math.round(value)} RON`,
-    },
   };
 
-  public grid: ApexGrid = { yaxis: { lines: { show: true } } };
+  readonly grid: ApexGrid = { yaxis: { lines: { show: true } } };
 
-  public fill: ApexFill = { opacity: 1 };
+  readonly fill: ApexFill = { opacity: 1 };
 
-  public tooltip: ApexTooltip = {
+  readonly tooltip: ApexTooltip = {
     x: { show: false },
     y: {
       formatter: (val: number) => this.money(val),
     },
   };
 
-  public colors: string[] = ['#465fff'];
-
-  isOpen = false;
-
-  toggleDropdown(): void {
-    this.isOpen = !this.isOpen;
-  }
-
-  closeDropdown(): void {
-    this.isOpen = false;
-  }
+  readonly colors: string[] = ['#465fff'];
 
   private monthLabel(value?: string): string {
-    if (!value) {
-      return '';
-    }
-
-    return value.slice(0, 3);
+    return value ? value.slice(0, 3) : '';
   }
 
   private money(value: number): string {

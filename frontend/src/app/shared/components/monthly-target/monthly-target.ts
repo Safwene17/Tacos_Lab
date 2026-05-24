@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import {
-  ApexNonAxisChartSeries,
   ApexChart,
-  ApexPlotOptions,
   ApexFill,
+  ApexNonAxisChartSeries,
+  ApexPlotOptions,
   ApexStroke,
   NgApexchartsModule,
 } from 'ng-apexcharts';
@@ -29,14 +29,14 @@ export class MonthlyTargetComponent {
 
   readonly series = computed<ApexNonAxisChartSeries>(() => [this.progress()]);
 
-  public chart: ApexChart = {
+  readonly chart: ApexChart = {
     fontFamily: 'Outfit, sans-serif',
     type: 'radialBar',
     height: 330,
     sparkline: { enabled: true },
   };
 
-  public plotOptions: ApexPlotOptions = {
+  readonly plotOptions: ApexPlotOptions = {
     radialBar: {
       startAngle: -85,
       endAngle: 85,
@@ -59,27 +59,18 @@ export class MonthlyTargetComponent {
     },
   };
 
-  public fill: ApexFill = {
+  readonly fill: ApexFill = {
     type: 'solid',
     colors: ['#465FFF'],
   };
 
-  public stroke: ApexStroke = {
+  readonly stroke: ApexStroke = {
     lineCap: 'round',
   };
 
-  public labels: string[] = ['Progress'];
-  public colors: string[] = ['#465FFF'];
-
-  isOpen = false;
-
-  toggleDropdown(): void {
-    this.isOpen = !this.isOpen;
-  }
-
-  closeDropdown(): void {
-    this.isOpen = false;
-  }
+  readonly labels: string[] = ['Progress'];
+  readonly colors: string[] = ['#465FFF'];
+  readonly target = MONTHLY_REVENUE_TARGET;
 
   money(value: number): string {
     return new Intl.NumberFormat('ro-RO', {
@@ -88,6 +79,4 @@ export class MonthlyTargetComponent {
       maximumFractionDigits: 0,
     }).format(value);
   }
-
-  readonly target = MONTHLY_REVENUE_TARGET;
 }

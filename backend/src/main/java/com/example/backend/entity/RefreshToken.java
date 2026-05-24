@@ -2,12 +2,16 @@ package com.example.backend.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.Instant;
 
@@ -15,11 +19,20 @@ import java.time.Instant;
 @Setter
 @Entity
 @NoArgsConstructor
-@Table(name = "refresh_tokens")
+@Table(
+        name = "refresh_tokens",
+        indexes = {
+                @Index(name = "idx_refresh_tokens_admin_user_id", columnList = "admin_user_id"),
+                @Index(name = "idx_refresh_tokens_token_hash", columnList = "tokenHash", unique = true),
+                @Index(name = "idx_refresh_tokens_expires_at", columnList = "expiresAt")
+        }
+)
 public class RefreshToken extends BaseEntity {
 
-    @ManyToOne(optional = false)
+    // DB-level cascade: deleting an AdminUser deletes all their RefreshTokens
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "admin_user_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private AdminUser adminUser;
 
     @Column(nullable = false, unique = true)
@@ -36,7 +49,6 @@ public class RefreshToken extends BaseEntity {
 
     @Column(length = 500)
     private String userAgent;
-
 
     public boolean isExpired() {
         return Instant.now().isAfter(expiresAt);

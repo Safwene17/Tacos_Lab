@@ -6,6 +6,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,13 @@ import java.time.LocalDate;
 @Setter
 @Entity
 @NoArgsConstructor
-@Table(name = "employees")
+@Table(
+        name = "employees",
+        indexes = {
+                @Index(name = "idx_employees_status", columnList = "employmentStatus"),
+                @Index(name = "idx_employees_last_name", columnList = "lastName")
+        }
+)
 public class Employee extends BaseEntity {
 
     @Column(nullable = false, length = 120)

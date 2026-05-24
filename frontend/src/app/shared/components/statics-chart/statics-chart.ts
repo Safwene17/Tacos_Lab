@@ -1,9 +1,12 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   OnDestroy,
   ViewChild,
+  computed,
+  input,
 } from '@angular/core';
 import flatpickr from 'flatpickr';
 import { Instance } from 'flatpickr/dist/types/instance';
@@ -23,17 +26,46 @@ import {
 } from 'ng-apexcharts';
 
 import { ChartTabComponent } from '../common/chart-tab/chart-tab.component';
+import type { PeriodFinancialStatResponseDto } from '../../../core/api/model/periodFinancialStatResponse';
 
 @Component({
   selector: 'app-statics-chart',
   standalone: true,
   imports: [NgApexchartsModule, ChartTabComponent],
   templateUrl: './statics-chart.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StatisticsChartComponent implements AfterViewInit, OnDestroy {
   @ViewChild('datepicker') datepicker!: ElementRef<HTMLInputElement>;
 
+  readonly weeklyStats = input<PeriodFinancialStatResponseDto[]>([]);
+
   private flatpickrInstance?: Instance;
+
+  readonly series = computed<ApexAxisChartSeries>(() => [
+    {
+      name: 'Income',
+      data: this.weeklyStats().map((item) => item.income ?? 0),
+    },
+    {
+      name: 'Expenses',
+      data: this.weeklyStats().map((item) => item.expenses ?? 0),
+    },
+  ]);
+
+  readonly xaxis = computed<ApexXAxis>(() => ({
+    type: 'category',
+    categories: this.weeklyStats().map((item) => item.period ?? ''),
+    axisBorder: {
+      show: false,
+    },
+    axisTicks: {
+      show: false,
+    },
+    tooltip: {
+      enabled: false,
+    },
+  }));
 
   ngAfterViewInit(): void {
     this.flatpickrInstance = flatpickr(this.datepicker.nativeElement, {
@@ -61,18 +93,7 @@ export class StatisticsChartComponent implements AfterViewInit, OnDestroy {
     this.flatpickrInstance?.destroy();
   }
 
-  public series: ApexAxisChartSeries = [
-    {
-      name: 'Sales',
-      data: [180, 190, 170, 160, 175, 165, 170, 205, 230, 210, 240, 235],
-    },
-    {
-      name: 'Revenue',
-      data: [40, 30, 50, 40, 55, 40, 70, 100, 110, 120, 150, 140],
-    },
-  ];
-
-  public chart: ApexChart = {
+  readonly chart: ApexChart = {
     fontFamily: 'Outfit, sans-serif',
     height: 310,
     type: 'area',
@@ -81,14 +102,14 @@ export class StatisticsChartComponent implements AfterViewInit, OnDestroy {
     },
   };
 
-  public colors: string[] = ['#465FFF', '#9CB9FF'];
+  readonly colors: string[] = ['#465FFF', '#9CB9FF'];
 
-  public stroke: ApexStroke = {
+  readonly stroke: ApexStroke = {
     curve: 'straight',
     width: [2, 2],
   };
 
-  public fill: ApexFill = {
+  readonly fill: ApexFill = {
     type: 'gradient',
     gradient: {
       opacityFrom: 0.55,
@@ -96,7 +117,7 @@ export class StatisticsChartComponent implements AfterViewInit, OnDestroy {
     },
   };
 
-  public markers: ApexMarkers = {
+  readonly markers: ApexMarkers = {
     size: 0,
     strokeColors: '#fff',
     strokeWidth: 2,
@@ -105,7 +126,7 @@ export class StatisticsChartComponent implements AfterViewInit, OnDestroy {
     },
   };
 
-  public grid: ApexGrid = {
+  readonly grid: ApexGrid = {
     xaxis: {
       lines: {
         show: false,
@@ -118,50 +139,24 @@ export class StatisticsChartComponent implements AfterViewInit, OnDestroy {
     },
   };
 
-  public dataLabels: ApexDataLabels = {
+  readonly dataLabels: ApexDataLabels = {
     enabled: false,
   };
 
-  public tooltip: ApexTooltip = {
+  readonly tooltip: ApexTooltip = {
     enabled: true,
-    x: {
-      format: 'dd MMM yyyy',
+    y: {
+      formatter: (value: number) => this.money(value),
     },
   };
 
-  public xaxis: ApexXAxis = {
-    type: 'category',
-    categories: [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-    ],
-    axisBorder: {
-      show: false,
-    },
-    axisTicks: {
-      show: false,
-    },
-    tooltip: {
-      enabled: false,
-    },
-  };
-
-  public yaxis: ApexYAxis = {
+  readonly yaxis: ApexYAxis = {
     labels: {
       style: {
         fontSize: '12px',
         colors: ['#6B7280'],
       },
+      formatter: (value) => `${Math.round(value)}`,
     },
     title: {
       text: '',
@@ -171,9 +166,17 @@ export class StatisticsChartComponent implements AfterViewInit, OnDestroy {
     },
   };
 
-  public legend: ApexLegend = {
+  readonly legend: ApexLegend = {
     show: false,
     position: 'top',
     horizontalAlign: 'left',
   };
+
+  private money(value: number): string {
+    return new Intl.NumberFormat('ro-RO', {
+      style: 'currency',
+      currency: 'RON',
+      maximumFractionDigits: 0,
+    }).format(value);
+  }
 }

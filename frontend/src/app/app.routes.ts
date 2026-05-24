@@ -4,22 +4,18 @@ import { adminAuthGuard, guestOnlyGuard } from './core/auth/auth.guard';
 export const appRoutes: Routes = [
   {
     path: '',
-    loadComponent: () =>
-      import('./features/landing/landing').then((m) => m.Landing),
+    loadComponent: () => import('./features/landing/landing').then((m) => m.Landing),
   },
   {
     path: 'login',
     canActivate: [guestOnlyGuard],
-    loadComponent: () =>
-      import('./features/admin/auth/login/login').then((m) => m.Login),
+    loadComponent: () => import('./features/admin/auth/login/login').then((m) => m.Login),
   },
   {
     path: 'admin',
     canActivate: [adminAuthGuard],
     loadComponent: () =>
-      import('./features/admin/layout/admin-layout/admin-layout').then(
-        (m) => m.AdminLayout,
-      ),
+      import('./features/admin/layout/admin-layout/admin-layout').then((m) => m.AdminLayout),
     children: [
       {
         path: 'dashboard',
@@ -30,6 +26,71 @@ export const appRoutes: Routes = [
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full',
+      },
+      {
+        path: 'menus',
+        loadComponent: () => import('./features/admin/menus/menus').then((m) => m.Menus),
+      },
+      {
+        path: 'employees',
+        loadComponent: () =>
+          import('./features/admin/employees/employee-list/employee-list').then(
+            (m) => m.EmployeeList,
+          ),
+      },
+      {
+        path: 'employees/:id',
+        loadComponent: () =>
+          import('./features/admin/employees/employee-detail/employee-detail').then(
+            (m) => m.EmployeeDetail,
+          ),
+      },
+      {
+        path: 'employees/:id/edit',
+        loadComponent: () =>
+          import('./features/admin/employees/employee-edit/employee-edit').then(
+            (m) => m.EmployeeEdit,
+          ),
+      },
+
+      //-------payroll pages-------//
+
+      {
+        path: 'employees/:id/payroll/new',
+        loadComponent: () =>
+          import('./features/admin/employees/payroll-create/payroll-create').then(
+            (m) => m.PayrollCreate,
+          ),
+      },
+      {
+        path: 'employees/:employeeId/payroll/:payrollRecordId/edit',
+        loadComponent: () =>
+          import('./features/admin/employees/payroll-edit/payroll-edit').then((m) => m.PayrollEdit),
+      },
+      {
+        path: 'settings',
+        loadComponent: () => import('./features/admin/settings/settings').then((m) => m.Settings),
+      },
+      // -------finance pages------- //
+
+      {
+        path: 'transactions/new',
+        loadComponent: () =>
+          import('./features/admin/finance/transaction-create/transaction-create').then(
+            (m) => m.TransactionCreate,
+          ),
+      },
+      {
+        path: 'transactions',
+        loadComponent: () =>
+          import('./features/admin/finance/transactions/transactions').then((m) => m.Transactions),
+      },
+      {
+        path: 'transactions/:id/edit',
+        loadComponent: () =>
+          import('./features/admin/finance/transaction-edit/transaction-edit').then(
+            (m) => m.TransactionEdit,
+          ),
       },
     ],
   },

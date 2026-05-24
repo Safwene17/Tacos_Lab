@@ -1,0 +1,443 @@
+<div class="space-y-6">
+  <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div>
+      <button
+        type="button"
+        class="mb-3 inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white"
+        (click)="backToEmployees()"
+      >
+        ← Back to employees
+      </button>
+
+      <h1 class="text-title-sm font-semibold text-gray-800 dark:text-white/90">Employee Details</h1>
+
+      <p class="mt-1 text-theme-sm text-gray-500 dark:text-gray-400">
+        Personal information, employment details, and payroll history.
+      </p>
+    </div>
+
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+      <button
+        type="button"
+        class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03]"
+        [disabled]="loadingEmployee() || !employee()"
+        (click)="createPayrollRecord()"
+      >
+        Add Payroll
+      </button>
+
+      <button
+        type="button"
+        class="inline-flex items-center justify-center rounded-lg bg-admin-brand-500 px-4 py-2.5 text-theme-sm font-medium text-white shadow-theme-xs hover:bg-admin-brand-600 disabled:cursor-not-allowed disabled:opacity-60"
+        [disabled]="loadingEmployee() || !employee()"
+        (click)="editEmployee()"
+      >
+        Edit Employee
+      </button>
+    </div>
+  </div>
+
+  @if (employeeError()) {
+    <div
+      class="rounded-2xl border border-error-500/20 bg-error-50 p-5 dark:border-error-500/30 dark:bg-error-500/10"
+    >
+      <p class="text-theme-sm font-medium text-error-700 dark:text-error-500">
+        {{ employeeError() }}
+      </p>
+
+      <button
+        type="button"
+        class="mt-4 rounded-lg bg-error-600 px-4 py-2 text-theme-sm font-medium text-white hover:bg-error-700"
+        (click)="retry()"
+      >
+        Retry
+      </button>
+    </div>
+  }
+
+  @if (loadingEmployee()) {
+    <div
+      class="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] sm:p-6"
+    >
+      <div class="animate-pulse">
+        <div class="flex items-center gap-4">
+          <div class="h-20 w-20 rounded-full bg-gray-200 dark:bg-gray-800"></div>
+          <div class="space-y-3">
+            <div class="h-6 w-56 rounded bg-gray-200 dark:bg-gray-800"></div>
+            <div class="h-4 w-36 rounded bg-gray-200 dark:bg-gray-800"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  } @else if (employee()) {
+    <div
+      class="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] sm:p-6"
+    >
+      <div class="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+        <div class="flex items-center gap-5">
+          <div
+            class="flex h-20 w-20 items-center justify-center rounded-full bg-gray-100 text-title-sm font-semibold text-gray-700 dark:bg-gray-800 dark:text-white/90"
+          >
+            {{ initials() }}
+          </div>
+
+          <div>
+            <h2 class="text-title-sm font-semibold text-gray-800 dark:text-white/90">
+              {{ employee()?.fullName }}
+            </h2>
+
+            <div class="mt-3 flex flex-wrap items-center gap-2">
+              <span
+                class="inline-flex rounded-full bg-gray-100 px-2.5 py-0.5 text-theme-xs font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-300"
+              >
+                {{ value(employee()?.role) }}
+              </span>
+
+              <span
+                class="inline-flex rounded-full px-2.5 py-0.5 text-theme-xs font-medium"
+                [class]="statusBadgeClass(employee()?.employmentStatus)"
+              >
+                {{ employee()?.employmentStatus }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="rounded-xl bg-gray-50 px-5 py-4 dark:bg-white/[0.03]">
+          <p class="text-theme-xs text-gray-500 dark:text-gray-400">Salary</p>
+          <p class="mt-1 text-lg font-semibold text-gray-800 dark:text-white/90">
+            {{ money(employee()?.salaryAmount, employee()?.salaryCurrency ?? 'RON') }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-6 xl:grid-cols-2">
+      <div
+        class="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] sm:p-6"
+      >
+        <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90">Personal Information</h3>
+
+        <div class="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
+          <div>
+            <p class="text-theme-xs text-gray-500 dark:text-gray-400">First Name</p>
+            <p class="mt-1 text-theme-sm font-medium text-gray-800 dark:text-white/90">
+              {{ value(employee()?.firstName) }}
+            </p>
+          </div>
+
+          <div>
+            <p class="text-theme-xs text-gray-500 dark:text-gray-400">Last Name</p>
+            <p class="mt-1 text-theme-sm font-medium text-gray-800 dark:text-white/90">
+              {{ value(employee()?.lastName) }}
+            </p>
+          </div>
+
+          <div>
+            <p class="text-theme-xs text-gray-500 dark:text-gray-400">Email</p>
+            <p class="mt-1 text-theme-sm font-medium text-gray-800 dark:text-white/90">
+              {{ value(employee()?.email) }}
+            </p>
+          </div>
+
+          <div>
+            <p class="text-theme-xs text-gray-500 dark:text-gray-400">Phone Number</p>
+            <p class="mt-1 text-theme-sm font-medium text-gray-800 dark:text-white/90">
+              {{ value(employee()?.phoneNumber) }}
+            </p>
+          </div>
+
+          <div>
+            <p class="text-theme-xs text-gray-500 dark:text-gray-400">Emergency Contact Name</p>
+            <p class="mt-1 text-theme-sm font-medium text-gray-800 dark:text-white/90">
+              {{ value(employee()?.emergencyContactName) }}
+            </p>
+          </div>
+
+          <div>
+            <p class="text-theme-xs text-gray-500 dark:text-gray-400">Emergency Contact Phone</p>
+            <p class="mt-1 text-theme-sm font-medium text-gray-800 dark:text-white/90">
+              {{ value(employee()?.emergencyContactPhone) }}
+            </p>
+          </div>
+        </div>
+
+        <div class="mt-6">
+          <p class="text-theme-xs text-gray-500 dark:text-gray-400">Notes</p>
+          <p
+            class="mt-2 whitespace-pre-line text-theme-sm leading-6 text-gray-700 dark:text-gray-300"
+          >
+            {{ value(employee()?.notes) }}
+          </p>
+        </div>
+      </div>
+
+      <div
+        class="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] sm:p-6"
+      >
+        <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90">Employment</h3>
+
+        <div class="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
+          <div>
+            <p class="text-theme-xs text-gray-500 dark:text-gray-400">Role</p>
+            <p class="mt-1 text-theme-sm font-medium text-gray-800 dark:text-white/90">
+              {{ value(employee()?.role) }}
+            </p>
+          </div>
+
+          <div>
+            <p class="text-theme-xs text-gray-500 dark:text-gray-400">Status</p>
+            <span
+              class="mt-1 inline-flex rounded-full px-2.5 py-0.5 text-theme-xs font-medium"
+              [class]="statusBadgeClass(employee()?.employmentStatus)"
+            >
+              {{ employee()?.employmentStatus }}
+            </span>
+          </div>
+
+          <div>
+            <p class="text-theme-xs text-gray-500 dark:text-gray-400">First Working Day</p>
+            <p class="mt-1 text-theme-sm font-medium text-gray-800 dark:text-white/90">
+              {{ date(employee()?.firstWorkingDay) }}
+            </p>
+          </div>
+
+          <div>
+            <p class="text-theme-xs text-gray-500 dark:text-gray-400">Months Employed</p>
+            <p class="mt-1 text-theme-sm font-medium text-gray-800 dark:text-white/90">
+              {{ employee()?.monthsEmployed ?? 0 }}
+            </p>
+          </div>
+
+          <div>
+            <p class="text-theme-xs text-gray-500 dark:text-gray-400">Salary</p>
+            <p class="mt-1 text-theme-sm font-medium text-gray-800 dark:text-white/90">
+              {{ money(employee()?.salaryAmount, employee()?.salaryCurrency ?? 'RON') }}
+            </p>
+          </div>
+
+          <div>
+            <p class="text-theme-xs text-gray-500 dark:text-gray-400">Last Payment Date</p>
+            <p class="mt-1 text-theme-sm font-medium text-gray-800 dark:text-white/90">
+              {{ date(employee()?.lastPaymentDate) }}
+            </p>
+          </div>
+        </div>
+
+        <div class="mt-6 rounded-2xl bg-gray-50 p-5 dark:bg-white/[0.03]">
+          <p class="text-theme-xs text-gray-500 dark:text-gray-400">Total Payroll Records</p>
+          <p class="mt-1 text-title-sm font-bold text-gray-800 dark:text-white/90">
+            {{ employee()?.payrollRecordsCount ?? 0 }}
+          </p>
+        </div>
+      </div>
+    </div>
+  }
+
+  <div
+    class="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] sm:p-6"
+  >
+    <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90">Payroll History</h3>
+
+        <p class="mt-1 text-theme-sm text-gray-500 dark:text-gray-400">
+          Salary payment records linked to this employee.
+        </p>
+      </div>
+
+      <div class="text-theme-sm text-gray-500 dark:text-gray-400">
+        {{ payrollTotalElements() }} records
+      </div>
+    </div>
+
+    @if (payrollError()) {
+      <div
+        class="mt-5 rounded-xl border border-error-500/20 bg-error-50 p-4 dark:border-error-500/30 dark:bg-error-500/10"
+      >
+        <p class="text-theme-sm font-medium text-error-700 dark:text-error-500">
+          {{ payrollError() }}
+        </p>
+
+        <button
+          type="button"
+          class="mt-3 rounded-lg bg-error-600 px-4 py-2 text-theme-sm font-medium text-white hover:bg-error-700"
+          (click)="loadPayrollRecords()"
+        >
+          Retry
+        </button>
+      </div>
+    }
+
+    <div class="mt-5 max-w-full overflow-x-auto">
+      <table class="w-full text-left">
+        <thead class="border-y border-gray-100 dark:border-gray-800">
+          <tr>
+            <th class="py-3 pr-5 text-theme-xs font-medium text-gray-500 dark:text-gray-400">
+              Payment Date
+            </th>
+
+            <th class="py-3 pr-5 text-theme-xs font-medium text-gray-500 dark:text-gray-400">
+              Period
+            </th>
+
+            <th class="py-3 pr-5 text-theme-xs font-medium text-gray-500 dark:text-gray-400">
+              Amount
+            </th>
+
+            <th class="py-3 pr-5 text-theme-xs font-medium text-gray-500 dark:text-gray-400">
+              Payment Method
+            </th>
+
+            <th class="py-3 pr-5 text-theme-xs font-medium text-gray-500 dark:text-gray-400">
+              Notes
+            </th>
+
+            <th
+              class="py-3 pr-5 text-right text-theme-xs font-medium text-gray-500 dark:text-gray-400"
+            >
+              Actions
+            </th>
+          </tr>
+        </thead>
+
+        <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+          @if (loadingPayroll()) {
+            @for (_ of [1, 2, 3, 4, 5]; track $index) {
+              <tr>
+                <td class="py-4 pr-5">
+                  <div class="h-4 w-24 animate-pulse rounded bg-gray-200 dark:bg-gray-800"></div>
+                </td>
+
+                <td class="py-4 pr-5">
+                  <div class="h-4 w-44 animate-pulse rounded bg-gray-200 dark:bg-gray-800"></div>
+                </td>
+
+                <td class="py-4 pr-5">
+                  <div class="h-4 w-28 animate-pulse rounded bg-gray-200 dark:bg-gray-800"></div>
+                </td>
+
+                <td class="py-4 pr-5">
+                  <div class="h-4 w-28 animate-pulse rounded bg-gray-200 dark:bg-gray-800"></div>
+                </td>
+
+                <td class="py-4 pr-5">
+                  <div class="h-4 w-40 animate-pulse rounded bg-gray-200 dark:bg-gray-800"></div>
+                </td>
+
+                <td class="py-4 pr-5 text-right">
+                  <div
+                    class="ml-auto h-9 w-32 animate-pulse rounded bg-gray-200 dark:bg-gray-800"
+                  ></div>
+                </td>
+              </tr>
+            }
+          } @else if (payrollRecords().length === 0) {
+            <tr>
+              <td
+                colspan="6"
+                class="py-10 text-center text-theme-sm text-gray-500 dark:text-gray-400"
+              >
+                No payroll records found.
+              </td>
+            </tr>
+          } @else {
+            @for (record of payrollRecords(); track record.id) {
+              <tr>
+                <td class="py-4 pr-5 text-theme-sm text-gray-700 dark:text-gray-300">
+                  {{ date(record.paymentDate) }}
+                </td>
+
+                <td class="py-4 pr-5 text-theme-sm text-gray-700 dark:text-gray-300">
+                  {{ period(record) }}
+                </td>
+
+                <td class="py-4 pr-5 text-theme-sm font-medium text-gray-800 dark:text-white/90">
+                  {{ money(record.amount, record.currency ?? 'RON') }}
+                </td>
+
+                <td class="py-4 pr-5 text-theme-sm text-gray-700 dark:text-gray-300">
+                  {{ value(record.paymentMethod) }}
+                </td>
+
+                <td class="py-4 pr-5 text-theme-sm text-gray-500 dark:text-gray-400">
+                  {{ value(record.notes) }}
+                </td>
+
+                <td class="py-4 pr-5 text-right">
+                  <div class="flex items-center justify-end gap-2">
+                    <button
+                      type="button"
+                      class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-theme-xs font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03]"
+                      (click)="editPayrollRecord(record)"
+                    >
+                      Edit
+                    </button>
+
+                    <button
+                      type="button"
+                      class="rounded-lg border border-error-300 bg-white px-3 py-2 text-theme-xs font-medium text-error-600 shadow-theme-xs hover:bg-error-50 dark:border-error-500/30 dark:bg-gray-800 dark:text-error-500 dark:hover:bg-error-500/10"
+                      (click)="deletePayrollRecord(record)"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+
+    @if (payrollTotalPages() > 1) {
+      <div
+        class="mt-5 flex flex-col gap-3 border-t border-gray-100 pt-5 dark:border-gray-800 sm:flex-row sm:items-center sm:justify-between"
+      >
+        <p class="text-theme-sm text-gray-500 dark:text-gray-400">
+          Page {{ payrollPage() + 1 }} of {{ payrollTotalPages() }}
+        </p>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03]"
+            [disabled]="payrollPage() === 0 || loadingPayroll()"
+            (click)="previousPayrollPage()"
+          >
+            Previous
+          </button>
+
+          @for (page of payrollPages(); track page) {
+            <button
+              type="button"
+              class="rounded-lg px-3 py-2 text-theme-sm font-medium"
+              [class.bg-admin-brand-500]="page === payrollPage()"
+              [class.text-white]="page === payrollPage()"
+              [class.border]="page !== payrollPage()"
+              [class.border-gray-300]="page !== payrollPage()"
+              [class.bg-white]="page !== payrollPage()"
+              [class.text-gray-700]="page !== payrollPage()"
+              [class.dark:border-gray-700]="page !== payrollPage()"
+              [class.dark:bg-gray-800]="page !== payrollPage()"
+              [class.dark:text-gray-400]="page !== payrollPage()"
+              [disabled]="loadingPayroll()"
+              (click)="goToPayrollPage(page)"
+            >
+              {{ page + 1 }}
+            </button>
+          }
+
+          <button
+            type="button"
+            class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03]"
+            [disabled]="payrollPage() + 1 >= payrollTotalPages() || loadingPayroll()"
+            (click)="nextPayrollPage()"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+</div>

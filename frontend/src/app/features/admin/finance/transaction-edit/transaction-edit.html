@@ -1,0 +1,283 @@
+<div class="space-y-6">
+  <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div>
+      <button
+        type="button"
+        class="mb-3 inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white"
+        (click)="cancel()"
+      >
+        ← Back to transactions
+      </button>
+
+      <h1 class="text-title-sm font-semibold text-gray-800 dark:text-white/90">
+        {{ pageTitle() }}
+      </h1>
+
+      <p class="mt-1 text-theme-sm text-gray-500 dark:text-gray-400">
+        Update a manual income or expense transaction.
+      </p>
+    </div>
+  </div>
+
+  @if (error()) {
+    <div
+      class="rounded-2xl border border-error-500/20 bg-error-50 p-5 dark:border-error-500/30 dark:bg-error-500/10"
+    >
+      <p class="text-theme-sm font-medium text-error-700 dark:text-error-500">
+        {{ error() }}
+      </p>
+
+      <button
+        type="button"
+        class="mt-4 rounded-lg bg-error-600 px-4 py-2 text-theme-sm font-medium text-white hover:bg-error-700"
+        (click)="loadTransaction()"
+      >
+        Retry
+      </button>
+    </div>
+  }
+
+  <div class="grid grid-cols-1 gap-6 xl:grid-cols-[0.8fr_1.2fr]">
+    <div class="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] sm:p-6">
+      @if (loading()) {
+        <div class="animate-pulse space-y-5">
+          <div class="h-6 w-52 rounded bg-gray-200 dark:bg-gray-800"></div>
+          <div class="h-4 w-72 rounded bg-gray-200 dark:bg-gray-800"></div>
+          <div class="h-28 rounded-2xl bg-gray-200 dark:bg-gray-800"></div>
+          <div class="h-20 rounded-xl bg-gray-200 dark:bg-gray-800"></div>
+        </div>
+      } @else {
+        <h2 class="text-lg font-semibold text-gray-800 dark:text-white/90">
+          Transaction Preview
+        </h2>
+
+        <p class="mt-1 text-theme-sm text-gray-500 dark:text-gray-400">
+          Changes will be reflected in dashboard totals and charts.
+        </p>
+
+        <div class="mt-6 rounded-2xl bg-gray-50 p-5 dark:bg-white/[0.03]">
+          <p class="text-theme-xs text-gray-500 dark:text-gray-400">
+            Amount
+          </p>
+
+          <p
+            class="mt-2 text-title-sm font-bold"
+            [class.text-success-600]="selectedType() === TransactionRequestDto.TypeEnum.Income"
+            [class.dark:text-success-500]="selectedType() === TransactionRequestDto.TypeEnum.Income"
+            [class.text-error-600]="selectedType() === TransactionRequestDto.TypeEnum.Expense"
+            [class.dark:text-error-500]="selectedType() === TransactionRequestDto.TypeEnum.Expense"
+          >
+            {{ moneyPreview() }}
+          </p>
+        </div>
+
+        <div class="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-1">
+          <div class="rounded-xl border border-gray-200 p-4 dark:border-gray-800">
+            <p class="text-theme-xs text-gray-500 dark:text-gray-400">
+              Type
+            </p>
+
+            <p class="mt-1 text-theme-sm font-medium text-gray-800 dark:text-white/90">
+              {{ form.controls.type.value }}
+            </p>
+          </div>
+
+          <div class="rounded-xl border border-gray-200 p-4 dark:border-gray-800">
+            <p class="text-theme-xs text-gray-500 dark:text-gray-400">
+              Date
+            </p>
+
+            <p class="mt-1 text-theme-sm font-medium text-gray-800 dark:text-white/90">
+              {{ form.controls.transactionDate.value || '-' }}
+            </p>
+          </div>
+
+          <div class="rounded-xl border border-gray-200 p-4 dark:border-gray-800">
+            <p class="text-theme-xs text-gray-500 dark:text-gray-400">
+              Original Category
+            </p>
+
+            <p class="mt-1 text-theme-sm font-medium text-gray-800 dark:text-white/90">
+              {{ transaction()?.categoryName || '-' }}
+            </p>
+          </div>
+        </div>
+
+        <div class="mt-5 rounded-2xl bg-admin-brand-25 p-5 dark:bg-admin-brand-500/10">
+          <p class="text-theme-sm font-medium text-admin-brand-700 dark:text-admin-brand-300">
+            Manual transaction
+          </p>
+
+          <p class="mt-1 text-theme-sm text-admin-brand-600 dark:text-admin-brand-300/80">
+            Payroll-linked transactions are protected and must be updated through payroll records.
+          </p>
+        </div>
+      }
+    </div>
+
+    <div class="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] sm:p-6">
+      <form class="space-y-6" [formGroup]="form" (ngSubmit)="submit()">
+        <div>
+          <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90">
+            Transaction Information
+          </h3>
+
+          <p class="mt-1 text-theme-sm text-gray-500 dark:text-gray-400">
+            Edit the details below.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+          <label class="block">
+            <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">
+              Type
+            </span>
+
+            <select
+              formControlName="type"
+              class="mt-1 h-11 w-full rounded-lg border border-gray-300 bg-white px-4 text-theme-sm text-gray-800 outline-none transition focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+            >
+              <option [value]="TransactionRequestDto.TypeEnum.Expense">EXPENSE</option>
+              <option [value]="TransactionRequestDto.TypeEnum.Income">INCOME</option>
+            </select>
+
+            @if (fieldError('type')) {
+              <p class="mt-1 text-theme-xs text-error-600 dark:text-error-500">
+                {{ fieldError('type') }}
+              </p>
+            }
+          </label>
+
+          <label class="block">
+            <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">
+              Amount
+            </span>
+
+            <input
+              type="number"
+              formControlName="amount"
+              class="mt-1 h-11 w-full rounded-lg border border-gray-300 bg-white px-4 text-theme-sm text-gray-800 outline-none transition focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+              placeholder="0.00"
+            />
+
+            @if (fieldError('amount')) {
+              <p class="mt-1 text-theme-xs text-error-600 dark:text-error-500">
+                {{ fieldError('amount') }}
+              </p>
+            }
+          </label>
+
+          <label class="block">
+            <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">
+              Transaction Date
+            </span>
+
+            <input
+              type="date"
+              formControlName="transactionDate"
+              class="mt-1 h-11 w-full rounded-lg border border-gray-300 bg-white px-4 text-theme-sm text-gray-800 outline-none transition focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+            />
+
+            @if (fieldError('transactionDate')) {
+              <p class="mt-1 text-theme-xs text-error-600 dark:text-error-500">
+                {{ fieldError('transactionDate') }}
+              </p>
+            }
+          </label>
+
+          <label class="block">
+            <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">
+              Payment Method
+            </span>
+
+            <select
+              formControlName="paymentMethod"
+              class="mt-1 h-11 w-full rounded-lg border border-gray-300 bg-white px-4 text-theme-sm text-gray-800 outline-none transition focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+            >
+              <option [value]="TransactionRequestDto.PaymentMethodEnum.Cash">CASH</option>
+              <option [value]="TransactionRequestDto.PaymentMethodEnum.Card">CARD</option>
+              <option [value]="TransactionRequestDto.PaymentMethodEnum.Wolt">WOLT</option>
+              <option [value]="TransactionRequestDto.PaymentMethodEnum.BankTransfer">
+                BANK_TRANSFER
+              </option>
+              <option [value]="TransactionRequestDto.PaymentMethodEnum.Other">OTHER</option>
+            </select>
+
+            @if (fieldError('paymentMethod')) {
+              <p class="mt-1 text-theme-xs text-error-600 dark:text-error-500">
+                {{ fieldError('paymentMethod') }}
+              </p>
+            }
+          </label>
+
+          <label class="block sm:col-span-2">
+            <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">
+              Category
+            </span>
+
+            <select
+              formControlName="categoryId"
+              class="mt-1 h-11 w-full rounded-lg border border-gray-300 bg-white px-4 text-theme-sm text-gray-800 outline-none transition focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+              [disabled]="loadingCategories()"
+            >
+              <option value="">
+                {{ loadingCategories() ? 'Loading categories...' : 'Select category' }}
+              </option>
+
+              @for (category of categories(); track category.id) {
+                <option [value]="category.id">
+                  {{ category.name }}
+                </option>
+              }
+            </select>
+
+            @if (fieldError('categoryId')) {
+              <p class="mt-1 text-theme-xs text-error-600 dark:text-error-500">
+                {{ fieldError('categoryId') }}
+              </p>
+            }
+          </label>
+        </div>
+
+        <label class="block">
+          <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">
+            Notes
+          </span>
+
+          <textarea
+            rows="5"
+            formControlName="notes"
+            class="mt-1 w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-theme-sm text-gray-800 outline-none transition focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+            placeholder="Optional transaction notes..."
+          ></textarea>
+
+          @if (fieldError('notes')) {
+            <p class="mt-1 text-theme-xs text-error-600 dark:text-error-500">
+              {{ fieldError('notes') }}
+            </p>
+          }
+        </label>
+
+        <div
+          class="flex flex-col-reverse gap-3 border-t border-gray-100 pt-6 dark:border-gray-800 sm:flex-row sm:justify-end"
+        >
+          <button
+            type="button"
+            class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03]"
+            (click)="cancel()"
+          >
+            Cancel
+          </button>
+
+          <button
+            type="submit"
+            class="inline-flex items-center justify-center rounded-lg bg-admin-brand-500 px-5 py-2.5 text-theme-sm font-medium text-white shadow-theme-xs hover:bg-admin-brand-600 disabled:cursor-not-allowed disabled:opacity-60"
+            [disabled]="saving() || loading() || loadingCategories()"
+          >
+            {{ saving() ? 'Saving...' : 'Save Changes' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

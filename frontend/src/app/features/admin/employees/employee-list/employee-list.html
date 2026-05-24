@@ -1,0 +1,459 @@
+<div class="space-y-6">
+  <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <div>
+      <h2 class="text-title-sm font-semibold text-gray-900 dark:text-white">
+        Employees
+      </h2>
+
+      <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+        Manage restaurant staff, salaries, and employment information.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="inline-flex items-center justify-center rounded-lg bg-admin-brand-500 px-4 py-2.5 text-theme-sm font-medium text-white shadow-theme-xs transition hover:bg-admin-brand-600 disabled:cursor-not-allowed disabled:opacity-60"
+      (click)="openCreateForm()"
+    >
+      Add Employee
+    </button>
+  </div>
+
+  @if (error()) {
+    <div
+      class="rounded-2xl border border-error-200 bg-error-50 p-5 dark:border-error-500/30 dark:bg-error-500/10"
+    >
+      <p class="text-theme-sm font-medium text-error-700 dark:text-error-500">
+        {{ error() }}
+      </p>
+
+      <button
+        type="button"
+        class="mt-4 rounded-lg bg-error-600 px-4 py-2 text-theme-sm font-medium text-white hover:bg-error-700"
+        (click)="loadEmployees()"
+      >
+        Retry
+      </button>
+    </div>
+  }
+
+  <div
+    class="overflow-hidden rounded-2xl border border-gray-200 bg-white px-4 pb-3 pt-4 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6"
+  >
+    <div class="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90">
+          Employee List
+        </h3>
+
+        <p class="text-theme-sm text-gray-500 dark:text-gray-400">
+          {{ totalElements() }} total employees
+        </p>
+      </div>
+    </div>
+
+    <div class="max-w-full overflow-x-auto">
+      <table class="w-full text-left">
+        <thead class="border-y border-gray-100 dark:border-gray-800">
+          <tr>
+            <th class="whitespace-nowrap py-3 pr-5 text-theme-xs font-medium text-gray-500 dark:text-gray-400">
+              Full Name
+            </th>
+            <th class="whitespace-nowrap py-3 pr-5 text-theme-xs font-medium text-gray-500 dark:text-gray-400">
+              Role
+            </th>
+            <th class="whitespace-nowrap py-3 pr-5 text-theme-xs font-medium text-gray-500 dark:text-gray-400">
+              Status
+            </th>
+            <th class="whitespace-nowrap py-3 pr-5 text-theme-xs font-medium text-gray-500 dark:text-gray-400">
+              Phone
+            </th>
+            <th class="whitespace-nowrap py-3 pr-5 text-theme-xs font-medium text-gray-500 dark:text-gray-400">
+              Salary
+            </th>
+            <th class="whitespace-nowrap py-3 pr-5 text-theme-xs font-medium text-gray-500 dark:text-gray-400">
+              First Day
+            </th>
+            <th class="whitespace-nowrap py-3 text-right text-theme-xs font-medium text-gray-500 dark:text-gray-400">
+              Actions
+            </th>
+          </tr>
+        </thead>
+
+        <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+          @if (loading()) {
+            @for (_ of [1, 2, 3, 4, 5, 6]; track _) {
+              <tr>
+                <td class="py-4 pr-5">
+                  <div class="h-4 w-40 animate-pulse rounded bg-gray-100 dark:bg-gray-800"></div>
+                </td>
+                <td class="py-4 pr-5">
+                  <div class="h-4 w-24 animate-pulse rounded bg-gray-100 dark:bg-gray-800"></div>
+                </td>
+                <td class="py-4 pr-5">
+                  <div class="h-6 w-20 animate-pulse rounded-full bg-gray-100 dark:bg-gray-800"></div>
+                </td>
+                <td class="py-4 pr-5">
+                  <div class="h-4 w-28 animate-pulse rounded bg-gray-100 dark:bg-gray-800"></div>
+                </td>
+                <td class="py-4 pr-5">
+                  <div class="h-4 w-24 animate-pulse rounded bg-gray-100 dark:bg-gray-800"></div>
+                </td>
+                <td class="py-4 pr-5">
+                  <div class="h-4 w-24 animate-pulse rounded bg-gray-100 dark:bg-gray-800"></div>
+                </td>
+                <td class="py-4">
+                  <div class="ml-auto h-8 w-20 animate-pulse rounded-lg bg-gray-100 dark:bg-gray-800"></div>
+                </td>
+              </tr>
+            }
+          } @else if (employees().length === 0) {
+            <tr>
+              <td colspan="7" class="py-10 text-center text-theme-sm text-gray-500 dark:text-gray-400">
+                No employees found.
+              </td>
+            </tr>
+          } @else {
+            @for (employee of employees(); track employee.id) {
+              <tr>
+                <td class="py-4 pr-5">
+                  <p class="font-medium text-gray-800 text-theme-sm dark:text-white/90">
+                    {{ employee.fullName || ((employee.firstName ?? '') + ' ' + (employee.lastName ?? '')) }}
+                  </p>
+
+                  <p class="mt-1 text-theme-xs text-gray-500 dark:text-gray-400">
+                    {{ employee.email || '-' }}
+                  </p>
+                </td>
+
+                <td class="py-4 pr-5 text-theme-sm text-gray-500 dark:text-gray-400">
+                  {{ employee.role || '-' }}
+                </td>
+
+                <td class="py-4 pr-5">
+                  <span
+                    class="inline-flex rounded-full px-2.5 py-0.5 text-theme-xs font-medium"
+                    [class]="statusBadgeClass(employee.employmentStatus)"
+                  >
+                    {{ employee.employmentStatus || '-' }}
+                  </span>
+                </td>
+
+                <td class="py-4 pr-5 text-theme-sm text-gray-500 dark:text-gray-400">
+                  {{ employee.phoneNumber || '-' }}
+                </td>
+
+                <td class="py-4 pr-5 text-theme-sm text-gray-500 dark:text-gray-400">
+                  {{ salary(employee) }}
+                </td>
+
+                <td class="py-4 pr-5 text-theme-sm text-gray-500 dark:text-gray-400">
+                  {{ date(employee.firstWorkingDay) }}
+                </td>
+
+                <td class="py-4">
+                  <div class="flex justify-end gap-2">
+                    <button
+                      type="button"
+                      class="rounded-lg border border-gray-300 px-3 py-2 text-theme-xs font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-white/[0.03]"
+                      (click)="viewDetails(employee)"
+                    >
+                      View
+                    </button>
+
+                    <button
+                      type="button"
+                      class="rounded-lg border border-gray-300 px-3 py-2 text-theme-xs font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-white/[0.03]"
+                      (click)="editEmployee(employee)"
+                    >
+                      Edit
+                    </button>
+
+                    <button
+                      type="button"
+                      class="rounded-lg border border-error-300 px-3 py-2 text-theme-xs font-medium text-error-600 hover:bg-error-50 dark:border-error-500/30 dark:text-error-500 dark:hover:bg-error-500/10"
+                      (click)="askDelete(employee)"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="mt-5 flex flex-col gap-3 border-t border-gray-100 pt-4 dark:border-gray-800 sm:flex-row sm:items-center sm:justify-between">
+      <p class="text-theme-sm text-gray-500 dark:text-gray-400">
+        Page {{ page() + 1 }} of {{ totalPages() || 1 }}
+      </p>
+
+      <div class="flex flex-wrap gap-2">
+        <button
+          type="button"
+          class="rounded-lg border border-gray-300 px-3 py-2 text-theme-sm text-gray-700 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:text-gray-400"
+          [disabled]="page() === 0 || loading()"
+          (click)="previousPage()"
+        >
+          Previous
+        </button>
+
+        @for (pageNumber of pages(); track pageNumber) {
+          <button
+            type="button"
+            class="rounded-lg px-3 py-2 text-theme-sm font-medium"
+            [class.bg-admin-brand-500]="pageNumber === page()"
+            [class.text-white]="pageNumber === page()"
+            [class.border]="pageNumber !== page()"
+            [class.border-gray-300]="pageNumber !== page()"
+            [class.text-gray-700]="pageNumber !== page()"
+            [class.dark:border-gray-700]="pageNumber !== page()"
+            [class.dark:text-gray-400]="pageNumber !== page()"
+            [disabled]="loading()"
+            (click)="goToPage(pageNumber)"
+          >
+            {{ pageNumber + 1 }}
+          </button>
+        }
+
+        <button
+          type="button"
+          class="rounded-lg border border-gray-300 px-3 py-2 text-theme-sm text-gray-700 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:text-gray-400"
+          [disabled]="page() + 1 >= totalPages() || loading()"
+          (click)="nextPage()"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+@if (formOpen()) {
+  <div class="fixed inset-0 z-99999 flex justify-end bg-gray-900/50">
+    <div class="h-full w-full max-w-xl overflow-y-auto bg-white p-6 shadow-theme-lg dark:bg-gray-900">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+            Add Employee
+          </h3>
+
+          <p class="mt-1 text-theme-sm text-gray-500 dark:text-gray-400">
+            Create a new employee profile.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          class="rounded-lg p-2 text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-white/[0.03]"
+          (click)="closeCreateForm()"
+        >
+          ✕
+        </button>
+      </div>
+
+      <form class="mt-6 space-y-5" [formGroup]="form" (ngSubmit)="submitCreate()">
+        <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+          <label class="block">
+            <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">First name</span>
+            <input
+              type="text"
+              formControlName="firstName"
+              class="mt-1 h-11 w-full rounded-lg border border-gray-300 px-4 text-theme-sm text-gray-800 outline-none focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+            />
+            @if (fieldError('firstName')) {
+              <p class="mt-1 text-theme-xs text-error-600">{{ fieldError('firstName') }}</p>
+            }
+          </label>
+
+          <label class="block">
+            <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Last name</span>
+            <input
+              type="text"
+              formControlName="lastName"
+              class="mt-1 h-11 w-full rounded-lg border border-gray-300 px-4 text-theme-sm text-gray-800 outline-none focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+            />
+            @if (fieldError('lastName')) {
+              <p class="mt-1 text-theme-xs text-error-600">{{ fieldError('lastName') }}</p>
+            }
+          </label>
+        </div>
+
+        <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+          <label class="block">
+            <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Phone number</span>
+            <input
+              type="text"
+              formControlName="phoneNumber"
+              class="mt-1 h-11 w-full rounded-lg border border-gray-300 px-4 text-theme-sm text-gray-800 outline-none focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+            />
+            @if (fieldError('phoneNumber')) {
+              <p class="mt-1 text-theme-xs text-error-600">{{ fieldError('phoneNumber') }}</p>
+            }
+          </label>
+
+          <label class="block">
+            <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Email</span>
+            <input
+              type="email"
+              formControlName="email"
+              class="mt-1 h-11 w-full rounded-lg border border-gray-300 px-4 text-theme-sm text-gray-800 outline-none focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+            />
+            @if (fieldError('email')) {
+              <p class="mt-1 text-theme-xs text-error-600">{{ fieldError('email') }}</p>
+            }
+          </label>
+        </div>
+
+        <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+          <label class="block">
+            <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Salary amount</span>
+            <input
+              type="number"
+              formControlName="salaryAmount"
+              class="mt-1 h-11 w-full rounded-lg border border-gray-300 px-4 text-theme-sm text-gray-800 outline-none focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+            />
+            @if (fieldError('salaryAmount')) {
+              <p class="mt-1 text-theme-xs text-error-600">{{ fieldError('salaryAmount') }}</p>
+            }
+          </label>
+
+          <label class="block">
+            <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Role</span>
+            <input
+              type="text"
+              formControlName="role"
+              class="mt-1 h-11 w-full rounded-lg border border-gray-300 px-4 text-theme-sm text-gray-800 outline-none focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+            />
+            @if (fieldError('role')) {
+              <p class="mt-1 text-theme-xs text-error-600">{{ fieldError('role') }}</p>
+            }
+          </label>
+        </div>
+
+        <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+          <label class="block">
+            <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Employment status</span>
+            <select
+              formControlName="employmentStatus"
+              class="mt-1 h-11 w-full rounded-lg border border-gray-300 px-4 text-theme-sm text-gray-800 outline-none focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+            >
+              <option [value]="EmployeeRequestDto.EmploymentStatusEnum.Active">ACTIVE</option>
+              <option [value]="EmployeeRequestDto.EmploymentStatusEnum.Inactive">INACTIVE</option>
+            </select>
+            @if (fieldError('employmentStatus')) {
+              <p class="mt-1 text-theme-xs text-error-600">{{ fieldError('employmentStatus') }}</p>
+            }
+          </label>
+
+          <label class="block">
+            <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">First working day</span>
+            <input
+              type="date"
+              formControlName="firstWorkingDay"
+              class="mt-1 h-11 w-full rounded-lg border border-gray-300 px-4 text-theme-sm text-gray-800 outline-none focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+            />
+            @if (fieldError('firstWorkingDay')) {
+              <p class="mt-1 text-theme-xs text-error-600">{{ fieldError('firstWorkingDay') }}</p>
+            }
+          </label>
+        </div>
+
+        <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+          <label class="block">
+            <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Emergency contact name</span>
+            <input
+              type="text"
+              formControlName="emergencyContactName"
+              class="mt-1 h-11 w-full rounded-lg border border-gray-300 px-4 text-theme-sm text-gray-800 outline-none focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+            />
+            @if (fieldError('emergencyContactName')) {
+              <p class="mt-1 text-theme-xs text-error-600">{{ fieldError('emergencyContactName') }}</p>
+            }
+          </label>
+
+          <label class="block">
+            <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Emergency contact phone</span>
+            <input
+              type="text"
+              formControlName="emergencyContactPhone"
+              class="mt-1 h-11 w-full rounded-lg border border-gray-300 px-4 text-theme-sm text-gray-800 outline-none focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+            />
+            @if (fieldError('emergencyContactPhone')) {
+              <p class="mt-1 text-theme-xs text-error-600">{{ fieldError('emergencyContactPhone') }}</p>
+            }
+          </label>
+        </div>
+
+        <label class="block">
+          <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Notes</span>
+          <textarea
+            rows="4"
+            formControlName="notes"
+            class="mt-1 w-full rounded-lg border border-gray-300 px-4 py-3 text-theme-sm text-gray-800 outline-none focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+          ></textarea>
+          @if (fieldError('notes')) {
+            <p class="mt-1 text-theme-xs text-error-600">{{ fieldError('notes') }}</p>
+          }
+        </label>
+
+        <div class="flex justify-end gap-3 border-t border-gray-100 pt-5 dark:border-gray-800">
+          <button
+            type="button"
+            class="rounded-lg border border-gray-300 px-4 py-2.5 text-theme-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-white/[0.03]"
+            (click)="closeCreateForm()"
+          >
+            Cancel
+          </button>
+
+          <button
+            type="submit"
+            class="rounded-lg bg-admin-brand-500 px-4 py-2.5 text-theme-sm font-medium text-white hover:bg-admin-brand-600 disabled:cursor-not-allowed disabled:opacity-60"
+            [disabled]="saving()"
+          >
+            {{ saving() ? 'Saving...' : 'Create Employee' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
+
+@if (deleteDialogOpen()) {
+  <div class="fixed inset-0 z-99999 flex items-center justify-center bg-gray-900/50 px-4">
+    <div class="w-full max-w-md rounded-2xl bg-white p-6 shadow-theme-lg dark:bg-gray-900">
+      <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+        Delete employee
+      </h3>
+
+      <p class="mt-2 text-theme-sm text-gray-500 dark:text-gray-400">
+        Are you sure you want to delete
+        <span class="font-medium text-gray-900 dark:text-white">
+          {{ employeeToDelete()?.fullName }}
+        </span>
+        ? This action cannot be undone.
+      </p>
+
+      <div class="mt-6 flex justify-end gap-3">
+        <button
+          type="button"
+          class="rounded-lg border border-gray-300 px-4 py-2.5 text-theme-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-white/[0.03]"
+          (click)="closeDeleteDialog()"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          class="rounded-lg bg-error-600 px-4 py-2.5 text-theme-sm font-medium text-white hover:bg-error-700 disabled:cursor-not-allowed disabled:opacity-60"
+          [disabled]="deleting()"
+          (click)="confirmDelete()"
+        >
+          {{ deleting() ? 'Deleting...' : 'Delete' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
