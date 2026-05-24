@@ -6,7 +6,6 @@ import com.example.backend.dto.response.AdminMeResponse;
 import com.example.backend.dto.response.ApiResponse;
 import com.example.backend.dto.response.AuthResponse;
 import com.example.backend.service.AuthService;
-import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -16,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping(value = "/api/auth", produces = "application/json")
 public class AuthController {
 
     private final AuthService authService;
@@ -27,9 +26,8 @@ public class AuthController {
             HttpServletRequest servletRequest,
             HttpServletResponse servletResponse
     ) {
-        return ResponseEntity.ok(
-                ApiResponse.ok("Login successful", authService.login(request, servletRequest, servletResponse))
-        );
+        return ResponseEntity.status(200)
+                .body(ApiResponse.ok("Login successful", authService.login(request, servletRequest, servletResponse)));
     }
 
     @PostMapping("/refresh")

@@ -13,10 +13,4 @@ export * from './authController.serviceInterface';
 export * from './publicMenuController.service';
 import { PublicMenuControllerApiService } from './publicMenuController.service';
 export * from './publicMenuController.serviceInterface';
-export const APIS = [
-  AdminEmployeeControllerApiService,
-  AdminFinanceControllerApiService,
-  AdminMenuControllerApiService,
-  AuthControllerApiService,
-  PublicMenuControllerApiService,
-];
+export const APIS = [AdminEmployeeControllerApiService, AdminFinanceControllerApiService, AdminMenuControllerApiService, AuthControllerApiService, PublicMenuControllerApiService];

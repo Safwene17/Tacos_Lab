@@ -1,0 +1,123 @@
+<header
+  class="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-gray-200 bg-white px-4 shadow-theme-xs dark:border-gray-800 dark:bg-gray-900 lg:px-6"
+>
+  <div class="flex items-center gap-3">
+    <button
+      type="button"
+      class="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 text-gray-500 transition hover:bg-gray-100 hover:text-gray-700 dark:border-gray-800 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-white"
+      (click)="sidebar.toggleMobileSidebar()"
+      aria-label="Toggle mobile sidebar"
+    >
+      <svg class="h-5 w-5 xl:hidden" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path
+          d="M4 6h16M4 12h16M4 18h16"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        />
+      </svg>
+
+      <svg class="hidden h-5 w-5 xl:block" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path
+          d="M4 6h16M4 12h16M4 18h16"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        />
+      </svg>
+    </button>
+
+    <button
+      type="button"
+      class="hidden h-10 w-10 items-center justify-center rounded-lg border border-gray-200 text-gray-500 transition hover:bg-gray-100 hover:text-gray-700 dark:border-gray-800 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-white xl:flex"
+      (click)="sidebar.toggleSidebar()"
+      aria-label="Collapse desktop sidebar"
+    >
+      <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path
+          d="M15 6l-6 6 6 6"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </button>
+
+    <div class="hidden lg:block">
+      <h1 class="text-lg font-semibold text-gray-900 dark:text-white">Admin Dashboard</h1>
+      <p class="text-xs text-gray-500 dark:text-gray-400">Manage Le Tacos operations</p>
+    </div>
+  </div>
+
+  <div class="flex items-center gap-3">
+    <button
+      type="button"
+      class="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 shadow-theme-xs transition hover:bg-gray-50 hover:text-gray-700 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-white"
+      (click)="theme.toggleTheme()"
+      aria-label="Toggle dark mode"
+    >
+      @if (theme.isDark()) {
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path
+            d="M12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12Zm0 4a1 1 0 0 1-1-1v-1a1 1 0 1 1 2 0v1a1 1 0 0 1-1 1Zm0-18a1 1 0 0 1-1-1V2a1 1 0 1 1 2 0v1a1 1 0 0 1-1 1Zm10 8a1 1 0 0 1-1 1h-1a1 1 0 1 1 0-2h1a1 1 0 0 1 1 1ZM4 12a1 1 0 0 1-1 1H2a1 1 0 1 1 0-2h1a1 1 0 0 1 1 1Zm15.07 7.07a1 1 0 0 1-1.41 0l-.71-.71a1 1 0 0 1 1.41-1.41l.71.71a1 1 0 0 1 0 1.41ZM7.05 7.05a1 1 0 0 1-1.41 0l-.71-.71A1 1 0 1 1 6.34 4.93l.71.71a1 1 0 0 1 0 1.41Zm12.02-2.12a1 1 0 0 1 0 1.41l-.71.71a1 1 0 0 1-1.41-1.41l.71-.71a1 1 0 0 1 1.41 0ZM7.05 16.95a1 1 0 0 1 0 1.41l-.71.71a1 1 0 0 1-1.41-1.41l.71-.71a1 1 0 0 1 1.41 0Z"
+          />
+        </svg>
+      } @else {
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path
+            d="M21.64 13a1 1 0 0 0-1.05-.14A8.05 8.05 0 0 1 11.14 3.4a1 1 0 0 0-1.19-1.19A10 10 0 1 0 21.79 14a1 1 0 0 0-.15-1Z"
+          />
+        </svg>
+      }
+    </button>
+
+    <div class="relative">
+      <button
+        type="button"
+        class="flex items-center gap-3 rounded-full border border-gray-200 bg-white p-1.5 pr-3 shadow-theme-xs transition hover:bg-gray-50 dark:border-gray-800 dark:bg-gray-900 dark:hover:bg-white/5"
+        (click)="toggleUserMenu()"
+        aria-label="Open user menu"
+      >
+        <span
+          class="flex h-8 w-8 items-center justify-center rounded-full bg-gray-900 text-xs font-semibold text-white dark:bg-white dark:text-gray-900"
+        >
+          LT
+        </span>
+
+        <span class="hidden text-left sm:block">
+          <span class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            {{ authStore.me()?.email ?? 'Admin' }}
+          </span>
+          <span class="block text-xs text-gray-500 dark:text-gray-400"> Owner </span>
+        </span>
+      </button>
+
+      @if (userMenuOpen()) {
+        <div
+          class="absolute right-0 mt-3 w-56 rounded-2xl border border-gray-200 bg-white p-3 shadow-theme-lg dark:border-gray-800 dark:bg-gray-dark"
+        >
+          <div class="border-b border-gray-100 pb-3 dark:border-gray-800">
+            <p class="text-sm font-semibold text-gray-900 dark:text-white">Le Tacos Admin</p>
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              {{ authStore.me()?.email ?? 'admin@letacos.local' }}
+            </p>
+          </div>
+
+          <button
+            type="button"
+            class="mt-3 flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100 disabled:pointer-events-none disabled:opacity-60 dark:text-gray-300 dark:hover:bg-white/5"
+            [disabled]="loggingOut()"
+            (click)="logout()"
+          >
+            @if (loggingOut()) {
+              Signing out...
+            } @else {
+              Sign out
+            }
+          </button>
+        </div>
+      }
+    </div>
+  </div>
+</header>

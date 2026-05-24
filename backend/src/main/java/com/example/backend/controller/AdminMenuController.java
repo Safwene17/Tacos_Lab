@@ -18,7 +18,7 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/admin")
+@RequestMapping(value = "/api/admin", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AdminMenuController {
 
     private final MenuService menuService;
@@ -38,7 +38,7 @@ public class AdminMenuController {
             @Valid @RequestBody CategoryRequest request
     ) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.ok("Category created successfully",
+                .body(ApiResponse.created("Category created successfully",
                         menuService.createCategory(request)));
     }
 
@@ -54,9 +54,9 @@ public class AdminMenuController {
     }
 
     @DeleteMapping("/categories/{id}")
-    public ResponseEntity<ApiResponse<Void>> deleteCategory(@PathVariable UUID id) {
+    public ResponseEntity<Void> deleteCategory(@PathVariable UUID id) {
         menuService.deleteCategory(id);
-        return ResponseEntity.ok(ApiResponse.ok("Category deleted successfully", null));
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/menu-items")
@@ -74,7 +74,7 @@ public class AdminMenuController {
             @Valid @RequestBody MenuItemRequest request
     ) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.ok("Menu item created successfully",
+                .body(ApiResponse.created("Menu item created successfully",
                         menuService.createMenuItem(request)));
     }
 
@@ -90,9 +90,9 @@ public class AdminMenuController {
     }
 
     @DeleteMapping("/menu-items/{id}")
-    public ResponseEntity<ApiResponse<Void>> deleteMenuItem(@PathVariable UUID id) {
+    public ResponseEntity<Void> deleteMenuItem(@PathVariable UUID id) {
         menuService.deleteMenuItem(id);
-        return ResponseEntity.ok(ApiResponse.ok("Menu item deleted successfully", null));
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping(
@@ -107,7 +107,7 @@ public class AdminMenuController {
             @RequestParam(required = false, defaultValue = "false") Boolean primary
     ) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.ok("Image uploaded successfully",
+                .body(ApiResponse.created("Image uploaded successfully",
                         menuService.uploadMenuItemImage(menuItemId, file, altEn, altRo, primary)));
     }
 
@@ -135,20 +135,20 @@ public class AdminMenuController {
     }
 
     @PatchMapping("/menu-items/{menuItemId}/images/reorder")
-    public ResponseEntity<ApiResponse<Void>> reorderImages(
+    public ResponseEntity<Void> reorderImages(
             @PathVariable UUID menuItemId,
             @Valid @RequestBody List<MediaAssetOrderRequest> request
     ) {
         menuService.reorderImages(menuItemId, request);
-        return ResponseEntity.ok(ApiResponse.ok("Images reordered successfully", null));
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/menu-items/{menuItemId}/images/{imageId}")
-    public ResponseEntity<ApiResponse<Void>> deleteImage(
+    public ResponseEntity<Void> deleteImage(
             @PathVariable UUID menuItemId,
             @PathVariable UUID imageId
     ) {
         menuService.deleteMenuItemImage(menuItemId, imageId);
-        return ResponseEntity.ok(ApiResponse.ok("Image deleted successfully", null));
+        return ResponseEntity.noContent().build();
     }
 }

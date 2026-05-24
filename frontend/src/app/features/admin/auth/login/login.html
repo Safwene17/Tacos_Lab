@@ -1,0 +1,220 @@
+<section class="h-screen overflow-hidden bg-gray-50 font-outfit text-gray-700 dark:bg-gray-900">
+  <div class="flex h-full">
+
+    <!-- Left visual panel -->
+    <div
+      class="relative hidden w-1/2 items-center justify-center overflow-hidden bg-gray-950 px-12 py-10 dark:bg-black lg:flex"
+    >
+      <div
+        class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(70,95,255,0.30),transparent_32%),radial-gradient(circle_at_70%_75%,rgba(255,210,48,0.16),transparent_28%)]"
+      ></div>
+
+      <div
+        class="absolute inset-0 opacity-[0.08] [background-image:linear-gradient(rgba(255,255,255,0.15)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.15)_1px,transparent_1px)] [background-size:32px_32px]"
+      ></div>
+
+      <div class="relative z-10 max-w-lg">
+        <a href="/" class="inline-flex items-center gap-3" aria-label="Back to Le Tacos homepage">
+          <span
+            class="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-sm font-bold text-gray-950 shadow-theme-lg"
+          >
+            LT
+          </span>
+
+          <span>
+            <span class="block text-xl font-semibold text-white"> Le Tacos </span>
+            <span class="block text-sm text-white/50"> Restaurant admin panel </span>
+          </span>
+        </a>
+
+        <div class="mt-16">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-admin-brand-300">
+            Owner workspace
+          </p>
+
+          <h1 class="mt-5 text-title-md font-semibold text-white">
+            Manage your restaurant from one clean dashboard.
+          </h1>
+
+          <p class="mt-5 text-base leading-8 text-white/60">
+            Track revenue, expenses, employees, payroll, menu items, and daily operations from a
+            secure private dashboard.
+          </p>
+        </div>
+
+        <div class="mt-10 grid grid-cols-3 gap-4">
+          <div class="rounded-2xl border border-white/10 bg-white/[0.06] p-4 backdrop-blur">
+            <p class="text-sm font-semibold text-white">Menu</p>
+            <p class="mt-2 text-xs leading-5 text-white/45">Items, categories, images</p>
+          </div>
+
+          <div class="rounded-2xl border border-white/10 bg-white/[0.06] p-4 backdrop-blur">
+            <p class="text-sm font-semibold text-white">Team</p>
+            <p class="mt-2 text-xs leading-5 text-white/45">Employees and payroll</p>
+          </div>
+
+          <div class="rounded-2xl border border-white/10 bg-white/[0.06] p-4 backdrop-blur">
+            <p class="text-sm font-semibold text-white">Finance</p>
+            <p class="mt-2 text-xs leading-5 text-white/45">Income and expenses</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right auth panel -->
+    <div class="flex h-full flex-1 flex-col overflow-hidden">
+      <div class="flex items-center justify-between px-6 py-5 sm:px-8">
+        
+          <a href="/"
+          class="inline-flex items-center gap-3 lg:hidden"
+          aria-label="Back to Le Tacos homepage"
+        >
+          <span
+            class="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-900 text-xs font-bold text-white dark:bg-white dark:text-gray-900"
+          >
+            LT
+          </span>
+
+          <span class="text-base font-semibold text-gray-900 dark:text-white"> Le Tacos </span>
+        </a>
+
+        <div class="hidden lg:block"></div>
+
+        <button
+          type="button"
+          class="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 shadow-theme-xs transition hover:bg-gray-50 hover:text-gray-700 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-white"
+          (click)="theme.toggleTheme()"
+          aria-label="Toggle dark mode"
+        >
+          @if (theme.isDark()) {
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path
+                d="M12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12Zm0 4a1 1 0 0 1-1-1v-1a1 1 0 1 1 2 0v1a1 1 0 0 1-1 1Zm0-18a1 1 0 0 1-1-1V2a1 1 0 1 1 2 0v1a1 1 0 0 1-1 1Zm10 8a1 1 0 0 1-1 1h-1a1 1 0 1 1 0-2h1a1 1 0 0 1 1 1ZM4 12a1 1 0 0 1-1 1H2a1 1 0 1 1 0-2h1a1 1 0 0 1 1 1Zm15.07 7.07a1 1 0 0 1-1.41 0l-.71-.71a1 1 0 0 1 1.41-1.41l.71.71a1 1 0 0 1 0 1.41ZM7.05 7.05a1 1 0 0 1-1.41 0l-.71-.71A1 1 0 1 1 6.34 4.93l.71.71a1 1 0 0 1 0 1.41Zm12.02-2.12a1 1 0 0 1 0 1.41l-.71.71a1 1 0 0 1-1.41-1.41l.71-.71a1 1 0 0 1 1.41 0ZM7.05 16.95a1 1 0 0 1 0 1.41l-.71.71a1 1 0 0 1-1.41-1.41l.71-.71a1 1 0 0 1 1.41 0Z"
+              />
+            </svg>
+          } @else {
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path
+                d="M21.64 13a1 1 0 0 0-1.05-.14A8.05 8.05 0 0 1 11.14 3.4a1 1 0 0 0-1.19-1.19A10 10 0 1 0 21.79 14a1 1 0 0 0-.15-1Z"
+              />
+            </svg>
+          }
+        </button>
+      </div>
+
+      <div class="flex flex-1 items-center justify-center overflow-hidden px-6 py-10 sm:px-8">
+        <div class="w-full max-w-md">
+          <div class="mb-8">
+            <p class="text-sm font-medium text-admin-brand-500 dark:text-admin-brand-400">
+              Sign in to your account
+            </p>
+
+            <h2 class="mt-3 text-title-sm font-semibold text-gray-900 dark:text-white">
+              Welcome back
+            </h2>
+
+            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+              Enter your admin credentials to access the dashboard.
+            </p>
+          </div>
+
+          <form
+            class="rounded-2xl border border-gray-200 bg-white p-6 shadow-theme-sm dark:border-gray-800 dark:bg-white/[0.03] sm:p-8"
+            [formGroup]="form"
+            (ngSubmit)="submit()"
+          >
+            <div class="space-y-5">
+
+              <!-- Email -->
+              <div>
+                <label
+                  for="email"
+                  class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
+                  Email
+                </label>
+
+                <input
+                  id="email"
+                  type="email"
+                  formControlName="email"
+                  autocomplete="email"
+                  placeholder="admin@letacos.local"
+                  class="h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs outline-hidden transition placeholder:text-gray-400 focus:border-admin-brand-500 focus:ring-3 focus:ring-admin-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-admin-brand-500"
+                  [class.border-error-500]="emailInvalid()"
+                  [class.dark:border-error-500]="emailInvalid()"
+                />
+
+                <p class="mt-1.5 min-h-[18px] text-theme-xs text-error-500">
+                  {{ emailInvalid() ? 'Enter a valid email address.' : '' }}
+                </p>
+              </div>
+
+              <!-- Password -->
+              <div>
+                <div class="mb-1.5 flex items-center justify-between">
+                  <label
+                    for="password"
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                  >
+                    Password
+                  </label>
+
+                  <span class="text-theme-xs text-gray-400"> Owner only </span>
+                </div>
+
+                <div class="relative">
+                  <input
+                    id="password"
+                    [type]="passwordVisible() ? 'text' : 'password'"
+                    formControlName="password"
+                    autocomplete="current-password"
+                    placeholder="••••••••"
+                    class="h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 pr-16 text-sm text-gray-800 shadow-theme-xs outline-hidden transition placeholder:text-gray-400 focus:border-admin-brand-500 focus:ring-3 focus:ring-admin-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-admin-brand-500"
+                    [class.border-error-500]="passwordInvalid()"
+                    [class.dark:border-error-500]="passwordInvalid()"
+                  />
+
+                  <button
+                    type="button"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 text-theme-xs font-medium text-gray-500 transition hover:text-gray-700 disabled:pointer-events-none disabled:opacity-50 dark:text-gray-400 dark:hover:text-gray-200"
+                    (click)="togglePassword()"
+                  >
+                    {{ passwordVisible() ? 'Hide' : 'Show' }}
+                  </button>
+                </div>
+
+                <p class="mt-1.5 min-h-[18px] text-theme-xs text-error-500">
+                  {{ passwordInvalid() ? 'Password must contain at least 8 characters.' : '' }}
+                </p>
+              </div>
+
+              <button
+                type="submit"
+                class="flex h-11 w-full items-center justify-center rounded-lg bg-admin-brand-500 px-4 py-2.5 text-sm font-medium text-white shadow-theme-xs transition hover:bg-admin-brand-600 disabled:pointer-events-none disabled:opacity-60"
+              >
+                @if (loading()) {
+                  Signing in...
+                } @else {
+                  Sign in
+                }
+              </button>
+            </div>
+
+            <div class="mt-6 rounded-xl bg-gray-50 p-4 dark:bg-white/[0.04]">
+              <p class="text-theme-xs leading-5 text-gray-500 dark:text-gray-400">
+                Sessions use an in-memory access token and a secure refresh cookie. Do not share
+                this dashboard with unauthorized users.
+              </p>
+            </div>
+          </form>
+
+          <p class="mt-8 text-center text-theme-xs text-gray-500 dark:text-gray-400">
+            © 2026 Le Tacos. Private admin access.
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>

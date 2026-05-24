@@ -15,15 +15,17 @@ public record ApiResponse<T>(
         Instant timestamp
 ) {
 
-    public static <T> ApiResponse<T> ok(String message,T data) {
+    public static <T> ApiResponse<T> ok(String message, T data) {
         return new ApiResponse<>(true, 200, message, data, null, Instant.now());
     }
 
-//    public static <T> ApiResponse<T> created(T data) {
-//        return new ApiResponse<>(true, 201, "Created", data, null, Instant.now());
-//    }
+    public static <T> ApiResponse<T> created(String message, T data) {
+        return new ApiResponse<>(true, 201, message, data, null, Instant.now());
+    }
 
-
+    public static <T> ApiResponse<T> noContent() {
+        return new ApiResponse<>(true, 204, "No Content", null, null, Instant.now());
+    }
 
     public static <T> ApiResponse<T> error(int status, String message) {
         return new ApiResponse<>(false, status, message, null, null, Instant.now());

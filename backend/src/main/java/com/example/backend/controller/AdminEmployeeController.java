@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/admin/employees")
+@RequestMapping(value = "/api/admin/employees", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class AdminEmployeeController {
 
@@ -50,7 +51,7 @@ public class AdminEmployeeController {
             @Valid @RequestBody EmployeeRequest request
     ) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.ok("Employee created successfully ",employeeService.createEmployee(request)));
+                .body(ApiResponse.created("Employee created successfully ", employeeService.createEmployee(request)));
     }
 
     @PutMapping("/{id}")
@@ -62,9 +63,9 @@ public class AdminEmployeeController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> deleteEmployee(@PathVariable UUID id) {
+    public ResponseEntity<Void> deleteEmployee(@PathVariable UUID id) {
         employeeService.deleteEmployee(id);
-        return ResponseEntity.ok(ApiResponse.ok("Employee Deleted successfully",null ));
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{employeeId}/payroll")
@@ -73,7 +74,7 @@ public class AdminEmployeeController {
             @PageableDefault(size = 20, sort = "paymentDate") Pageable pageable
     ) {
         return ResponseEntity.ok(
-                ApiResponse.ok("payroll retried successfully",PageResponse.from(employeeService.getPayrollRecords(employeeId, pageable)))
+                ApiResponse.ok("payroll retrieved successfully",PageResponse.from(employeeService.getPayrollRecords(employeeId, pageable)))
         );
     }
 
@@ -83,7 +84,7 @@ public class AdminEmployeeController {
             @Valid @RequestBody PayrollRecordRequest request
     ) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.ok("Payroll created successfully",employeeService.createPayrollRecord(employeeId, request)));
+                .body(ApiResponse.created("Payroll created successfully", employeeService.createPayrollRecord(employeeId, request)));
     }
 
     @PutMapping("/payroll-records/{payrollRecordId}")

@@ -1,0 +1,56 @@
+<div class="overflow-hidden rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+  <div class="px-5 py-4 sm:px-6">
+    <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90">
+      Recent Performance
+    </h3>
+  </div>
+
+  <div class="max-w-full overflow-x-auto">
+    <table class="min-w-full">
+      <thead>
+        <tr class="border-y border-gray-100 dark:border-gray-800">
+          <th class="px-5 py-3 text-left text-theme-xs font-medium text-gray-500 dark:text-gray-400 sm:px-6">
+            Period
+          </th>
+          <th class="px-5 py-3 text-left text-theme-xs font-medium text-gray-500 dark:text-gray-400">
+            Income
+          </th>
+          <th class="px-5 py-3 text-left text-theme-xs font-medium text-gray-500 dark:text-gray-400">
+            Expenses
+          </th>
+          <th class="px-5 py-3 text-left text-theme-xs font-medium text-gray-500 dark:text-gray-400">
+            Net Profit
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (item of weeklyStats(); track item.period) {
+          <tr class="border-b border-gray-100 last:border-b-0 dark:border-gray-800">
+            <td class="px-5 py-4 text-sm font-medium text-gray-800 dark:text-white/90 sm:px-6">
+              {{ item.period }}
+            </td>
+
+            <td class="px-5 py-4 text-sm text-success-600 dark:text-success-500">
+              {{ money(item.income ?? 0) }}
+            </td>
+
+            <td class="px-5 py-4 text-sm text-error-600 dark:text-error-500">
+              {{ money(item.expenses ?? 0) }}
+            </td>
+
+            <td
+              class="px-5 py-4 text-sm font-semibold"
+              [class.text-success-600]="(item.netProfit ?? 0) >= 0"
+              [class.text-error-600]="(item.netProfit ?? 0) < 0"
+              [class.dark:text-success-500]="(item.netProfit ?? 0) >= 0"
+              [class.dark:text-error-500]="(item.netProfit ?? 0) < 0"
+            >
+              {{ money(item.netProfit ?? 0) }}
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

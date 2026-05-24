@@ -20,6 +20,11 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(ResourceNotFoundException.class)
+    ResponseEntity<ApiResponse<Void>> handleResourceNotFound(ResourceNotFoundException ex) {
+        return respond(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
     // ------------------------------------------------------------------ //
     //  Validation
     // ------------------------------------------------------------------ //

@@ -21,7 +21,6 @@ import { ApiResponsePageResponseTransactionResponseDto } from '../model/models';
 import { ApiResponsePayrollSummaryResponseDto } from '../model/models';
 import { ApiResponseTransactionCategoryResponseDto } from '../model/models';
 import { ApiResponseTransactionResponseDto } from '../model/models';
-import { ApiResponseVoidDto } from '../model/models';
 import { PageableDto } from '../model/models';
 import { TransactionCategoryRequestDto } from '../model/models';
 import { TransactionRequestDto } from '../model/models';
@@ -97,7 +96,7 @@ export interface AdminFinanceControllerApiServiceInterface {
    * @endpoint delete /api/admin/transaction-categories/{id}
    * @param id
    */
-  deleteCategory(id: string, extraHttpRequestParams?: any): Observable<ApiResponseVoidDto>;
+  deleteCategory(id: string, extraHttpRequestParams?: any): Observable<{}>;
 
   /**
    *
@@ -105,7 +104,7 @@ export interface AdminFinanceControllerApiServiceInterface {
    * @endpoint delete /api/admin/transactions/{id}
    * @param id
    */
-  deleteTransaction(id: string, extraHttpRequestParams?: any): Observable<ApiResponseVoidDto>;
+  deleteTransaction(id: string, extraHttpRequestParams?: any): Observable<{}>;
 
   /**
    *

@@ -26,7 +26,6 @@ export * from './apiResponsePayrollSummaryResponse';
 export * from './apiResponsePublicMenuResponse';
 export * from './apiResponseTransactionCategoryResponse';
 export * from './apiResponseTransactionResponse';
-export * from './apiResponseVoid';
 export * from './authResponse';
 export * from './categoryBreakdownResponse';
 export * from './categoryRequest';
