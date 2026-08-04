@@ -1,0 +1,664 @@
+<div class="space-y-6">
+  <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <div>
+      <h2 class="text-title-sm font-semibold text-gray-900 dark:text-white">
+        Menu Items
+      </h2>
+
+      <p class="mt-1 text-theme-sm text-gray-500 dark:text-gray-400">
+        Manage menu items, categories, and Cloudinary images.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="inline-flex items-center justify-center rounded-lg bg-admin-brand-500 px-4 py-2.5 text-theme-sm font-medium text-white shadow-theme-xs transition hover:bg-admin-brand-600 disabled:cursor-not-allowed disabled:opacity-60"
+      (click)="openCreateForm()"
+    >
+      Add Menu Item
+    </button>
+  </div>
+
+  @if (error()) {
+    <div
+      class="rounded-2xl border border-error-200 bg-error-50 p-5 dark:border-error-500/30 dark:bg-error-500/10"
+    >
+      <p class="text-theme-sm font-medium text-error-700 dark:text-error-500">
+        {{ error() }}
+      </p>
+
+      <button
+        type="button"
+        class="mt-4 rounded-lg bg-error-600 px-4 py-2 text-theme-sm font-medium text-white hover:bg-error-700"
+        (click)="reloadData()"
+      >
+        Retry
+      </button>
+    </div>
+  }
+
+  <div
+    class="overflow-hidden rounded-2xl border border-gray-200 bg-white px-4 pb-3 pt-4 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6"
+  >
+    <div class="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90">
+          Menu Item List
+        </h3>
+
+        <p class="text-theme-sm text-gray-500 dark:text-gray-400">
+          {{ totalElements() }} total menu items
+        </p>
+      </div>
+    </div>
+
+    <div class="max-w-full overflow-x-auto">
+      <table class="w-full text-left">
+        <thead class="border-y border-gray-100 dark:border-gray-800">
+          <tr>
+            <th class="whitespace-nowrap py-3 pr-5 text-theme-xs font-medium text-gray-500 dark:text-gray-400">
+              Image
+            </th>
+            <th class="whitespace-nowrap py-3 pr-5 text-theme-xs font-medium text-gray-500 dark:text-gray-400">
+              Name
+            </th>
+            <th class="whitespace-nowrap py-3 pr-5 text-theme-xs font-medium text-gray-500 dark:text-gray-400">
+              Category
+            </th>
+            <th class="whitespace-nowrap py-3 pr-5 text-theme-xs font-medium text-gray-500 dark:text-gray-400">
+              Price
+            </th>
+            <th class="whitespace-nowrap py-3 pr-5 text-theme-xs font-medium text-gray-500 dark:text-gray-400">
+              Badges
+            </th>
+            <th class="whitespace-nowrap py-3 text-right text-theme-xs font-medium text-gray-500 dark:text-gray-400">
+              Actions
+            </th>
+          </tr>
+        </thead>
+
+        <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+          @if (loading()) {
+            @for (_ of [1, 2, 3, 4, 5, 6]; track _) {
+              <tr>
+                <td class="py-4 pr-5">
+                  <div class="h-12 w-12 animate-pulse rounded-lg bg-gray-100 dark:bg-gray-800"></div>
+                </td>
+                <td class="py-4 pr-5">
+                  <div class="space-y-2">
+                    <div class="h-4 w-40 animate-pulse rounded bg-gray-100 dark:bg-gray-800"></div>
+                    <div class="h-3 w-28 animate-pulse rounded bg-gray-100 dark:bg-gray-800"></div>
+                  </div>
+                </td>
+                <td class="py-4 pr-5">
+                  <div class="h-4 w-28 animate-pulse rounded bg-gray-100 dark:bg-gray-800"></div>
+                </td>
+                <td class="py-4 pr-5">
+                  <div class="h-4 w-24 animate-pulse rounded bg-gray-100 dark:bg-gray-800"></div>
+                </td>
+                <td class="py-4 pr-5">
+                  <div class="flex gap-2">
+                    <div class="h-6 w-16 animate-pulse rounded-full bg-gray-100 dark:bg-gray-800"></div>
+                    <div class="h-6 w-20 animate-pulse rounded-full bg-gray-100 dark:bg-gray-800"></div>
+                    <div class="h-6 w-20 animate-pulse rounded-full bg-gray-100 dark:bg-gray-800"></div>
+                  </div>
+                </td>
+                <td class="py-4">
+                  <div class="ml-auto flex justify-end gap-2">
+                    <div class="h-8 w-20 animate-pulse rounded-lg bg-gray-100 dark:bg-gray-800"></div>
+                    <div class="h-8 w-20 animate-pulse rounded-lg bg-gray-100 dark:bg-gray-800"></div>
+                  </div>
+                </td>
+              </tr>
+            }
+          } @else if (items().length === 0) {
+            <tr>
+              <td colspan="6" class="py-10 text-center text-theme-sm text-gray-500 dark:text-gray-400">
+                No menu items found. Add your first menu item to get started.
+              </td>
+            </tr>
+          } @else {
+            @for (item of items(); track item.id) {
+              <tr>
+                <td class="py-4 pr-5 align-top">
+                  @if (primaryImage(item); as image) {
+                    <img
+                      [src]="image.secureUrl"
+                      [alt]="image.altEn || item.nameEn || 'Menu item image'"
+                      class="h-12 w-12 rounded-lg object-cover"
+                    />
+                  } @else {
+                    <div class="h-12 w-12 rounded-lg bg-gray-100 dark:bg-gray-800"></div>
+                  }
+                </td>
+
+                <td class="py-4 pr-5 align-top">
+                  <p class="font-medium text-gray-800 text-theme-sm dark:text-white/90">
+                    {{ item.nameEn || '-' }}
+                  </p>
+
+                  <p class="mt-1 text-theme-xs text-gray-500 dark:text-gray-400">
+                    {{ item.nameRo || '-' }}
+                  </p>
+                </td>
+
+                <td class="py-4 pr-5 align-top text-theme-sm text-gray-500 dark:text-gray-400">
+                  {{ categoryName(item) }}
+                </td>
+
+                <td class="py-4 pr-5 align-top text-theme-sm text-gray-500 dark:text-gray-400">
+                  {{ money(item.price, item.currency ?? 'RON') }}
+                </td>
+
+                <td class="py-4 pr-5 align-top">
+                  <div class="flex flex-wrap gap-2">
+                    @if (item.markAsNew) {
+                      <span
+                        class="inline-flex rounded-full px-2.5 py-0.5 text-theme-xs font-medium"
+                        [class]="badgeClass('new')"
+                      >
+                        New
+                      </span>
+                    }
+
+                    @if (item.popular) {
+                      <span
+                        class="inline-flex rounded-full px-2.5 py-0.5 text-theme-xs font-medium"
+                        [class]="badgeClass('popular')"
+                      >
+                        Popular
+                      </span>
+                    }
+
+                    <span
+                      class="inline-flex rounded-full px-2.5 py-0.5 text-theme-xs font-medium"
+                      [class]="statusBadgeClass(item.active)"
+                    >
+                      {{ item.active ? 'Active' : 'Inactive' }}
+                    </span>
+                  </div>
+                </td>
+
+                <td class="py-4 align-top">
+                  <div class="flex justify-end gap-2">
+                    <button
+                      type="button"
+                      class="rounded-lg border border-gray-300 px-3 py-2 text-theme-xs font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-white/[0.03]"
+                      (click)="openEditForm(item)"
+                    >
+                      Edit
+                    </button>
+
+                    <button
+                      type="button"
+                      class="rounded-lg border border-error-300 px-3 py-2 text-theme-xs font-medium text-error-600 hover:bg-error-50 dark:border-error-500/30 dark:text-error-500 dark:hover:bg-error-500/10"
+                      (click)="askDelete(item)"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="mt-5 flex flex-col gap-3 border-t border-gray-100 pt-4 dark:border-gray-800 sm:flex-row sm:items-center sm:justify-between">
+      <p class="text-theme-sm text-gray-500 dark:text-gray-400">
+        Page {{ page() + 1 }} of {{ totalPages() || 1 }}
+      </p>
+
+      <div class="flex flex-wrap gap-2">
+        <button
+          type="button"
+          class="rounded-lg border border-gray-300 px-3 py-2 text-theme-sm text-gray-700 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:text-gray-400"
+          [disabled]="page() === 0 || loading()"
+          (click)="previousPage()"
+        >
+          Previous
+        </button>
+
+        @for (pageNumber of pages(); track pageNumber) {
+          <button
+            type="button"
+            class="rounded-lg px-3 py-2 text-theme-sm font-medium"
+            [class.bg-admin-brand-500]="pageNumber === page()"
+            [class.text-white]="pageNumber === page()"
+            [class.border]="pageNumber !== page()"
+            [class.border-gray-300]="pageNumber !== page()"
+            [class.text-gray-700]="pageNumber !== page()"
+            [class.dark:border-gray-700]="pageNumber !== page()"
+            [class.dark:text-gray-400]="pageNumber !== page()"
+            [disabled]="loading()"
+            (click)="goToPage(pageNumber)"
+          >
+            {{ pageNumber + 1 }}
+          </button>
+        }
+
+        <button
+          type="button"
+          class="rounded-lg border border-gray-300 px-3 py-2 text-theme-sm text-gray-700 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:text-gray-400"
+          [disabled]="page() + 1 >= totalPages() || loading()"
+          (click)="nextPage()"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+@if (formOpen()) {
+  <div class="fixed inset-0 z-99999 flex justify-end bg-gray-900/50">
+    <div class="h-full w-full max-w-2xl overflow-y-auto bg-white p-6 shadow-theme-lg dark:bg-gray-900">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+            {{ editingItem()?.id ? 'Edit Menu Item' : 'Add Menu Item' }}
+          </h3>
+
+          <p class="mt-1 text-theme-sm text-gray-500 dark:text-gray-400">
+            {{ editingItem()?.id ? 'Update the item details and manage its images.' : 'Fill in the details, save, then upload images.' }}
+          </p>
+        </div>
+
+        <button
+          type="button"
+          class="rounded-lg p-2 text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-white/[0.03]"
+          (click)="closeForm()"
+        >
+          ✕
+        </button>
+      </div>
+
+      <form class="mt-6 space-y-6" [formGroup]="form" (ngSubmit)="submitForm()">
+
+        <!-- ── SECTION 1: Item Details ── -->
+        <div class="space-y-5">
+          <h4 class="text-base font-semibold text-gray-800 dark:text-white/90">Item Details</h4>
+
+          <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+            <label class="block">
+              <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Name EN</span>
+              <input
+                type="text"
+                formControlName="nameEn"
+                class="mt-1 h-11 w-full rounded-lg border border-gray-300 px-4 text-theme-sm text-gray-800 outline-none focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+              />
+              @if (fieldError('nameEn')) {
+                <p class="mt-1 text-theme-xs text-error-600">{{ fieldError('nameEn') }}</p>
+              }
+            </label>
+
+            <label class="block">
+              <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Name RO</span>
+              <input
+                type="text"
+                formControlName="nameRo"
+                class="mt-1 h-11 w-full rounded-lg border border-gray-300 px-4 text-theme-sm text-gray-800 outline-none focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+              />
+              @if (fieldError('nameRo')) {
+                <p class="mt-1 text-theme-xs text-error-600">{{ fieldError('nameRo') }}</p>
+              }
+            </label>
+
+            <label class="block">
+              <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Category</span>
+              <select
+                formControlName="categoryId"
+                class="mt-1 h-11 w-full rounded-lg border border-gray-300 px-4 text-theme-sm text-gray-800 outline-none focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+              >
+                <option value="">Select category</option>
+                @for (category of categoryOptions(); track category.id) {
+                  <option [value]="category.id">{{ category.nameEn }}</option>
+                }
+              </select>
+              @if (fieldError('categoryId')) {
+                <p class="mt-1 text-theme-xs text-error-600">{{ fieldError('categoryId') }}</p>
+              }
+            </label>
+
+            <label class="block">
+              <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Price</span>
+              <input
+                type="number"
+                formControlName="price"
+                step="0.01"
+                min="0.01"
+                class="mt-1 h-11 w-full rounded-lg border border-gray-300 px-4 text-theme-sm text-gray-800 outline-none focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+              />
+              @if (fieldError('price')) {
+                <p class="mt-1 text-theme-xs text-error-600">{{ fieldError('price') }}</p>
+              }
+            </label>
+
+            <label class="block">
+              <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Weight Label</span>
+              <input
+                type="text"
+                formControlName="weightLabel"
+                class="mt-1 h-11 w-full rounded-lg border border-gray-300 px-4 text-theme-sm text-gray-800 outline-none focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+              />
+              @if (fieldError('weightLabel')) {
+                <p class="mt-1 text-theme-xs text-error-600">{{ fieldError('weightLabel') }}</p>
+              }
+            </label>
+
+            <label class="block">
+              <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Display Order</span>
+              <input
+                type="number"
+                formControlName="displayOrder"
+                min="0"
+                class="mt-1 h-11 w-full rounded-lg border border-gray-300 px-4 text-theme-sm text-gray-800 outline-none focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+              />
+              @if (fieldError('displayOrder')) {
+                <p class="mt-1 text-theme-xs text-error-600">{{ fieldError('displayOrder') }}</p>
+              }
+            </label>
+
+            <label class="block sm:col-span-2">
+              <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Description EN</span>
+              <textarea
+                rows="3"
+                formControlName="descriptionEn"
+                class="mt-1 w-full rounded-lg border border-gray-300 px-4 py-3 text-theme-sm text-gray-800 outline-none focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+              ></textarea>
+            </label>
+
+            <label class="block sm:col-span-2">
+              <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Description RO</span>
+              <textarea
+                rows="3"
+                formControlName="descriptionRo"
+                class="mt-1 w-full rounded-lg border border-gray-300 px-4 py-3 text-theme-sm text-gray-800 outline-none focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+              ></textarea>
+            </label>
+          </div>
+
+          <div class="flex flex-wrap gap-6">
+            <label class="flex items-center gap-3">
+              <input type="checkbox" formControlName="markAsNew" class="h-4 w-4 rounded border-gray-300" />
+              <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Mark as New</span>
+            </label>
+
+            <label class="flex items-center gap-3">
+              <input type="checkbox" formControlName="popular" class="h-4 w-4 rounded border-gray-300" />
+              <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Popular</span>
+            </label>
+
+            <label class="flex items-center gap-3">
+              <input type="checkbox" formControlName="active" class="h-4 w-4 rounded border-gray-300" />
+              <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Active</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- ── DIVIDER ── -->
+        <div class="border-t border-gray-100 dark:border-gray-800"></div>
+
+        <!-- ── SECTION 2: Images — always visible ── -->
+        <div class="space-y-5">
+          <div>
+            <h4 class="text-base font-semibold text-gray-800 dark:text-white/90">Images</h4>
+            <p class="mt-1 text-theme-sm text-gray-500 dark:text-gray-400">
+              Hosted on Cloudinary. The primary image appears as the thumbnail.
+            </p>
+          </div>
+
+          <!-- Info banner shown only before item is saved -->
+          @if (!editingItem()?.id) {
+            <div class="rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 dark:border-gray-700 dark:bg-white/[0.03]">
+              <p class="text-theme-xs text-gray-500 dark:text-gray-400">
+                Save the item first to enable image uploads.
+              </p>
+            </div>
+          }
+
+          <!-- Existing images row -->
+          @if (itemImages().length > 0) {
+            <div class="flex gap-4 overflow-x-auto pb-2">
+              @for (image of itemImages(); track image.id) {
+                <div
+                  class="relative h-28 w-28 shrink-0 overflow-hidden rounded-xl border border-gray-200 bg-gray-100 dark:border-gray-800 dark:bg-gray-800"
+                >
+                  <img
+                    [src]="image.secureUrl"
+                    [alt]="image.altEn || editingItem()?.nameEn || 'Menu item image'"
+                    class="h-full w-full object-cover"
+                  />
+
+                  @if (image.primary) {
+                    <span
+                      class="absolute left-2 top-2 rounded-full bg-success-600 px-2 py-0.5 text-[10px] font-semibold text-white shadow-theme-xs"
+                    >
+                      Primary
+                    </span>
+                  }
+
+                  <div
+                    class="absolute inset-x-0 bottom-0 flex items-center justify-between gap-2 bg-gray-900/70 p-2"
+                  >
+                    <button
+                      type="button"
+                      class="rounded-md bg-white/15 px-2 py-1 text-[10px] font-medium text-white transition hover:bg-white/25 disabled:cursor-not-allowed disabled:opacity-50"
+                      [disabled]="image.primary || uploading()"
+                      (click)="setPrimaryImage(image)"
+                    >
+                      Set Primary
+                    </button>
+
+                    <button
+                      type="button"
+                      class="rounded-md bg-white/15 px-2 py-1 text-[10px] font-medium text-white transition hover:bg-white/25"
+                      (click)="askDeleteImage(image)"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              }
+            </div>
+          } @else if (editingItem()?.id) {
+            <div
+              class="rounded-xl border border-dashed border-gray-300 p-6 text-center text-theme-sm text-gray-500 dark:border-gray-700 dark:text-gray-400"
+            >
+              No images uploaded yet.
+            </div>
+          }
+
+          <!-- Upload zone — disabled until item has an id -->
+          <div
+            [class.pointer-events-none]="!editingItem()?.id"
+            [class.opacity-40]="!editingItem()?.id"
+          >
+            <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">
+              Upload image
+            </span>
+
+            <input
+              #imageFileInput
+              type="file"
+              accept="image/*"
+              class="sr-only"
+              (change)="onImageSelected($event)"
+            />
+
+            @if (!imagePreview()) {
+              <div
+                class="mt-1 flex min-h-28 cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed border-gray-300 px-4 py-6 text-center transition hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-white/[0.03]"
+                (click)="$event.preventDefault(); imageFileInput.click()"
+              >
+                <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">
+                  Click to upload or drag and drop
+                </span>
+                <span class="mt-1 text-theme-xs text-gray-500 dark:text-gray-400">
+                  PNG, JPG, or WebP
+                </span>
+              </div>
+            } @else {
+              <div class="mt-1 grid gap-5 sm:grid-cols-[160px_minmax(0,1fr)]">
+                <div
+                  class="overflow-hidden rounded-xl border border-gray-200 bg-gray-100 dark:border-gray-800 dark:bg-gray-800"
+                >
+                  <img
+                    [src]="imagePreview() ?? ''"
+                    alt="Upload preview"
+                    class="h-40 w-full object-cover"
+                  />
+                </div>
+
+                <div class="grid gap-4">
+                  <label class="block">
+                    <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">
+                      Alt EN
+                    </span>
+                    <input
+                      type="text"
+                      [value]="imageAltEn()"
+                      (input)="imageAltEn.set($any($event.target).value ?? '')"
+                      class="mt-1 h-11 w-full rounded-lg border border-gray-300 px-4 text-theme-sm text-gray-800 outline-none focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                    />
+                  </label>
+
+                  <label class="block">
+                    <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">
+                      Alt RO
+                    </span>
+                    <input
+                      type="text"
+                      [value]="imageAltRo()"
+                      (input)="imageAltRo.set($any($event.target).value ?? '')"
+                      class="mt-1 h-11 w-full rounded-lg border border-gray-300 px-4 text-theme-sm text-gray-800 outline-none focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                    />
+                  </label>
+
+                  <label class="flex items-center gap-3">
+                    <input
+                      type="checkbox"
+                      [checked]="imagePrimary()"
+                      (change)="imagePrimary.set($any($event.target).checked ?? false)"
+                      class="h-4 w-4 rounded border-gray-300"
+                    />
+                    <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">
+                      Set as primary
+                    </span>
+                  </label>
+
+                  <div class="flex flex-wrap gap-3">
+                    <button
+                      type="button"
+                      class="inline-flex items-center justify-center rounded-lg bg-admin-brand-500 px-4 py-2.5 text-theme-sm font-medium text-white shadow-theme-xs transition hover:bg-admin-brand-600 disabled:cursor-not-allowed disabled:opacity-60"
+                      [disabled]="uploading()"
+                      (click)="uploadSelectedImage()"
+                    >
+                      {{ uploading() ? 'Uploading...' : 'Upload Image' }}
+                    </button>
+
+                    <button
+                      type="button"
+                      class="rounded-lg border border-gray-300 px-3 py-2 text-theme-xs font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-white/[0.03]"
+                      (click)="clearImageDraft()"
+                    >
+                      Clear
+                    </button>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- ── FORM ACTIONS ── -->
+        <div class="flex justify-end gap-3 border-t border-gray-100 pt-5 dark:border-gray-800">
+          <button
+            type="button"
+            class="rounded-lg border border-gray-300 px-4 py-2.5 text-theme-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-white/[0.03]"
+            [disabled]="saving() || uploading()"
+            (click)="closeForm()"
+          >
+            Cancel
+          </button>
+
+          <button
+            type="submit"
+            class="inline-flex items-center justify-center rounded-lg bg-admin-brand-500 px-4 py-2.5 text-theme-sm font-medium text-white shadow-theme-xs transition hover:bg-admin-brand-600 disabled:cursor-not-allowed disabled:opacity-60"
+            [disabled]="saving()"
+          >
+            {{ saving() ? 'Saving...' : editingItem()?.id ? 'Save Changes' : 'Create Menu Item' }}
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+}
+
+@if (deleteDialogOpen()) {
+  <div class="fixed inset-0 z-99999 flex items-center justify-center bg-gray-900/50 px-4">
+    <div class="w-full max-w-md rounded-2xl bg-white p-6 shadow-theme-lg dark:bg-gray-900">
+      <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+        Delete Menu Item
+      </h2>
+
+      <p class="mt-2 text-theme-sm text-gray-500 dark:text-gray-400">
+        This menu item and all its images will be permanently deleted.
+      </p>
+
+      <div class="mt-6 flex justify-end gap-3">
+        <button
+          type="button"
+          class="rounded-lg border border-gray-300 px-3 py-2 text-theme-xs font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-white/[0.03]"
+          (click)="closeDeleteDialog()"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          class="rounded-lg border border-error-300 px-3 py-2 text-theme-xs font-medium text-error-600 hover:bg-error-50 dark:border-error-500/30 dark:text-error-500 dark:hover:bg-error-500/10"
+          [disabled]="deleting()"
+          (click)="confirmDeleteItem()"
+        >
+          {{ deleting() ? 'Deleting...' : 'Delete' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (imageDeleteDialogOpen()) {
+  <div class="fixed inset-0 z-99999 flex items-center justify-center bg-gray-900/50 px-4">
+    <div class="w-full max-w-md rounded-2xl bg-white p-6 shadow-theme-lg dark:bg-gray-900">
+      <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+        Delete Image
+      </h2>
+
+      <p class="mt-2 text-theme-sm text-gray-500 dark:text-gray-400">
+        This image will be permanently removed from Cloudinary.
+      </p>
+
+      <div class="mt-6 flex justify-end gap-3">
+        <button
+          type="button"
+          class="rounded-lg border border-gray-300 px-3 py-2 text-theme-xs font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-white/[0.03]"
+          (click)="closeImageDeleteDialog()"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          class="rounded-lg border border-error-300 px-3 py-2 text-theme-xs font-medium text-error-600 hover:bg-error-50 dark:border-error-500/30 dark:text-error-500 dark:hover:bg-error-500/10"
+          [disabled]="deleting()"
+          (click)="confirmDeleteImage()"
+        >
+          {{ deleting() ? 'Deleting...' : 'Delete' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

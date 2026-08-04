@@ -45,9 +45,9 @@ export interface AuthControllerApiServiceInterface {
      * 
      * 
      * @endpoint post /api/auth/logout
-     * @param leTacosRefresh 
+     * @param refreshToken 
      */
-    logout(leTacosRefresh?: string, extraHttpRequestParams?: any): Observable<{}>;
+    logout(refreshToken?: string, extraHttpRequestParams?: any): Observable<{}>;
 
     /**
      * 
@@ -60,8 +60,8 @@ export interface AuthControllerApiServiceInterface {
      * 
      * 
      * @endpoint post /api/auth/refresh
-     * @param leTacosRefresh 
+     * @param refreshToken 
      */
-    refresh(leTacosRefresh?: string, extraHttpRequestParams?: any): Observable<ApiResponseAuthResponseDto>;
+    refresh(refreshToken?: string, extraHttpRequestParams?: any): Observable<ApiResponseAuthResponseDto>;
 
 }

@@ -1,8 +1,8 @@
 <aside
   class="fixed left-0 top-0 z-50 flex h-screen flex-col border-r border-gray-200 bg-white px-5 text-gray-900 transition-all duration-300 ease-in-out dark:border-gray-800 dark:bg-gray-900 lg:translate-x-0"
   [ngClass]="{
-    'w-[290px]': sidebar.isDesktopExpanded(),
-    'w-[90px]': !sidebar.isDesktopExpanded(),
+    'w-72.5': sidebar.isDesktopExpanded(),
+    'w-22.5': !sidebar.isDesktopExpanded(),
     'translate-x-0': sidebar.isMobileOpen(),
     '-translate-x-full': !sidebar.isMobileOpen()
   }"
@@ -10,7 +10,7 @@
   (mouseleave)="sidebar.setHovered(false)"
 >
   <div
-    class="flex h-[72px] items-center border-b border-gray-100 dark:border-gray-800"
+    class="flex h-18 items-center border-b border-gray-100 dark:border-gray-800"
     [ngClass]="{
       'justify-start': sidebar.isDesktopExpanded(),
       'justify-center': !sidebar.isDesktopExpanded()
@@ -74,7 +74,7 @@
   </div>
 
   @if (sidebar.isDesktopExpanded()) {
-    <div class="mb-6 rounded-2xl bg-gray-50 p-4 dark:bg-white/[0.04]">
+    <div class="mb-6 rounded-2xl bg-gray-50 p-4 dark:bg-white/4">
       <p class="text-sm font-semibold text-gray-900 dark:text-white">
         Need updates?
       </p>

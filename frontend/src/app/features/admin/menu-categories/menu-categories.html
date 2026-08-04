@@ -1,0 +1,552 @@
+<div class="space-y-6">
+  <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <div>
+      <h2 class="text-title-sm font-semibold text-gray-900 dark:text-white">
+        Menu Categories
+      </h2>
+
+      <p class="mt-1 text-theme-sm text-gray-500 dark:text-gray-400">
+        Manage menu categories and the items inside each category.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="inline-flex items-center justify-center rounded-lg bg-admin-brand-500 px-4 py-2.5 text-theme-sm font-medium text-white shadow-theme-xs transition hover:bg-admin-brand-600 disabled:cursor-not-allowed disabled:opacity-60"
+      (click)="openCreateCategory()"
+    >
+      Add Category
+    </button>
+  </div>
+
+  @if (error()) {
+    <div
+      class="rounded-2xl border border-error-200 bg-error-50 p-5 dark:border-error-500/30 dark:bg-error-500/10"
+    >
+      <p class="text-theme-sm font-medium text-error-700 dark:text-error-500">
+        {{ error() }}
+      </p>
+
+      <button
+        type="button"
+        class="mt-4 rounded-lg bg-error-600 px-4 py-2 text-theme-sm font-medium text-white hover:bg-error-700"
+        (click)="reloadData()"
+      >
+        Retry
+      </button>
+    </div>
+  }
+
+  <div
+    class="overflow-hidden rounded-2xl border border-gray-200 bg-white px-4 pb-3 pt-4 dark:border-gray-800 dark:bg-white/3 sm:px-6"
+  >
+    <div class="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90">
+          Category Accordion
+        </h3>
+
+        <p class="text-theme-sm text-gray-500 dark:text-gray-400">
+          {{ totalElements() }} total categories
+        </p>
+      </div>
+    </div>
+
+    <div class="divide-y divide-gray-100 dark:divide-gray-800">
+      @if (loading()) {
+        @for (_ of [1, 2, 3, 4, 5]; track _) {
+          <div class="py-5">
+            <div class="flex items-center justify-between gap-4">
+              <div class="space-y-2">
+                <div class="h-4 w-40 animate-pulse rounded bg-gray-100 dark:bg-gray-800"></div>
+                <div class="h-3 w-28 animate-pulse rounded bg-gray-100 dark:bg-gray-800"></div>
+              </div>
+
+              <div class="flex items-center gap-3">
+                <div class="h-6 w-16 animate-pulse rounded-full bg-gray-100 dark:bg-gray-800"></div>
+                <div class="h-6 w-20 animate-pulse rounded-full bg-gray-100 dark:bg-gray-800"></div>
+                <div class="h-5 w-10 animate-pulse rounded bg-gray-100 dark:bg-gray-800"></div>
+                <div class="h-8 w-16 animate-pulse rounded-lg bg-gray-100 dark:bg-gray-800"></div>
+                <div class="h-8 w-16 animate-pulse rounded-lg bg-gray-100 dark:bg-gray-800"></div>
+              </div>
+            </div>
+          </div>
+        }
+      } @else if (categories().length === 0) {
+        <div class="py-12 text-center">
+          <p class="text-theme-sm text-gray-500 dark:text-gray-400">
+            No menu categories found.
+          </p>
+        </div>
+      } @else {
+        @for (category of categories(); track category.id) {
+          <div>
+            <div
+              class="flex cursor-pointer flex-col gap-4 py-5 transition hover:bg-gray-50 dark:hover:bg-white/2 sm:flex-row sm:items-center sm:justify-between"
+              role="button"
+              tabindex="0"
+              (click)="toggleCategory(category)"
+              (keydown.enter)="toggleCategory(category)"
+              (keydown.space)="$event.preventDefault(); toggleCategory(category)"
+            >
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center gap-3">
+                  <div class="min-w-0">
+                    <p class="truncate text-theme-sm font-semibold text-gray-900 dark:text-white">
+                      {{ category.nameEn || '-' }}
+                    </p>
+
+                    <p class="mt-1 text-theme-sm text-gray-500 dark:text-gray-400">
+                      {{ category.nameRo || '-' }}
+                    </p>
+                  </div>
+
+                  <span class="text-theme-xs text-gray-400">
+                    {{ isExpanded(category) ? '▲' : '▼' }}
+                  </span>
+                </div>
+              </div>
+
+              <div class="flex flex-wrap items-center gap-3 sm:justify-end">
+                @if (category.markAsNew) {
+                  <span class="inline-flex rounded-full px-2.5 py-0.5 text-theme-xs font-medium" [class]="'bg-warning-50 text-warning-600 dark:bg-warning-500/15 dark:text-warning-400'">
+                    New
+                  </span>
+                }
+
+                <span
+                  class="inline-flex rounded-full px-2.5 py-0.5 text-theme-xs font-medium"
+                  [class]="statusBadgeClass(category.active)"
+                >
+                  {{ category.active ? 'Active' : 'Inactive' }}
+                </span>
+
+                <span class="text-theme-sm text-gray-500 dark:text-gray-400">
+                  {{ category.displayOrder ?? 0 }}
+                </span>
+
+                <button
+                  type="button"
+                  class="rounded-lg border border-gray-300 px-3 py-2 text-theme-xs font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-white/3"
+                  (click)="openEditCategory(category, $event)"
+                >
+                  Edit
+                </button>
+
+                <button
+                  type="button"
+                  class="rounded-lg border border-error-300 px-3 py-2 text-theme-xs font-medium text-error-600 hover:bg-error-50 dark:border-error-500/30 dark:text-error-500 dark:hover:bg-error-500/10"
+                  (click)="openDeleteCategory(category, $event)"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+
+            @if (isExpanded(category)) {
+              <div class="border-t border-gray-100 bg-gray-50 px-4 py-4 dark:border-gray-800 dark:bg-white/2">
+                @if (loadingItems()) {
+                  <div class="space-y-3">
+                    @for (_ of [1, 2, 3]; track _) {
+                      <div class="h-14 animate-pulse rounded-xl bg-gray-100 dark:bg-gray-800"></div>
+                    }
+                  </div>
+                } @else if (categoryItems(category.id).length === 0) {
+                  <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <p class="text-theme-sm text-gray-500 dark:text-gray-400">
+                      No menu items in this category yet.
+                    </p>
+
+                    <button
+                      type="button"
+                      class="inline-flex items-center justify-center rounded-lg bg-admin-brand-500 px-4 py-2.5 text-theme-sm font-medium text-white shadow-theme-xs transition hover:bg-admin-brand-600"
+                      (click)="openCreateItemForCategory(category, $event)"
+                    >
+                      Add Item
+                    </button>
+                  </div>
+                } @else {
+                  <div class="space-y-3">
+                    @for (item of categoryItems(category.id); track item.id) {
+                      <div class="flex flex-col gap-3 rounded-xl border border-gray-200 bg-white p-3 dark:border-gray-800 dark:bg-gray-900 sm:flex-row sm:items-center sm:justify-between">
+                        <div class="flex min-w-0 items-center gap-3">
+                          @if (thumbnailImage(item); as image) {
+                            <img
+                              [src]="image.secureUrl ?? ''"
+                              [alt]="image.altEn || item.nameEn || 'Menu item image'"
+                              class="h-8 w-8 rounded-lg object-cover"
+                            />
+                          } @else {
+                            <div class="h-8 w-8 rounded-lg bg-gray-100 dark:bg-gray-800"></div>
+                          }
+
+                          <div class="min-w-0">
+                            <p class="truncate text-theme-sm font-medium text-gray-900 dark:text-white">
+                              {{ item.nameEn || '-' }}
+                            </p>
+
+                            <p class="text-theme-xs text-gray-500 dark:text-gray-400">
+                              {{ money(item.price, item.currency ?? 'RON') }}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div class="flex flex-wrap items-center gap-2 sm:justify-end">
+                          <span
+                            class="inline-flex rounded-full px-2.5 py-0.5 text-theme-xs font-medium"
+                            [class]="statusBadgeClass(item.active)"
+                          >
+                            {{ item.active ? 'Active' : 'Inactive' }}
+                          </span>
+
+                          <button
+                            type="button"
+                            class="rounded-lg border border-gray-300 px-3 py-2 text-theme-xs font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-white/3"
+                            (click)="openEditItem(item, $event)"
+                          >
+                            Edit
+                          </button>
+
+                          <button
+                            type="button"
+                            class="rounded-lg border border-error-300 px-3 py-2 text-theme-xs font-medium text-error-600 hover:bg-error-50 dark:border-error-500/30 dark:text-error-500 dark:hover:bg-error-500/10"
+                            (click)="openDeleteItem(item, $event)"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        }
+      }
+    </div>
+  </div>
+</div>
+
+@if (categoryFormOpen()) {
+  <div class="fixed inset-0 z-99999 flex justify-end bg-gray-900/50">
+    <div class="h-full w-full max-w-xl overflow-y-auto bg-white p-6 shadow-theme-lg dark:bg-gray-900">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+            {{ editingCategory() ? 'Edit Category' : 'Add Category' }}
+          </h3>
+
+          <p class="mt-1 text-theme-sm text-gray-500 dark:text-gray-400">
+            Configure category names, visibility, and display order.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          class="rounded-lg p-2 text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-white/3"
+          (click)="closeCategoryForm()"
+        >
+          ✕
+        </button>
+      </div>
+
+      <form class="mt-6 space-y-5" [formGroup]="categoryForm" (ngSubmit)="submitCategory()">
+        <label class="block">
+          <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Name EN</span>
+          <input
+            type="text"
+            formControlName="nameEn"
+            class="mt-1 h-11 w-full rounded-lg border border-gray-300 px-4 text-theme-sm text-gray-800 outline-none focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+          />
+          @if (categoryFieldError('nameEn')) {
+            <p class="mt-1 text-theme-xs text-error-600">{{ categoryFieldError('nameEn') }}</p>
+          }
+        </label>
+
+        <label class="block">
+          <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Name RO</span>
+          <input
+            type="text"
+            formControlName="nameRo"
+            class="mt-1 h-11 w-full rounded-lg border border-gray-300 px-4 text-theme-sm text-gray-800 outline-none focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+          />
+          @if (categoryFieldError('nameRo')) {
+            <p class="mt-1 text-theme-xs text-error-600">{{ categoryFieldError('nameRo') }}</p>
+          }
+        </label>
+
+        <label class="block">
+          <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Display Order</span>
+          <input
+            type="number"
+            formControlName="displayOrder"
+            min="0"
+            class="mt-1 h-11 w-full rounded-lg border border-gray-300 px-4 text-theme-sm text-gray-800 outline-none focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+          />
+          @if (categoryFieldError('displayOrder')) {
+            <p class="mt-1 text-theme-xs text-error-600">{{ categoryFieldError('displayOrder') }}</p>
+          }
+        </label>
+
+        <div class="flex flex-wrap gap-6">
+          <label class="flex items-center gap-3">
+            <input type="checkbox" formControlName="markAsNew" class="h-4 w-4 rounded border-gray-300" />
+            <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Mark as New</span>
+          </label>
+
+          <label class="flex items-center gap-3">
+            <input type="checkbox" formControlName="active" class="h-4 w-4 rounded border-gray-300" />
+            <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Active</span>
+          </label>
+        </div>
+
+        <div class="flex justify-end gap-3 border-t border-gray-100 pt-5 dark:border-gray-800">
+          <button
+            type="button"
+            class="rounded-lg border border-gray-300 px-4 py-2.5 text-theme-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-white/3"
+            (click)="closeCategoryForm()"
+          >
+            Cancel
+          </button>
+
+          <button
+            type="submit"
+            class="inline-flex items-center justify-center rounded-lg bg-admin-brand-500 px-4 py-2.5 text-theme-sm font-medium text-white shadow-theme-xs transition hover:bg-admin-brand-600 disabled:cursor-not-allowed disabled:opacity-60"
+            [disabled]="saving()"
+          >
+            {{ saving() ? 'Saving...' : 'Save Category' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
+
+@if (itemFormOpen()) {
+  <div class="fixed inset-0 z-99999 flex justify-end bg-gray-900/50">
+    <div class="h-full w-full max-w-xl overflow-y-auto bg-white p-6 shadow-theme-lg dark:bg-gray-900">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+            {{ editingItem() ? 'Edit Menu Item' : 'Add Menu Item' }}
+          </h3>
+
+          <p class="mt-1 text-theme-sm text-gray-500 dark:text-gray-400">
+            Manage the item details for this category.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          class="rounded-lg p-2 text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-white/3"
+          (click)="closeItemForm()"
+        >
+          ✕
+        </button>
+      </div>
+
+      <form class="mt-6 space-y-5" [formGroup]="itemForm" (ngSubmit)="submitItem()">
+        <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+          <label class="block">
+            <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Name EN</span>
+            <input
+              type="text"
+              formControlName="nameEn"
+              class="mt-1 h-11 w-full rounded-lg border border-gray-300 px-4 text-theme-sm text-gray-800 outline-none focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+            />
+            @if (itemFieldError('nameEn')) {
+              <p class="mt-1 text-theme-xs text-error-600">{{ itemFieldError('nameEn') }}</p>
+            }
+          </label>
+
+          <label class="block">
+            <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Name RO</span>
+            <input
+              type="text"
+              formControlName="nameRo"
+              class="mt-1 h-11 w-full rounded-lg border border-gray-300 px-4 text-theme-sm text-gray-800 outline-none focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+            />
+            @if (itemFieldError('nameRo')) {
+              <p class="mt-1 text-theme-xs text-error-600">{{ itemFieldError('nameRo') }}</p>
+            }
+          </label>
+
+          <label class="block">
+            <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Category</span>
+            <select
+              formControlName="categoryId"
+              class="mt-1 h-11 w-full rounded-lg border border-gray-300 px-4 text-theme-sm text-gray-800 outline-none focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+            >
+              <option value="">Select category</option>
+              @for (category of categories(); track category.id) {
+                <option [value]="category.id">{{ category.nameEn }}</option>
+              }
+            </select>
+            @if (itemFieldError('categoryId')) {
+              <p class="mt-1 text-theme-xs text-error-600">{{ itemFieldError('categoryId') }}</p>
+            }
+          </label>
+
+          <label class="block">
+            <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Price</span>
+            <input
+              type="number"
+              formControlName="price"
+              step="0.01"
+              min="0.01"
+              class="mt-1 h-11 w-full rounded-lg border border-gray-300 px-4 text-theme-sm text-gray-800 outline-none focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+            />
+            @if (itemFieldError('price')) {
+              <p class="mt-1 text-theme-xs text-error-600">{{ itemFieldError('price') }}</p>
+            }
+          </label>
+
+          <label class="block">
+            <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Weight Label</span>
+            <input
+              type="text"
+              formControlName="weightLabel"
+              class="mt-1 h-11 w-full rounded-lg border border-gray-300 px-4 text-theme-sm text-gray-800 outline-none focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+            />
+            @if (itemFieldError('weightLabel')) {
+              <p class="mt-1 text-theme-xs text-error-600">{{ itemFieldError('weightLabel') }}</p>
+            }
+          </label>
+
+          <label class="block">
+            <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Display Order</span>
+            <input
+              type="number"
+              formControlName="displayOrder"
+              min="0"
+              class="mt-1 h-11 w-full rounded-lg border border-gray-300 px-4 text-theme-sm text-gray-800 outline-none focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+            />
+            @if (itemFieldError('displayOrder')) {
+              <p class="mt-1 text-theme-xs text-error-600">{{ itemFieldError('displayOrder') }}</p>
+            }
+          </label>
+
+          <label class="block sm:col-span-2">
+            <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Description EN</span>
+            <textarea
+              rows="3"
+              formControlName="descriptionEn"
+              class="mt-1 w-full rounded-lg border border-gray-300 px-4 py-3 text-theme-sm text-gray-800 outline-none focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+            ></textarea>
+          </label>
+
+          <label class="block sm:col-span-2">
+            <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Description RO</span>
+            <textarea
+              rows="3"
+              formControlName="descriptionRo"
+              class="mt-1 w-full rounded-lg border border-gray-300 px-4 py-3 text-theme-sm text-gray-800 outline-none focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+            ></textarea>
+          </label>
+        </div>
+
+        <div class="flex flex-wrap gap-6">
+          <label class="flex items-center gap-3">
+            <input type="checkbox" formControlName="markAsNew" class="h-4 w-4 rounded border-gray-300" />
+            <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Mark as New</span>
+          </label>
+
+          <label class="flex items-center gap-3">
+            <input type="checkbox" formControlName="popular" class="h-4 w-4 rounded border-gray-300" />
+            <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Popular</span>
+          </label>
+
+          <label class="flex items-center gap-3">
+            <input type="checkbox" formControlName="active" class="h-4 w-4 rounded border-gray-300" />
+            <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Active</span>
+          </label>
+        </div>
+
+        <div class="flex justify-end gap-3 border-t border-gray-100 pt-5 dark:border-gray-800">
+          <button
+            type="button"
+            class="rounded-lg border border-gray-300 px-4 py-2.5 text-theme-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-white/3"
+            (click)="closeItemForm()"
+          >
+            Cancel
+          </button>
+
+          <button
+            type="submit"
+            class="inline-flex items-center justify-center rounded-lg bg-admin-brand-500 px-4 py-2.5 text-theme-sm font-medium text-white shadow-theme-xs transition hover:bg-admin-brand-600 disabled:cursor-not-allowed disabled:opacity-60"
+            [disabled]="savingItem()"
+          >
+            {{ savingItem() ? 'Saving...' : 'Save Item' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
+
+@if (deleteDialogOpen()) {
+  <div class="fixed inset-0 z-99999 flex items-center justify-center bg-gray-900/50 px-4">
+    <div class="w-full max-w-md rounded-2xl bg-white p-6 shadow-theme-lg dark:bg-gray-900">
+      <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+        Delete Category
+      </h2>
+
+      <p class="mt-2 text-theme-sm text-gray-500 dark:text-gray-400">
+        Deleting this category will also delete all menu items inside it.
+      </p>
+
+      <div class="mt-6 flex justify-end gap-3">
+        <button
+          type="button"
+          class="rounded-lg border border-gray-300 px-3 py-2 text-theme-xs font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-white/3"
+          (click)="closeDeleteCategory()"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          class="rounded-lg border border-error-300 px-3 py-2 text-theme-xs font-medium text-error-600 hover:bg-error-50 dark:border-error-500/30 dark:text-error-500 dark:hover:bg-error-500/10"
+          [disabled]="deleting()"
+          (click)="confirmDeleteCategory()"
+        >
+          {{ deleting() ? 'Deleting...' : 'Delete' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (deleteItemDialogOpen()) {
+  <div class="fixed inset-0 z-99999 flex items-center justify-center bg-gray-900/50 px-4">
+    <div class="w-full max-w-md rounded-2xl bg-white p-6 shadow-theme-lg dark:bg-gray-900">
+      <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+        Delete Menu Item
+      </h2>
+
+      <p class="mt-2 text-theme-sm text-gray-500 dark:text-gray-400">
+        This menu item will be permanently deleted.
+      </p>
+
+      <div class="mt-6 flex justify-end gap-3">
+        <button
+          type="button"
+          class="rounded-lg border border-gray-300 px-3 py-2 text-theme-xs font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-white/3"
+          (click)="closeDeleteItem()"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          class="rounded-lg border border-error-300 px-3 py-2 text-theme-xs font-medium text-error-600 hover:bg-error-50 dark:border-error-500/30 dark:text-error-500 dark:hover:bg-error-500/10"
+          [disabled]="deleting()"
+          (click)="confirmDeleteItem()"
+        >
+          {{ deleting() ? 'Deleting...' : 'Delete' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

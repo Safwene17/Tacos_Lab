@@ -1,0 +1,292 @@
+<div class="space-y-6">
+  <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div>
+      <h1 class="text-title-sm font-semibold text-gray-800 dark:text-white/90">
+        Transaction Categories
+      </h1>
+
+      <p class="mt-1 text-theme-sm text-gray-500 dark:text-gray-400">
+        Manage income and expense categories used by the finance dashboard.
+      </p>
+    </div>
+  </div>
+
+  @if (error()) {
+    <div
+      class="rounded-2xl border border-error-500/20 bg-error-50 p-5 dark:border-error-500/30 dark:bg-error-500/10"
+    >
+      <p class="text-theme-sm font-medium text-error-700 dark:text-error-500">
+        {{ error() }}
+      </p>
+
+      <button
+        type="button"
+        class="mt-4 rounded-lg bg-error-600 px-4 py-2 text-theme-sm font-medium text-white hover:bg-error-700"
+        (click)="loadCategories()"
+      >
+        Retry
+      </button>
+    </div>
+  }
+
+  <div class="grid grid-cols-1 gap-6 xl:grid-cols-[0.75fr_1.25fr]">
+    <div
+      class="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] sm:p-6"
+    >
+      <h2 class="text-lg font-semibold text-gray-800 dark:text-white/90">
+        {{ editingCategory() ? 'Edit Category' : 'Add Category' }}
+      </h2>
+
+      <p class="mt-1 text-theme-sm text-gray-500 dark:text-gray-400">
+        Categories are used to group transactions in reports and charts.
+      </p>
+
+      <form class="mt-6 space-y-5" [formGroup]="form" (ngSubmit)="submit()">
+        <label class="block">
+          <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">
+            Type
+          </span>
+
+          <select
+            formControlName="type"
+            class="mt-1 h-11 w-full rounded-lg border border-gray-300 bg-white px-4 text-theme-sm text-gray-800 outline-none transition focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+          >
+            <option [value]="TransactionCategoryRequestDto.TypeEnum.Expense">
+              EXPENSE
+            </option>
+            <option [value]="TransactionCategoryRequestDto.TypeEnum.Income">
+              INCOME
+            </option>
+          </select>
+
+          @if (fieldError('type')) {
+            <p class="mt-1 text-theme-xs text-error-600 dark:text-error-500">
+              {{ fieldError('type') }}
+            </p>
+          }
+        </label>
+
+        <label class="block">
+          <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">
+            Name
+          </span>
+
+          <input
+            type="text"
+            formControlName="name"
+            class="mt-1 h-11 w-full rounded-lg border border-gray-300 bg-white px-4 text-theme-sm text-gray-800 outline-none transition focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+            placeholder="Ingredients"
+          />
+
+          @if (fieldError('name')) {
+            <p class="mt-1 text-theme-xs text-error-600 dark:text-error-500">
+              {{ fieldError('name') }}
+            </p>
+          }
+        </label>
+
+        <label class="block">
+          <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">
+            System Key
+          </span>
+
+          <input
+            type="text"
+            formControlName="systemKey"
+            class="mt-1 h-11 w-full rounded-lg border border-gray-300 bg-white px-4 text-theme-sm text-gray-800 outline-none transition focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+            placeholder="Optional, e.g. INGREDIENTS"
+            [readonly]="!!editingCategory()?.systemKey"
+          />
+
+          <p class="mt-1 text-theme-xs text-gray-500 dark:text-gray-400">
+            Leave empty for custom categories. Seeded system categories should keep their key.
+          </p>
+
+          @if (fieldError('systemKey')) {
+            <p class="mt-1 text-theme-xs text-error-600 dark:text-error-500">
+              {{ fieldError('systemKey') }}
+            </p>
+          }
+        </label>
+
+        <label class="block">
+          <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">
+            Display Order
+          </span>
+
+          <input
+            type="number"
+            formControlName="displayOrder"
+            class="mt-1 h-11 w-full rounded-lg border border-gray-300 bg-white px-4 text-theme-sm text-gray-800 outline-none transition focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+          />
+
+          @if (fieldError('displayOrder')) {
+            <p class="mt-1 text-theme-xs text-error-600 dark:text-error-500">
+              {{ fieldError('displayOrder') }}
+            </p>
+          }
+        </label>
+
+        <label class="flex items-center gap-3">
+          <input
+            type="checkbox"
+            formControlName="active"
+            class="h-4 w-4 rounded border-gray-300 text-admin-brand-500 focus:ring-admin-brand-500"
+          />
+
+          <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">
+            Active
+          </span>
+        </label>
+
+        <div
+          class="flex flex-col-reverse gap-3 border-t border-gray-100 pt-5 dark:border-gray-800 sm:flex-row sm:justify-end"
+        >
+          @if (editingCategory()) {
+            <button
+              type="button"
+              class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03]"
+              (click)="resetForm()"
+            >
+              Cancel
+            </button>
+          }
+
+          <button
+            type="submit"
+            class="inline-flex items-center justify-center rounded-lg bg-admin-brand-500 px-5 py-2.5 text-theme-sm font-medium text-white shadow-theme-xs hover:bg-admin-brand-600 disabled:cursor-not-allowed disabled:opacity-60"
+            [disabled]="saving()"
+          >
+            {{ saving() ? 'Saving...' : editingCategory() ? 'Save Changes' : 'Create Category' }}
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div
+      class="overflow-hidden rounded-2xl border border-gray-200 bg-white px-4 pb-3 pt-4 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6"
+    >
+      <div class="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90">
+            Categories
+          </h3>
+
+          <p class="mt-1 text-theme-sm text-gray-500 dark:text-gray-400">
+            {{ totalElements() }} categories
+          </p>
+        </div>
+      </div>
+
+      <div class="max-w-full overflow-x-auto">
+        <table class="w-full text-left">
+          <thead class="border-y border-gray-100 dark:border-gray-800">
+            <tr>
+              <th class="py-3 pr-5 text-theme-xs font-medium text-gray-500 dark:text-gray-400">
+                Name
+              </th>
+
+              <th class="py-3 pr-5 text-theme-xs font-medium text-gray-500 dark:text-gray-400">
+                Type
+              </th>
+
+              <th class="py-3 pr-5 text-theme-xs font-medium text-gray-500 dark:text-gray-400">
+                System Key
+              </th>
+
+              <th class="py-3 pr-5 text-theme-xs font-medium text-gray-500 dark:text-gray-400">
+                Status
+              </th>
+
+              <th class="py-3 pr-5 text-theme-xs font-medium text-gray-500 dark:text-gray-400">
+                Order
+              </th>
+
+              <th class="py-3 pr-5 text-right text-theme-xs font-medium text-gray-500 dark:text-gray-400">
+                Actions
+              </th>
+            </tr>
+          </thead>
+
+          <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+            @if (loading()) {
+              @for (_ of [1, 2, 3, 4, 5]; track $index) {
+                <tr>
+                  @for (__ of [1, 2, 3, 4, 5, 6]; track $index) {
+                    <td class="py-4 pr-5">
+                      <div class="h-4 w-24 animate-pulse rounded bg-gray-200 dark:bg-gray-800"></div>
+                    </td>
+                  }
+                </tr>
+              }
+            } @else if (categories().length === 0) {
+              <tr>
+                <td
+                  colspan="6"
+                  class="py-10 text-center text-theme-sm text-gray-500 dark:text-gray-400"
+                >
+                  No categories found.
+                </td>
+              </tr>
+            } @else {
+              @for (category of categories(); track category.id) {
+                <tr>
+                  <td class="py-4 pr-5 text-theme-sm font-medium text-gray-800 dark:text-white/90">
+                    {{ category.name }}
+                  </td>
+
+                  <td class="py-4 pr-5">
+                    <span
+                      class="inline-flex rounded-full px-2.5 py-0.5 text-theme-xs font-medium"
+                      [class]="typeBadgeClass(category.type)"
+                    >
+                      {{ category.type }}
+                    </span>
+                  </td>
+
+                  <td class="py-4 pr-5 text-theme-sm text-gray-500 dark:text-gray-400">
+                    {{ category.systemKey || '-' }}
+                  </td>
+
+                  <td class="py-4 pr-5">
+                    <span
+                      class="inline-flex rounded-full px-2.5 py-0.5 text-theme-xs font-medium"
+                      [class]="activeBadgeClass(category.active)"
+                    >
+                      {{ category.active ? 'Active' : 'Inactive' }}
+                    </span>
+                  </td>
+
+                  <td class="py-4 pr-5 text-theme-sm text-gray-700 dark:text-gray-300">
+                    {{ category.displayOrder ?? 0 }}
+                  </td>
+
+                  <td class="py-4 pr-5 text-right">
+                    <div class="flex items-center justify-end gap-2">
+                      <button
+                        type="button"
+                        class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-theme-xs font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03]"
+                        (click)="editCategory(category)"
+                      >
+                        Edit
+                      </button>
+
+                      <button
+                        type="button"
+                        class="rounded-lg border border-error-300 bg-white px-3 py-2 text-theme-xs font-medium text-error-600 shadow-theme-xs hover:bg-error-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-error-500/30 dark:bg-gray-800 dark:text-error-500 dark:hover:bg-error-500/10"
+                        [disabled]="!!category.systemKey"
+                        (click)="deleteCategory(category)"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              }
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
