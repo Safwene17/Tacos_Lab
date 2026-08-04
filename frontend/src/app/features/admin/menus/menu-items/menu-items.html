@@ -1,0 +1,240 @@
+<div class="space-y-6">
+  <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <div>
+      <h2 class="text-title-sm font-semibold text-gray-900 dark:text-white">
+        Menu Items
+      </h2>
+
+      <p class="mt-1 text-theme-sm text-gray-500 dark:text-gray-400">
+        Manage menu items, categories, images, and pricing.
+      </p>
+    </div>
+
+    <a
+      routerLink="/admin/menu/items/new"
+      class="inline-flex items-center justify-center rounded-lg bg-admin-brand-500 px-4 py-2.5 text-theme-sm font-medium text-white shadow-theme-xs transition hover:bg-admin-brand-600"
+    >
+      Add Menu Item
+    </a>
+  </div>
+
+  @if (activeCategory(); as category) {
+    <div class="flex flex-col gap-3 rounded-2xl border border-admin-brand-200 bg-admin-brand-50 p-5 dark:border-admin-brand-500/20 dark:bg-admin-brand-500/10 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <p class="text-theme-sm font-medium text-admin-brand-700 dark:text-admin-brand-400">
+          Showing items for category: {{ category.nameEn || '-' }}
+        </p>
+
+        <p class="mt-1 text-theme-sm text-admin-brand-700/80 dark:text-admin-brand-400/80">
+          {{ category.nameRo || '-' }}
+        </p>
+      </div>
+
+      <button
+        type="button"
+        class="inline-flex items-center justify-center rounded-lg border border-admin-brand-300 px-4 py-2 text-theme-sm font-medium text-admin-brand-700 hover:bg-white/70 dark:border-admin-brand-500/30 dark:text-admin-brand-400 dark:hover:bg-white/5"
+        (click)="clearFilter()"
+      >
+        Clear filter
+      </button>
+    </div>
+  }
+
+  @if (error()) {
+    <div class="rounded-2xl border border-error-200 bg-error-50 p-5 dark:border-error-500/30 dark:bg-error-500/10">
+      <p class="text-theme-sm font-medium text-error-700 dark:text-error-500">
+        {{ error() }}
+      </p>
+
+      <button
+        type="button"
+        class="mt-4 rounded-lg bg-error-600 px-4 py-2 text-theme-sm font-medium text-white hover:bg-error-700"
+        (click)="reloadData()"
+      >
+        Retry
+      </button>
+    </div>
+  }
+
+  @if (loading()) {
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      @for (_ of [1, 2, 3, 4, 5, 6]; track _) {
+        <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/3">
+          <div class="space-y-4 animate-pulse">
+            <div class="h-48 rounded-xl bg-gray-100 dark:bg-gray-800"></div>
+            <div class="space-y-2">
+              <div class="h-5 w-40 rounded bg-gray-100 dark:bg-gray-800"></div>
+              <div class="h-4 w-28 rounded bg-gray-100 dark:bg-gray-800"></div>
+              <div class="h-4 w-24 rounded bg-gray-100 dark:bg-gray-800"></div>
+            </div>
+            <div class="flex gap-2">
+              <div class="h-6 w-16 rounded-full bg-gray-100 dark:bg-gray-800"></div>
+              <div class="h-6 w-20 rounded-full bg-gray-100 dark:bg-gray-800"></div>
+              <div class="h-6 w-18 rounded-full bg-gray-100 dark:bg-gray-800"></div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  } @else if (items().length === 0) {
+    <div class="rounded-2xl border border-dashed border-gray-300 bg-white p-10 text-center dark:border-gray-700 dark:bg-white/3">
+      <p class="text-theme-sm text-gray-500 dark:text-gray-400">
+        No menu items found. Add your first menu item to get started.
+      </p>
+    </div>
+  } @else {
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      @for (item of items(); track item.id) {
+        <article class="overflow-hidden rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/3">
+          <div class="overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-800">
+            @if (primaryImage(item); as image) {
+              <img
+                [src]="image.secureUrl"
+                [alt]="image.altEn || item.nameEn || 'Menu item image'"
+                class="h-48 w-full object-cover"
+              />
+            } @else {
+              <div class="flex h-48 items-center justify-center text-theme-sm font-medium text-gray-400 dark:text-gray-500">
+                No image
+              </div>
+            }
+          </div>
+
+          <div class="mt-5 space-y-4">
+            <div class="flex items-start justify-between gap-3">
+              <div class="min-w-0">
+                <h3 class="truncate text-lg font-semibold text-gray-900 dark:text-white">
+                  {{ item.nameEn || '-' }}
+                </h3>
+
+                <p class="mt-1 text-theme-sm text-gray-500 dark:text-gray-400">
+                  {{ item.nameRo || '-' }}
+                </p>
+              </div>
+
+              <span class="rounded-full bg-gray-100 px-2.5 py-0.5 text-theme-xs font-medium text-gray-600 dark:bg-gray-800 dark:text-gray-300">
+                {{ money(item.price, item.currency ?? 'RON') }}
+              </span>
+            </div>
+
+            <p class="text-theme-sm text-gray-500 dark:text-gray-400">
+              {{ categoryName(item) }}
+            </p>
+
+            <div class="flex flex-wrap gap-2">
+              @if (item.markAsNew) {
+                <span class="inline-flex rounded-full px-2.5 py-0.5 text-theme-xs font-medium" [class]="badgeClass('new')">
+                  New
+                </span>
+              }
+
+              @if (item.popular) {
+                <span class="inline-flex rounded-full px-2.5 py-0.5 text-theme-xs font-medium" [class]="badgeClass('popular')">
+                  Popular
+                </span>
+              }
+
+              <span class="inline-flex rounded-full px-2.5 py-0.5 text-theme-xs font-medium" [class]="statusBadgeClass(item.active)">
+                {{ item.active ? 'Active' : 'Inactive' }}
+              </span>
+            </div>
+
+            <div class="flex flex-wrap gap-2 pt-1">
+              <a
+                [routerLink]="['/admin/menu/items', item.id, 'edit']"
+                class="rounded-lg border border-gray-300 px-3 py-2 text-theme-xs font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-white/3"
+              >
+                Edit
+              </a>
+
+              <button
+                type="button"
+                class="rounded-lg border border-error-300 px-3 py-2 text-theme-xs font-medium text-error-600 hover:bg-error-50 dark:border-error-500/30 dark:text-error-500 dark:hover:bg-error-500/10"
+                (click)="openDeleteItem(item)"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+  }
+
+  <div class="flex flex-col gap-3 border-t border-gray-100 pt-4 dark:border-gray-800 sm:flex-row sm:items-center sm:justify-between">
+    <p class="text-theme-sm text-gray-500 dark:text-gray-400">
+      Page {{ page() + 1 }} of {{ totalPages() || 1 }} · {{ totalElements() }} total items
+    </p>
+
+    <div class="flex flex-wrap gap-2">
+      <button
+        type="button"
+        class="rounded-lg border border-gray-300 px-3 py-2 text-theme-sm text-gray-700 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:text-gray-400"
+        [disabled]="page() === 0 || loading()"
+        (click)="previousPage()"
+      >
+        Previous
+      </button>
+
+      @for (pageNumber of pages(); track pageNumber) {
+        <button
+          type="button"
+          class="rounded-lg px-3 py-2 text-theme-sm font-medium"
+          [class.bg-admin-brand-500]="pageNumber === page()"
+          [class.text-white]="pageNumber === page()"
+          [class.border]="pageNumber !== page()"
+          [class.border-gray-300]="pageNumber !== page()"
+          [class.text-gray-700]="pageNumber !== page()"
+          [class.dark:border-gray-700]="pageNumber !== page()"
+          [class.dark:text-gray-400]="pageNumber !== page()"
+          [disabled]="loading()"
+          (click)="goToPage(pageNumber)"
+        >
+          {{ pageNumber + 1 }}
+        </button>
+      }
+
+      <button
+        type="button"
+        class="rounded-lg border border-gray-300 px-3 py-2 text-theme-sm text-gray-700 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:text-gray-400"
+        [disabled]="page() + 1 >= totalPages() || loading()"
+        (click)="nextPage()"
+      >
+        Next
+      </button>
+    </div>
+  </div>
+</div>
+
+@if (deleteDialogOpen()) {
+  <div class="fixed inset-0 z-99999 flex items-center justify-center bg-gray-900/50 px-4">
+    <div class="w-full max-w-md rounded-2xl bg-white p-6 shadow-theme-lg dark:bg-gray-900">
+      <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+        Delete Menu Item
+      </h2>
+
+      <p class="mt-2 text-theme-sm text-gray-500 dark:text-gray-400">
+        This menu item will be permanently deleted.
+      </p>
+
+      <div class="mt-6 flex justify-end gap-3">
+        <button
+          type="button"
+          class="rounded-lg border border-gray-300 px-3 py-2 text-theme-xs font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-white/3"
+          (click)="closeDeleteDialog()"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          class="rounded-lg border border-error-300 px-3 py-2 text-theme-xs font-medium text-error-600 hover:bg-error-50 dark:border-error-500/30 dark:text-error-500 dark:hover:bg-error-500/10"
+          [disabled]="deleting()"
+          (click)="confirmDeleteItem()"
+        >
+          {{ deleting() ? 'Deleting...' : 'Delete' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

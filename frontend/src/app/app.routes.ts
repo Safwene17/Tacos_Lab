@@ -28,8 +28,49 @@ export const appRoutes: Routes = [
         pathMatch: 'full',
       },
       {
-        path: 'menus',
-        loadComponent: () => import('./features/admin/menus/menus').then((m) => m.Menus),
+        path: 'menu',
+        children: [
+          {
+            path: 'categories',
+            loadComponent: () =>
+              import('./features/admin/menus/menu-categories/menu-categories').then(
+                (m) => m.MenuCategories,
+              ),
+          },
+          {
+            path: 'categories/new',
+            loadComponent: () =>
+              import('./features/admin/menus/menu-category-form/menu-category-form').then(
+                (m) => m.MenuCategoryForm,
+              ),
+          },
+          {
+            path: 'categories/:id/edit',
+            loadComponent: () =>
+              import('./features/admin/menus/menu-category-form/menu-category-form').then(
+                (m) => m.MenuCategoryForm,
+              ),
+          },
+          {
+            path: 'items',
+            loadComponent: () =>
+              import('./features/admin/menus/menu-items/menu-items').then((m) => m.MenuItems),
+          },
+          {
+            path: 'items/new',
+            loadComponent: () =>
+              import('./features/admin/menus/menu-item-form/menu-item-form').then(
+                (m) => m.MenuItemForm,
+              ),
+          },
+          {
+            path: 'items/:id/edit',
+            loadComponent: () =>
+              import('./features/admin/menus/menu-item-form/menu-item-form').then(
+                (m) => m.MenuItemForm,
+              ),
+          },
+        ],
       },
       {
         path: 'employees',
@@ -91,6 +132,17 @@ export const appRoutes: Routes = [
           import('./features/admin/finance/transaction-edit/transaction-edit').then(
             (m) => m.TransactionEdit,
           ),
+      },
+      {
+        path: 'transaction-categories',
+        loadComponent: () =>
+          import('./features/admin/finance/transaction-categories/transaction-categories').then(
+            (m) => m.TransactionCategories,
+          ),
+      },
+      {
+        path: 'settings',
+        loadComponent: () => import('./features/admin/settings/settings').then((m) => m.Settings),
       },
     ],
   },

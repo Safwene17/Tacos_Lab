@@ -83,6 +83,15 @@ export interface AdminMenuControllerApiServiceInterface {
     /**
      * 
      * 
+     * @endpoint get /api/admin/categories/{categoryId}/menu-items
+     * @param categoryId 
+     * @param pageable 
+     */
+    getMenuItemsByCategoryId(categoryId: string, pageable: PageableDto, extraHttpRequestParams?: any): Observable<ApiResponsePageResponseAdminMenuItemResponseDto>;
+
+    /**
+     * 
+     * 
      * @endpoint get /api/admin/menu-items
      * @param pageable 
      */

@@ -140,6 +140,17 @@ public class MenuService {
                 ));
     }
 
+        @Transactional(readOnly = true)
+        public Page<AdminMenuItemResponse> getMenuItemsByCategoryId(UUID categoryId, Pageable pageable) {
+        findCategory(categoryId);
+
+        return menuItemRepository.findByCategoryId(categoryId, pageable)
+            .map(item -> menuMapper.toAdminMenuItem(
+                item,
+                mediaAssetRepository.findAllByMenuItemOrderByDisplayOrderAsc(item)
+            ));
+        }
+
     @Transactional
     public AdminMenuItemResponse createMenuItem(MenuItemRequest request) {
         Category category = findCategory(request.categoryId());

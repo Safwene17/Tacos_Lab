@@ -69,6 +69,17 @@ public class AdminMenuController {
         );
     }
 
+    @GetMapping("/categories/{categoryId}/menu-items")
+    public ResponseEntity<ApiResponse<PageResponse<AdminMenuItemResponse>>> getMenuItemsByCategoryId(
+            @PathVariable UUID categoryId,
+            @PageableDefault(size = 20, sort = "displayOrder") Pageable pageable
+    ) {
+        return ResponseEntity.ok(
+                ApiResponse.ok("Menu items retrieved successfully",
+                        PageResponse.from(menuService.getMenuItemsByCategoryId(categoryId, pageable)))
+        );
+    }
+
     @PostMapping("/menu-items")
     public ResponseEntity<ApiResponse<AdminMenuItemResponse>> createMenuItem(
             @Valid @RequestBody MenuItemRequest request
