@@ -22,11 +22,7 @@
     <div class="flex flex-col gap-3 rounded-2xl border border-admin-brand-200 bg-admin-brand-50 p-5 dark:border-admin-brand-500/20 dark:bg-admin-brand-500/10 sm:flex-row sm:items-center sm:justify-between">
       <div>
         <p class="text-theme-sm font-medium text-admin-brand-700 dark:text-admin-brand-400">
-          Showing items for category: {{ category.nameEn || '-' }}
-        </p>
-
-        <p class="mt-1 text-theme-sm text-admin-brand-700/80 dark:text-admin-brand-400/80">
-          {{ category.nameRo || '-' }}
+          Showing items for category: {{ category.name || '-' }}
         </p>
       </div>
 
@@ -90,7 +86,7 @@
             @if (primaryImage(item); as image) {
               <img
                 [src]="image.secureUrl"
-                [alt]="image.altEn || item.nameEn || 'Menu item image'"
+                [alt]="image.alt || item.name || 'Menu item image'"
                 class="h-48 w-full object-cover"
               />
             } @else {
@@ -104,12 +100,8 @@
             <div class="flex items-start justify-between gap-3">
               <div class="min-w-0">
                 <h3 class="truncate text-lg font-semibold text-gray-900 dark:text-white">
-                  {{ item.nameEn || '-' }}
+                  {{ item.name || '-' }}
                 </h3>
-
-                <p class="mt-1 text-theme-sm text-gray-500 dark:text-gray-400">
-                  {{ item.nameRo || '-' }}
-                </p>
               </div>
 
               <span class="rounded-full bg-gray-100 px-2.5 py-0.5 text-theme-xs font-medium text-gray-600 dark:bg-gray-800 dark:text-gray-300">

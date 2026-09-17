@@ -138,7 +138,7 @@ export class MenuItems {
   }
 
   categoryName(item: AdminMenuItemResponseDto): string {
-    return item.categoryNameEn || this.categories().find((category) => category.id === item.categoryId)?.nameEn || '-';
+    return item.categoryName || this.categories().find((category) => category.id === item.categoryId)?.name || '-';
   }
 
   money(value?: number, currency = 'RON'): string {

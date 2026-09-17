@@ -21,34 +21,28 @@ public class PublicMenuController {
 
     @GetMapping("/categories")
     public ResponseEntity<ApiResponse<List<PublicCategoryResponse>>> categories(
-            @RequestParam(required = false) String locale,
-            @RequestHeader(name = "Accept-Language", required = false) String acceptLanguage
     ) {
         return ResponseEntity.ok(
                 ApiResponse.ok("Categories retrieved successfully",
-                        menuService.getPublicCategories(locale, acceptLanguage))
+                        menuService.getPublicCategories())
         );
     }
 
     @GetMapping("/menu-items")
     public ResponseEntity<ApiResponse<List<PublicMenuItemResponse>>> menuItems(
-            @RequestParam(required = false) String locale,
-            @RequestHeader(name = "Accept-Language", required = false) String acceptLanguage
     ) {
         return ResponseEntity.ok(
                 ApiResponse.ok("Menu items retrieved successfully",
-                        menuService.getPublicMenuItems(locale, acceptLanguage))
+                        menuService.getPublicMenuItems())
         );
     }
 
     @GetMapping("/menu")
     public ResponseEntity<ApiResponse<PublicMenuResponse>> menu(
-            @RequestParam(required = false) String locale,
-            @RequestHeader(name = "Accept-Language", required = false) String acceptLanguage
     ) {
         return ResponseEntity.ok(
                 ApiResponse.ok("Menu retrieved successfully",
-                        menuService.getPublicMenu(locale, acceptLanguage))
+                        menuService.getPublicMenu())
         );
     }
 }

@@ -59,11 +59,8 @@ public class MediaAsset extends BaseEntity {
     @Column
     private String folder;
 
-    @Column
-    private String altEn;
-
-    @Column
-    private String altRo;
+        @Column
+        private String alt;
 
     @Column(nullable = false)
     private Integer displayOrder = 0;

@@ -20,8 +20,7 @@ export interface AdminMediaAssetResponseDto {
     bytes?: number;
     version?: string;
     folder?: string;
-    altEn?: string;
-    altRo?: string;
+    alt?: string;
     primary?: boolean;
     displayOrder?: number;
 }

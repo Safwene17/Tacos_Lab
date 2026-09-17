@@ -11,6 +11,7 @@ public record PublicMenuItemResponse(
         UUID id,
         String name,
         String description,
+        java.util.List<String> ingredients,
         BigDecimal price,
         String currency,
         String weightLabel,

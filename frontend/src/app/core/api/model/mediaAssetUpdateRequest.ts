@@ -10,8 +10,7 @@
 
 
 export interface MediaAssetUpdateRequestDto { 
-    altEn?: string;
-    altRo?: string;
+    alt?: string;
     primary?: boolean;
     displayOrder: number;
 }

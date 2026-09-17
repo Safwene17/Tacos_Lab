@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { adminAuthGuard, guestOnlyGuard } from './core/auth/auth.guard';
+import { forceChangePasswordGuard } from './features/admin/auth/force-change-password.guard';
 
 export const appRoutes: Routes = [
   {
@@ -7,9 +8,22 @@ export const appRoutes: Routes = [
     loadComponent: () => import('./features/landing/landing').then((m) => m.Landing),
   },
   {
+    path: 'menu/product/:id',
+    loadComponent: () =>
+      import('./features/landing/product-detail/product-detail').then((m) => m.ProductDetail),
+  },
+  {
     path: 'login',
     canActivate: [guestOnlyGuard],
     loadComponent: () => import('./features/admin/auth/login/login').then((m) => m.Login),
+  },
+  {
+    path: 'force-change-password',
+    canActivate: [forceChangePasswordGuard],
+    loadComponent: () =>
+      import('./features/admin/auth/force-change-password/force-change-password').then(
+        (m) => m.ForceChangePassword,
+      ),
   },
   {
     path: 'admin',

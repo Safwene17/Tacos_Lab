@@ -14,6 +14,7 @@ export interface PublicMenuItemResponseDto {
     id?: string;
     name?: string;
     description?: string;
+    ingredients?: Array<string>;
     price?: number;
     currency?: string;
     weightLabel?: string;

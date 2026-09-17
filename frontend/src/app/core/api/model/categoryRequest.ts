@@ -10,8 +10,7 @@
 
 
 export interface CategoryRequestDto { 
-    nameEn: string;
-    nameRo: string;
+    name: string;
     markAsNew?: boolean;
     active?: boolean;
     displayOrder: number;

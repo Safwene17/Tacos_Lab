@@ -11,10 +11,9 @@
 
 export interface MenuItemRequestDto { 
     categoryId: string;
-    nameEn: string;
-    nameRo: string;
-    descriptionEn?: string;
-    descriptionRo?: string;
+    name: string;
+    description?: string;
+    ingredients?: Array<string>;
     price: number;
     weightLabel?: string;
     markAsNew?: boolean;

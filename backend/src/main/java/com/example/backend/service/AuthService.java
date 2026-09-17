@@ -1,6 +1,7 @@
 package com.example.backend.service;
 
 import com.example.backend.dto.request.ChangePasswordRequest;
+import com.example.backend.dto.request.ForceChangePasswordRequest;
 import com.example.backend.dto.request.LoginRequest;
 import com.example.backend.dto.response.AdminMeResponse;
 import com.example.backend.dto.response.AuthResponse;
@@ -94,6 +95,16 @@ public class AuthService {
         if (!passwordEncoder.matches(request.currentPassword(), admin.getPasswordHash())) {
             throw new BusinessException("Current password is incorrect.");
         }
+
+        admin.setPasswordHash(passwordEncoder.encode(request.newPassword()));
+        admin.setMustChangePassword(false);
+        refreshTokenService.revokeAll(admin);
+        refreshCookieService.clearRefreshCookie(response);
+    }
+
+    @Transactional
+    public void forceChangePassword(ForceChangePasswordRequest request, HttpServletResponse response) {
+        AdminUser admin = currentAdmin();
 
         admin.setPasswordHash(passwordEncoder.encode(request.newPassword()));
         admin.setMustChangePassword(false);

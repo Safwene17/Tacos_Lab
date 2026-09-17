@@ -12,8 +12,7 @@ import type { AdminCategoryResponseDto } from '../../../../core/api/model/adminC
 import type { PageableDto } from '../../../../core/api/model/pageable';
 
 type CategoryForm = FormGroup<{
-  nameEn: FormControl<string>;
-  nameRo: FormControl<string>;
+  name: FormControl<string>;
   displayOrder: FormControl<number | null>;
   markAsNew: FormControl<boolean>;
   active: FormControl<boolean>;
@@ -38,11 +37,7 @@ export class MenuCategoryForm {
   readonly error = signal<string | null>(null);
 
   readonly form: CategoryForm = new FormGroup({
-    nameEn: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required, Validators.maxLength(150)],
-    }),
-    nameRo: new FormControl('', {
+    name: new FormControl('', {
       nonNullable: true,
       validators: [Validators.required, Validators.maxLength(150)],
     }),
@@ -113,8 +108,7 @@ export class MenuCategoryForm {
 
     const value = this.form.getRawValue();
     const request: CategoryRequestDto = {
-      nameEn: value.nameEn.trim(),
-      nameRo: value.nameRo.trim(),
+      name: value.name.trim(),
       displayOrder: value.displayOrder ?? 0,
       markAsNew: value.markAsNew,
       active: value.active,
@@ -176,8 +170,7 @@ export class MenuCategoryForm {
 
   private patchForm(category: AdminCategoryResponseDto): void {
     this.form.patchValue({
-      nameEn: category.nameEn ?? '',
-      nameRo: category.nameRo ?? '',
+      name: category.name ?? '',
       displayOrder: category.displayOrder ?? 0,
       markAsNew: category.markAsNew ?? false,
       active: category.active ?? true,

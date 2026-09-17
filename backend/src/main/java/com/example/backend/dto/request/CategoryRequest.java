@@ -7,13 +7,9 @@ import jakarta.validation.constraints.Size;
 
 public record CategoryRequest(
 
-        @NotBlank(message = "English name is required.")
-        @Size(max = 150, message = "English name must not exceed 150 characters.")
-        String nameEn,
-
-        @NotBlank(message = "Romanian name is required.")
-        @Size(max = 150, message = "Romanian name must not exceed 150 characters.")
-        String nameRo,
+        @NotBlank(message = "Name is required.")
+        @Size(max = 150, message = "Name must not exceed 150 characters.")
+        String name,
 
         boolean markAsNew,
 

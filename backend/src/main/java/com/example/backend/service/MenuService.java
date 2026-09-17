@@ -38,59 +38,48 @@ public class MenuService {
     private final MenuItemRepository menuItemRepository;
     private final MediaAssetRepository mediaAssetRepository;
     private final CloudinaryService cloudinaryService;
-    private final LocaleResolverService localeResolverService;
     private final MenuMapper menuMapper;
 
     @Transactional(readOnly = true)
-    public List<PublicCategoryResponse> getPublicCategories(String localeParam, String acceptLanguage) {
-        String locale = localeResolverService.resolve(localeParam, acceptLanguage);
-
+    public List<PublicCategoryResponse> getPublicCategories() {
         return categoryRepository.findAllByActiveTrueOrderByDisplayOrderAsc()
                 .stream()
-                .map(category -> menuMapper.toPublicCategory(category, locale))
+                .map(menuMapper::toPublicCategory)
                 .toList();
     }
 
     @Transactional(readOnly = true)
-    public List<PublicMenuItemResponse> getPublicMenuItems(String localeParam, String acceptLanguage) {
-        String locale = localeResolverService.resolve(localeParam, acceptLanguage);
-
+        public List<PublicMenuItemResponse> getPublicMenuItems() {
         return menuItemRepository.findAllByActiveTrueOrderByDisplayOrderAsc()
-                .stream()
-                .filter(item -> item.getCategory().isActive())
-                .map(item -> menuMapper.toPublicMenuItem(
-                        item,
-                        mediaAssetRepository.findAllByMenuItemOrderByDisplayOrderAsc(item),
-                        locale
-                ))
-                .toList();
-    }
+            .stream()
+            .filter(item -> item.getCategory().isActive())
+            .map(item -> menuMapper.toPublicMenuItem(
+                item,
+                mediaAssetRepository.findAllByMenuItemOrderByDisplayOrderAsc(item)
+            ))
+            .toList();
+        }
 
     @Transactional(readOnly = true)
-    public PublicMenuResponse getPublicMenu(String localeParam, String acceptLanguage) {
-        String locale = localeResolverService.resolve(localeParam, acceptLanguage);
-
+        public PublicMenuResponse getPublicMenu() {
         List<Category> categories = categoryRepository.findAllByActiveTrueOrderByDisplayOrderAsc();
         List<MenuItem> items = menuItemRepository.findAllByActiveTrueOrderByDisplayOrderAsc();
 
         List<PublicMenuCategoryGroupResponse> groups = categories.stream()
-                .map(category -> PublicMenuCategoryGroupResponse.builder()
-                        .category(menuMapper.toPublicCategory(category, locale))
-                        .items(items.stream()
-                                .filter(item -> item.getCategory().getId().equals(category.getId()))
-                                .sorted(Comparator.comparing(MenuItem::getDisplayOrder))
-                                .map(item -> menuMapper.toPublicMenuItem(
-                                        item,
-                                        mediaAssetRepository.findAllByMenuItemOrderByDisplayOrderAsc(item),
-                                        locale
-                                ))
-                                .toList())
-                        .build())
-                .toList();
+            .map(category -> PublicMenuCategoryGroupResponse.builder()
+                .category(menuMapper.toPublicCategory(category))
+                .items(items.stream()
+                    .filter(item -> item.getCategory().getId().equals(category.getId()))
+                    .sorted(Comparator.comparing(MenuItem::getDisplayOrder))
+                    .map(item -> menuMapper.toPublicMenuItem(
+                        item,
+                        mediaAssetRepository.findAllByMenuItemOrderByDisplayOrderAsc(item)
+                    ))
+                    .toList())
+                .build())
+            .toList();
 
-        return PublicMenuResponse.builder()
-                .categories(groups)
-                .build();
+        return PublicMenuResponse.builder().categories(groups).build();
     }
 
     @Transactional(readOnly = true)
@@ -102,8 +91,7 @@ public class MenuService {
     @Transactional
     public AdminCategoryResponse createCategory(CategoryRequest request) {
         Category category = new Category();
-            category.setNameEn(request.nameEn());
-        category.setNameRo(request.nameRo());
+        category.setName(request.name());
         category.setMarkAsNew(request.markAsNew());
         category.setActive(request.active());
         category.setDisplayOrder(request.displayOrder());
@@ -115,8 +103,7 @@ public class MenuService {
     public AdminCategoryResponse updateCategory(UUID id, CategoryRequest request) {
         Category category = findCategory(id);
 
-        category.setNameEn(request.nameEn());
-        category.setNameRo(request.nameRo());
+        category.setName(request.name());
         category.setMarkAsNew(request.markAsNew());
         category.setActive(request.active());
         category.setDisplayOrder(request.displayOrder());
@@ -187,8 +174,7 @@ public class MenuService {
     public AdminMediaAssetResponse uploadMenuItemImage(
             UUID menuItemId,
             MultipartFile file,
-            String altEn,
-            String altRo,
+            String alt,
             Boolean primary
     ) {
         MenuItem menuItem = findMenuItem(menuItemId);
@@ -212,8 +198,7 @@ public class MenuService {
         asset.setBytes(uploadedImage.bytes());
         asset.setVersion(uploadedImage.version());
         asset.setFolder(uploadedImage.folder());
-        asset.setAltEn(altEn);
-        asset.setAltRo(altRo);
+        asset.setAlt(alt);
         asset.setPrimary(shouldBePrimary);
         asset.setDisplayOrder(mediaAssetRepository.findMaxDisplayOrderByMenuItemId(menuItemId) + 1);
 
@@ -232,8 +217,7 @@ public class MenuService {
             mediaAssetRepository.unsetPrimaryForMenuItem(menuItemId);
         }
 
-        asset.setAltEn(request.altEn());
-        asset.setAltRo(request.altRo());
+        asset.setAlt(request.alt());
         asset.setPrimary(request.primary());
         asset.setDisplayOrder(request.displayOrder());
 
@@ -270,10 +254,9 @@ public class MenuService {
 
     private void applyMenuItemRequest(MenuItem item, MenuItemRequest request, Category category) {
         item.setCategory(category);
-        item.setNameEn(request.nameEn());
-        item.setNameRo(request.nameRo());
-        item.setDescriptionEn(request.descriptionEn());
-        item.setDescriptionRo(request.descriptionRo());
+        item.setName(request.name());
+        item.setDescription(request.description());
+        item.setIngredients(request.ingredients() == null ? new java.util.ArrayList<>() : request.ingredients());
         item.setPrice(request.price());
         item.setWeightLabel(request.weightLabel());
         item.setMarkAsNew(request.markAsNew());

@@ -5,4 +5,4 @@ CREATE TABLE IF NOT EXISTS schema_version_marker (
 );
 
 INSERT INTO schema_version_marker (description)
-VALUES ('Le Tacos database foundation initialized');
+VALUES ('Tacos Lab database foundation initialized');

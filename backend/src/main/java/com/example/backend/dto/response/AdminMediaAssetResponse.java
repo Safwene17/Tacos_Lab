@@ -16,8 +16,7 @@ public record AdminMediaAssetResponse(
         Long bytes,
         String version,
         String folder,
-        String altEn,
-        String altRo,
+        String alt,
         boolean primary,
         Integer displayOrder
 ) {

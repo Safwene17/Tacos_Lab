@@ -12,7 +12,7 @@ public abstract class AbstractIntegrationTest {
     @Container
     @ServiceConnection
     static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine")
-            .withDatabaseName("Le-Tacos")
+            .withDatabaseName("Tacos-Lab")
             .withUsername("test")
             .withPassword("test");
 

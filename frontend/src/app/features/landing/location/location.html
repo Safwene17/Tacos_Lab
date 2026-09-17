@@ -8,8 +8,8 @@
 
   <div class="relative z-10 mx-auto max-w-7xl">
     <app-section-title
-      [title]="i18n.t('location.title')"
-      [subtitle]="i18n.t('location.subtitle')"
+      [title]="'Visit Us'"
+      [subtitle]="'Find Your Nearest Tacos Lab'"
     />
 
     <div class="grid items-stretch gap-6 lg:grid-cols-[0.9fr_1.4fr]">
@@ -24,11 +24,11 @@
         </div>
 
         <h3 class="mt-7 font-display text-4xl leading-none text-brand-yellow">
-          {{ i18n.t('location.cardTitle') }}
+          Timisoara Location
         </h3>
 
         <p class="mt-4 text-base leading-8 text-white/65">
-          {{ i18n.t('location.description') }}
+          Stop by our restaurant to experience the full Tacos Lab atmosphere
         </p>
 
         <div class="mt-7 space-y-4">
@@ -39,10 +39,10 @@
 
             <div>
               <p class="font-bold text-brand-cream">
-                {{ i18n.t('location.addressTitle') }}
+                Address
               </p>
               <p class="mt-1 text-sm text-white/55">
-                {{ i18n.t('location.addressText') }}
+                Timisoara, Romania
               </p>
             </div>
           </div>
@@ -54,10 +54,10 @@
 
             <div>
               <p class="font-bold text-brand-cream">
-                {{ i18n.t('location.deliveryTitle') }}
+                Delivery
               </p>
               <p class="mt-1 text-sm text-white/55">
-                {{ i18n.t('location.deliveryText') }}
+                We deliver throughout the city
               </p>
             </div>
           </div>
@@ -69,10 +69,10 @@
 
             <div>
               <p class="font-bold text-brand-cream">
-                {{ i18n.t('location.hoursTitle') }}
+                Hours
               </p>
               <p class="mt-1 text-sm text-white/55">
-                {{ i18n.t('location.hoursText') }}
+                Open daily from 11 AM to 11 PM
               </p>
             </div>
           </div>
@@ -84,7 +84,7 @@
           rel="noopener noreferrer"
           class="mt-8 inline-flex w-full items-center justify-center rounded-full bg-brand-gold px-7 py-4 text-sm font-black uppercase tracking-[0.16em] text-brand-black shadow-[0_16px_50px_rgba(255,210,48,0.22)] transition duration-300 hover:-translate-y-0.5 hover:bg-brand-yellow hover:shadow-[0_20px_65px_rgba(255,210,48,0.32)] sm:w-auto"
         >
-          {{ i18n.t('location.mapsCta') }}
+          Get Directions
         </a>
       </div>
 
@@ -99,7 +99,7 @@
           loading="lazy"
           allowfullscreen
           referrerpolicy="no-referrer-when-downgrade"
-          [title]="i18n.t('location.mapTitle')"
+          [title]="'Tacos Lab Location'"
         ></iframe>
 
         <div

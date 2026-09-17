@@ -1,6 +1,5 @@
 package com.example.backend.mapper;
 
-import com.example.backend.constant.AppConstants;
 import com.example.backend.dto.response.AdminCategoryResponse;
 import com.example.backend.dto.response.AdminMediaAssetResponse;
 import com.example.backend.dto.response.AdminMenuItemResponse;
@@ -17,10 +16,10 @@ import java.util.List;
 @Component
 public class MenuMapper {
 
-    public PublicCategoryResponse toPublicCategory(Category category, String locale) {
+    public PublicCategoryResponse toPublicCategory(Category category) {
         return PublicCategoryResponse.builder()
                 .id(category.getId())
-                .name(localized(category.getNameEn(), category.getNameRo(), locale))
+                .name(category.getName())
                 .markAsNew(category.isMarkAsNew())
                 .displayOrder(category.getDisplayOrder())
                 .build();
@@ -29,43 +28,41 @@ public class MenuMapper {
     public AdminCategoryResponse toAdminCategory(Category category) {
         return AdminCategoryResponse.builder()
                 .id(category.getId())
-                .nameEn(category.getNameEn())
-                .nameRo(category.getNameRo())
+                .name(category.getName())
                 .markAsNew(category.isMarkAsNew())
                 .active(category.isActive())
                 .displayOrder(category.getDisplayOrder())
                 .build();
     }
 
-    public PublicMenuItemResponse toPublicMenuItem(
+        public PublicMenuItemResponse toPublicMenuItem(
             MenuItem item,
-            List<MediaAsset> images,
-            String locale
-    ) {
+            List<MediaAsset> images
+        ) {
         return PublicMenuItemResponse.builder()
-                .id(item.getId())
-                .name(localized(item.getNameEn(), item.getNameRo(), locale))
-                .description(localized(item.getDescriptionEn(), item.getDescriptionRo(), locale))
-                .price(item.getPrice())
-                .currency(item.getCurrency())
-                .weightLabel(item.getWeightLabel())
-                .markAsNew(item.isMarkAsNew())
-                .popular(item.isPopular())
-                .categoryId(item.getCategory().getId())
-                .categoryName(localized(item.getCategory().getNameEn(), item.getCategory().getNameRo(), locale))
-                .images(images.stream().map(image -> toPublicMediaAsset(image, locale)).toList())
-                .build();
-    }
+            .id(item.getId())
+            .name(item.getName())
+            .description(item.getDescription())
+            .ingredients(item.getIngredients())
+            .price(item.getPrice())
+            .currency(item.getCurrency())
+            .weightLabel(item.getWeightLabel())
+            .markAsNew(item.isMarkAsNew())
+            .popular(item.isPopular())
+            .categoryId(item.getCategory().getId())
+            .categoryName(item.getCategory().getName())
+            .images(images.stream().map(this::toPublicMediaAsset).toList())
+            .build();
+        }
 
     public AdminMenuItemResponse toAdminMenuItem(MenuItem item, List<MediaAsset> images) {
         return AdminMenuItemResponse.builder()
                 .id(item.getId())
                 .categoryId(item.getCategory().getId())
-                .categoryNameEn(item.getCategory().getNameEn())
-                .nameEn(item.getNameEn())
-                .nameRo(item.getNameRo())
-                .descriptionEn(item.getDescriptionEn())
-                .descriptionRo(item.getDescriptionRo())
+                .categoryName(item.getCategory().getName())
+                .name(item.getName())
+                .description(item.getDescription())
+                .ingredients(item.getIngredients())
                 .price(item.getPrice())
                 .currency(item.getCurrency())
                 .weightLabel(item.getWeightLabel())
@@ -77,11 +74,11 @@ public class MenuMapper {
                 .build();
     }
 
-    public PublicMediaAssetResponse toPublicMediaAsset(MediaAsset asset, String locale) {
+    public PublicMediaAssetResponse toPublicMediaAsset(MediaAsset asset) {
         return PublicMediaAssetResponse.builder()
                 .id(asset.getId())
                 .url(asset.getSecureUrl())
-                .alt(localized(asset.getAltEn(), asset.getAltRo(), locale))
+                .alt(asset.getAlt())
                 .primary(asset.isPrimary())
                 .displayOrder(asset.getDisplayOrder())
                 .build();
@@ -99,18 +96,10 @@ public class MenuMapper {
                 .bytes(asset.getBytes())
                 .version(asset.getVersion())
                 .folder(asset.getFolder())
-                .altEn(asset.getAltEn())
-                .altRo(asset.getAltRo())
+                .alt(asset.getAlt())
                 .primary(asset.isPrimary())
                 .displayOrder(asset.getDisplayOrder())
                 .build();
     }
-
-    private String localized(String en, String ro, String locale) {
-        if (AppConstants.ROMANIAN_LOCALE.equals(locale)) {
-            return ro != null && !ro.isBlank() ? ro : en;
-        }
-
-        return en;
-    }
+    
 }

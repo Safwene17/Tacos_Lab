@@ -3,48 +3,48 @@
 
   <div class="relative z-10 mx-auto max-w-4xl">
     <app-section-title
-      [title]="i18n.t('contact.title')"
-      [subtitle]="i18n.t('contact.subtitle')"
+      [title]="'Contact Us'"
+      [subtitle]="'Get In Touch'"
     />
 
     <div
       appScrollReveal
       class="rounded-[2rem] border border-brand-gold/25 bg-brand-softblack/85 p-8 text-center shadow-[0_28px_95px_rgba(0,0,0,0.48)] backdrop-blur-xl sm:p-12"
     >
-      <div class="grid gap-5 text-left sm:grid-cols-3">
+      <div class="grid gap-5 text-left sm:grid-cols-2">
         <div class="rounded-2xl border border-white/10 bg-black/35 p-5 shadow-[0_12px_35px_rgba(0,0,0,0.24)] transition duration-300 hover:-translate-y-0.5 hover:border-brand-gold/30 hover:bg-brand-gold/[0.045]">
           <div class="text-brand-yellow">
             <app-icon name="location" size="lg" />
           </div>
-          <p class="mt-3 font-black text-brand-yellow">{{ i18n.t('contact.locationTitle') }}</p>
-          <p class="mt-2 text-sm text-white/55">{{ i18n.t('contact.locationText') }}</p>
+          <p class="mt-3 font-black text-brand-yellow">Location</p>
+          <p class="mt-2 text-sm text-white/72">{{ contactInfo.address }}</p>
         </div>
 
         <div class="rounded-2xl border border-white/10 bg-black/35 p-5 shadow-[0_12px_35px_rgba(0,0,0,0.24)] transition duration-300 hover:-translate-y-0.5 hover:border-brand-gold/30 hover:bg-brand-gold/[0.045]">
           <div class="text-brand-yellow">
-            <app-icon name="delivery" size="lg" />
+            <app-icon name="star" size="lg" />
           </div>
-          <p class="mt-3 font-black text-brand-yellow">{{ i18n.t('contact.orderTitle') }}</p>
-          <p class="mt-2 text-sm text-white/55">{{ i18n.t('contact.orderText') }}</p>
+          <p class="mt-3 font-black text-brand-yellow">Get in Touch</p>
+          <p class="mt-2 text-sm text-white/72">
+            <a href="tel:+40256123456" class="hover:text-brand-gold transition">{{ contactInfo.phone }}</a>
+          </p>
+          <p class="mt-1 text-sm text-white/72">
+            <a href="mailto:hello@tacoslab.ro" class="hover:text-brand-gold transition">{{ contactInfo.email }}</a>
+          </p>
         </div>
 
-        <div class="rounded-2xl border border-white/10 bg-black/35 p-5 shadow-[0_12px_35px_rgba(0,0,0,0.24)] transition duration-300 hover:-translate-y-0.5 hover:border-brand-gold/30 hover:bg-brand-gold/[0.045]">
+        <div class="rounded-2xl border border-white/10 bg-black/35 p-5 shadow-[0_12px_35px_rgba(0,0,0,0.24)] transition duration-300 hover:-translate-y-0.5 hover:border-brand-gold/30 hover:bg-brand-gold/[0.045] sm:col-span-2">
           <div class="text-brand-yellow">
             <app-icon name="clock" size="lg" />
           </div>
-          <p class="mt-3 font-black text-brand-yellow">{{ i18n.t('contact.availabilityTitle') }}</p>
-          <p class="mt-2 text-sm text-white/55">{{ i18n.t('contact.availabilityText') }}</p>
+          <p class="mt-3 font-black text-brand-yellow">Hours of Operation</p>
+          <div class="mt-2 space-y-1 text-sm text-white/72">
+            <p><span class="font-semibold text-white">Monday - Friday:</span> {{ contactInfo.hours.weekdays }}</p>
+            <p><span class="font-semibold text-white">Saturday - Sunday:</span> {{ contactInfo.hours.weekends }}</p>
+          </div>
         </div>
       </div>
 
-      <a
-        [href]="woltUrl"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="mx-auto mt-10 inline-flex w-full items-center justify-center rounded-full bg-brand-gold px-8 py-5 text-sm font-black uppercase tracking-[0.16em] text-brand-black shadow-[0_16px_50px_rgba(255,210,48,0.24)] transition duration-300 hover:-translate-y-0.5 hover:bg-brand-yellow hover:shadow-[0_20px_65px_rgba(255,210,48,0.34)] sm:w-auto"
-      >
-        {{ i18n.t('contact.cta') }}
-      </a>
     </div>
   </div>
 </section>

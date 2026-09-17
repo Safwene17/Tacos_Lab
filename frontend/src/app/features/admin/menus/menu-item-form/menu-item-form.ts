@@ -6,6 +6,7 @@ import { finalize } from 'rxjs';
 import { toast } from 'ngx-sonner';
 
 import { AdminMenuControllerApiService } from '../../../../core/api/api/adminMenuController.service';
+import { IngredientChips } from '../../../../shared/components/ingredient-chips/ingredient-chips';
 
 import { MenuItemRequestDto } from '../../../../core/api/model/menuItemRequest';
 import { MediaAssetUpdateRequestDto } from '../../../../core/api/model/mediaAssetUpdateRequest';
@@ -17,10 +18,9 @@ import type { PageableDto } from '../../../../core/api/model/pageable';
 
 type MenuItemFormGroup = FormGroup<{
   categoryId: FormControl<string>;
-  nameEn: FormControl<string>;
-  nameRo: FormControl<string>;
-  descriptionEn: FormControl<string>;
-  descriptionRo: FormControl<string>;
+  name: FormControl<string>;
+  description: FormControl<string>;
+  ingredients: FormControl<string[]>;
   price: FormControl<number | null>;
   weightLabel: FormControl<string>;
   displayOrder: FormControl<number | null>;
@@ -32,7 +32,7 @@ type MenuItemFormGroup = FormGroup<{
 @Component({
   selector: 'app-menu-item-form',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, IngredientChips],
   templateUrl: './menu-item-form.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -54,14 +54,12 @@ export class MenuItemForm {
   readonly itemImages = signal<AdminMediaAssetResponseDto[]>([]);
   readonly selectedFile = signal<File | null>(null);
   readonly filePreviewUrl = signal<string | null>(null);
-  readonly fileAltEn = signal('');
-  readonly fileAltRo = signal('');
+  readonly fileAlt = signal('');
   readonly filePrimary = signal(false);
   readonly imageDeleteDialogOpen = signal(false);
   readonly imageToDelete = signal<AdminMediaAssetResponseDto | null>(null);
   readonly editingImageId = signal<string | null>(null);
-  readonly editingImageAltEn = signal('');
-  readonly editingImageAltRo = signal('');
+  readonly editingImageAlt = signal('');
   readonly editingImageDisplayOrder = signal(0);
   readonly editingImagePrimary = signal(false);
 
@@ -70,23 +68,19 @@ export class MenuItemForm {
     [...this.categories()].sort((left, right) => (left.displayOrder ?? 0) - (right.displayOrder ?? 0)),
   );
 
-  readonly form: MenuItemFormGroup = new FormGroup({
+  readonly form = new FormGroup({
     categoryId: new FormControl('', {
       nonNullable: true,
       validators: [Validators.required],
     }),
-    nameEn: new FormControl('', {
+    name: new FormControl('', {
       nonNullable: true,
       validators: [Validators.required, Validators.maxLength(180)],
     }),
-    nameRo: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required, Validators.maxLength(180)],
-    }),
-    descriptionEn: new FormControl('', {
+    description: new FormControl('', {
       nonNullable: true,
     }),
-    descriptionRo: new FormControl('', {
+    ingredients: new FormControl<string[]>([], {
       nonNullable: true,
     }),
     price: new FormControl<number | null>(null, {
@@ -276,8 +270,7 @@ export class MenuItemForm {
 
     this.selectedFile.set(file);
     this.filePreviewUrl.set(URL.createObjectURL(file));
-    this.fileAltEn.set('');
-    this.fileAltRo.set('');
+    this.fileAlt.set('');
     this.filePrimary.set(false);
   }
 
@@ -292,7 +285,7 @@ export class MenuItemForm {
     this.uploading.set(true);
 
     this.menuApi
-      .uploadImage(itemId, file, this.fileAltEn().trim() || undefined, this.fileAltRo().trim() || undefined, this.filePrimary())
+      .uploadImage(itemId, file, this.fileAlt().trim() || undefined, this.filePrimary())
       .pipe(finalize(() => this.uploading.set(false)))
       .subscribe({
         next: (response) => {
@@ -313,16 +306,14 @@ export class MenuItemForm {
 
   startEditImage(image: AdminMediaAssetResponseDto): void {
     this.editingImageId.set(image.id ?? null);
-    this.editingImageAltEn.set(image.altEn ?? '');
-    this.editingImageAltRo.set(image.altRo ?? '');
+    this.editingImageAlt.set(image.alt ?? '');
     this.editingImageDisplayOrder.set(image.displayOrder ?? 0);
     this.editingImagePrimary.set(image.primary ?? false);
   }
 
   cancelEditImage(): void {
     this.editingImageId.set(null);
-    this.editingImageAltEn.set('');
-    this.editingImageAltRo.set('');
+    this.editingImageAlt.set('');
     this.editingImageDisplayOrder.set(0);
     this.editingImagePrimary.set(false);
   }
@@ -335,8 +326,7 @@ export class MenuItemForm {
     }
 
     const request: MediaAssetUpdateRequestDto = {
-      altEn: this.editingImageAltEn().trim() || undefined,
-      altRo: this.editingImageAltRo().trim() || undefined,
+      alt: this.editingImageAlt().trim() || undefined,
       primary: this.editingImagePrimary(),
       displayOrder: this.editingImageDisplayOrder(),
     };
@@ -450,7 +440,7 @@ export class MenuItemForm {
   }
 
   categoryName(item: AdminMenuItemResponseDto): string {
-    return item.categoryNameEn || this.categoryOptions().find((category) => category.id === item.categoryId)?.nameEn || '-';
+    return item.categoryName || this.categoryOptions().find((category) => category.id === item.categoryId)?.name || '-';
   }
 
   money(value?: number, currency = 'RON'): string {
@@ -513,8 +503,7 @@ export class MenuItemForm {
 
     this.selectedFile.set(null);
     this.filePreviewUrl.set(null);
-    this.fileAltEn.set('');
-    this.fileAltRo.set('');
+    this.fileAlt.set('');
     this.filePrimary.set(false);
 
     if (this.imageFileInput) {
@@ -536,10 +525,9 @@ export class MenuItemForm {
 
     return {
       categoryId: value.categoryId,
-      nameEn: value.nameEn.trim(),
-      nameRo: value.nameRo.trim(),
-      descriptionEn: value.descriptionEn.trim() || undefined,
-      descriptionRo: value.descriptionRo.trim() || undefined,
+      name: value.name.trim(),
+      description: value.description.trim() || undefined,
+      ingredients: value.ingredients || [],
       price: value.price ?? 0,
       weightLabel: value.weightLabel.trim() || undefined,
       displayOrder: value.displayOrder ?? 0,
@@ -552,10 +540,9 @@ export class MenuItemForm {
   private patchForm(item: AdminMenuItemResponseDto): void {
     this.form.patchValue({
       categoryId: item.categoryId ?? '',
-      nameEn: item.nameEn ?? '',
-      nameRo: item.nameRo ?? '',
-      descriptionEn: item.descriptionEn ?? '',
-      descriptionRo: item.descriptionRo ?? '',
+      name: item.name ?? '',
+      description: item.description ?? '',
+      ingredients: item.ingredients ?? [],
       price: item.price ?? null,
       weightLabel: item.weightLabel ?? '',
       displayOrder: item.displayOrder ?? 0,

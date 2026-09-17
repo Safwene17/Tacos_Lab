@@ -14,17 +14,13 @@ public record MenuItemRequest(
         @NotNull(message = "Category id is required.")
         UUID categoryId,
 
-        @NotBlank(message = "English name is required.")
-        @Size(max = 180, message = "English name must not exceed 180 characters.")
-        String nameEn,
+        @NotBlank(message = "Name is required.")
+        @Size(max = 180, message = "Name must not exceed 180 characters.")
+        String name,
 
-        @NotBlank(message = "Romanian name is required.")
-        @Size(max = 180, message = "Romanian name must not exceed 180 characters.")
-        String nameRo,
+        String description,
 
-        String descriptionEn,
-
-        String descriptionRo,
+        java.util.List<String> ingredients,
 
         @NotNull(message = "Price is required.")
         @DecimalMin(value = "0.01", message = "Price must be greater than zero.")

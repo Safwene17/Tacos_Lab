@@ -1,38 +1,128 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { SectionTitle } from '../../../shared/components/section-title/section-title';
-import { MenuCard } from '../../../shared/components/menu-card/menu-card';
-import { ScrollReveal } from '../../../core/directives/scroll-reveal';
-import { MENU_ITEMS, MENU_TABS, type MenuCategory } from '../data/menu.data';
-import { I18n } from '../../../core/i18n/i18n';
+import { Router } from '@angular/router';
+import { finalize } from 'rxjs';
 
-type SelectedCategory = MenuCategory | 'all';
+import { PublicMenuControllerApiService } from '../../../core/api/api/publicMenuController.service';
+
+
+import type { PublicMediaAssetResponseDto } from '../../../core/api/model/publicMediaAssetResponse';
+import type { PublicMenuCategoryGroupResponseDto } from '../../../core/api/model/publicMenuCategoryGroupResponse';
+import type { PublicMenuItemResponseDto } from '../../../core/api/model/publicMenuItemResponse';
 
 @Component({
   selector: 'app-menu',
   standalone: true,
-  imports: [SectionTitle, MenuCard, ScrollReveal],
   templateUrl: './menu.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Menu {
-  readonly i18n = inject(I18n);
+  private readonly router = inject(Router);
 
-  readonly tabs = MENU_TABS;
-  readonly selectedCategory = signal<SelectedCategory>('all');
+  private readonly publicMenuApi = inject(PublicMenuControllerApiService);
+
+  readonly menuGroups = signal<PublicMenuCategoryGroupResponseDto[]>([]);
+  readonly loadingMenu = signal(false);
+  readonly menuError = signal<string | null>(null);
+  readonly selectedCategoryId = signal<string | null>(null);
+
+  readonly categories = computed(() =>
+    [...this.menuGroups()]
+      .map((group) => group.category)
+      .filter((category): category is NonNullable<typeof category> => Boolean(category))
+      .sort((left, right) => {
+        const leftOrder = left.displayOrder ?? 0;
+        const rightOrder = right.displayOrder ?? 0;
+
+        if (leftOrder !== rightOrder) {
+          return leftOrder - rightOrder;
+        }
+
+        return (left.name ?? '').localeCompare(right.name ?? '');
+      }),
+  );
+
+  readonly allItems = computed(() => this.menuGroups().flatMap((group) => group.items ?? []));
 
   readonly filteredItems = computed(() => {
-    const selected = this.selectedCategory();
+    const selected = this.selectedCategoryId();
 
-    return selected === 'all'
-      ? MENU_ITEMS
-      : MENU_ITEMS.filter((item) => item.category === selected);
+    if (!selected) {
+      return this.allItems();
+    }
+
+    return this.allItems().filter((item) => item.categoryId === selected);
   });
 
-  selectCategory(category: SelectedCategory): void {
-    this.selectedCategory.set(category);
+  constructor() {
+    this.loadMenu();
   }
 
-  revealDelay(index: number): number {
-    return index * 50;
+  loadMenu(): void {
+    this.loadingMenu.set(true);
+    this.menuError.set(null);
+
+    const language = 'en';
+
+    this.publicMenuApi
+      .menu(language, language)
+      .pipe(finalize(() => this.loadingMenu.set(false)))
+      .subscribe({
+        next: (response) => {
+          if (!response.success || !response.data) {
+            this.menuError.set(response.message ?? 'Unable to load menu items.');
+            this.menuGroups.set([]);
+            return;
+          }
+
+          this.menuGroups.set(response.data.categories ?? []);
+        },
+        error: (error: unknown) => {
+          this.menuError.set(this.errorMessage(error));
+        },
+      });
+  }
+
+  selectCategory(categoryId: string | null): void {
+    this.selectedCategoryId.set(categoryId);
+  }
+
+  viewProduct(item: PublicMenuItemResponseDto): void {
+    if (!item.id) {
+      return;
+    }
+
+    void this.router.navigate(['/menu/product', item.id]);
+  }
+
+  firstImage(item: PublicMenuItemResponseDto): PublicMediaAssetResponseDto | null {
+    const images = item.images ?? [];
+
+    return images.find((image) => image.primary) ?? images[0] ?? null;
+  }
+
+  money(value?: number, currency = 'RON'): string {
+    return new Intl.NumberFormat('ro-RO', {
+      style: 'currency',
+      currency: currency ?? 'RON',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(value ?? 0);
+  }
+
+  retry(): void {
+    this.loadMenu();
+  }
+
+  private errorMessage(error: unknown): string {
+    if (error instanceof HttpErrorResponse) {
+      return error.error?.message ?? `Request failed with status ${error.status}.`;
+    }
+
+    if (error instanceof Error) {
+      return error.message;
+    }
+
+    return 'Unexpected error.';
   }
 }

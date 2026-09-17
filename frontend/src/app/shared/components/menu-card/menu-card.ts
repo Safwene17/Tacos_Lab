@@ -1,7 +1,6 @@
-import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import type { MenuItem } from '../../../features/landing/data/menu.data';
 import { Icon } from '../icon/icon';
-import { I18n } from '../../../core/i18n/i18n';
 
 @Component({
   selector: 'app-menu-card',
@@ -11,7 +10,5 @@ import { I18n } from '../../../core/i18n/i18n';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MenuCard {
-  readonly i18n = inject(I18n);
-
   readonly item = input.required<MenuItem>();
 }

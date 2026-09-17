@@ -6,11 +6,8 @@ import jakarta.validation.constraints.Size;
 
 public record MediaAssetUpdateRequest(
 
-        @Size(max = 255, message = "English alt text must not exceed 255 characters.")
-        String altEn,
-
-        @Size(max = 255, message = "Romanian alt text must not exceed 255 characters.")
-        String altRo,
+        @Size(max = 255, message = "Alt text must not exceed 255 characters.")
+        String alt,
 
         boolean primary,
 

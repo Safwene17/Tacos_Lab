@@ -1,0 +1,23 @@
+<div class="space-y-2">
+  <div class="flex flex-wrap gap-2">
+    <ng-container *ngFor="let ing of value; let i = index">
+      <span class="inline-flex items-center gap-2 rounded-full bg-gray-800/60 px-3 py-1 text-sm text-white">
+        <span class="truncate max-w-xs">{{ ing }}</span>
+        <button type="button" class="text-gray-300 hover:text-white" (click)="remove(i)">✕</button>
+      </span>
+    </ng-container>
+  </div>
+
+  <div class="mt-2 flex gap-2">
+    <input
+      type="text"
+      [(ngModel)]="newIngredient"
+      (keydown)="onKey($any($event))"
+      [placeholder]="placeholder"
+      class="flex-1 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 outline-none focus:border-admin-brand-500"
+    />
+    <button type="button" class="rounded-lg bg-admin-brand-500 px-4 py-2 text-sm font-medium text-white" (click)="add()">+ Add</button>
+  </div>
+
+  <p class="text-theme-xs text-gray-500">{{ helper }}</p>
+</div>

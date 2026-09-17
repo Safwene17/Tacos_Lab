@@ -7,9 +7,8 @@ import java.util.UUID;
 @Builder
 public record AdminCategoryResponse(
         UUID id,
-        String nameEn,
-        String nameRo,
-        boolean markAsNew,
+                String name,
+                boolean markAsNew,
         boolean active,
         Integer displayOrder
 ) {

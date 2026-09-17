@@ -11,17 +11,17 @@
         <a
           href="#hero"
           class="inline-flex items-center justify-center gap-3 lg:justify-start"
-          aria-label="Le Tacos home"
+          aria-label="Tacos Lab home"
         >
           <span
             class="bg-gradient-to-r from-brand-gold via-brand-yellow to-brand-cream bg-clip-text font-display text-4xl leading-none text-transparent sm:text-5xl"
           >
-            Le Tacos
+            Tacos Lab
           </span>
         </a>
 
         <p class="mt-4 text-sm font-semibold leading-6 text-white/55 sm:text-base">
-          {{ i18n.t('footer.tagline') }}
+          Authentic Mexican Cuisine
         </p>
 
         <div class="mt-4 flex flex-col items-center gap-3 text-sm text-white/45 lg:items-start">
@@ -29,7 +29,7 @@
             <span class="text-brand-yellow">
               <app-icon name="location" size="sm" />
             </span>
-            <span>{{ i18n.t('footer.location') }}</span>
+            <span>Timisoara, Romania</span>
           </div>
 
           <a
@@ -39,12 +39,12 @@
             class="inline-flex items-center gap-2 text-brand-yellow/80 transition hover:text-brand-yellow"
           >
             <app-icon name="arrowRight" size="sm" />
-            {{ i18n.t('footer.maps') }}
+            Get Directions
           </a>
         </div>
 
         <p class="mt-4 text-sm leading-6 text-white/38">
-          {{ i18n.t('footer.description') }}
+          Experience authentic Mexican flavors with Tacos Lab
         </p>
       </div>
 
@@ -57,7 +57,7 @@
             [href]="link.href"
             class="w-full rounded-full border border-white/10 bg-white/[0.03] px-5 py-3 text-center text-xs font-black uppercase tracking-[0.18em] text-white/60 transition duration-300 hover:-translate-y-0.5 hover:border-brand-gold/30 hover:bg-brand-gold/10 hover:text-brand-yellow sm:w-auto"
           >
-            {{ i18n.t(link.labelKey) }}
+            {{ link.label }}
           </a>
         }
       </nav>
@@ -67,7 +67,7 @@
       class="mt-10 flex flex-col items-center justify-center gap-4 border-t border-white/10 pt-6 text-center text-xs text-white/35 sm:text-sm"
     >
       <p>
-        {{ i18n.t('footer.rights') }}
+        © 2024 Tacos Lab. All rights reserved.
       </p>
     </div>
   </div>

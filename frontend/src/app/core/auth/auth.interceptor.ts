@@ -40,7 +40,10 @@ export const authInterceptor: HttpInterceptorFn = (
 function shouldAttachToken(url: string): boolean {
   const cleanUrl = normalizeUrl(url);
 
-  return cleanUrl.endsWith('/api/auth/me') || cleanUrl.includes('/api/admin/');
+  return cleanUrl.endsWith('/api/auth/me')
+    || cleanUrl.endsWith('/api/auth/change-password')
+    || cleanUrl.endsWith('/api/auth/force-change-password')
+    || cleanUrl.includes('/api/admin/');
 }
 
 function shouldSendCredentials(url: string): boolean {

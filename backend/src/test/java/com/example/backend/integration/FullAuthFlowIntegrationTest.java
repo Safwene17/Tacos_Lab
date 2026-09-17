@@ -33,8 +33,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         "app.security.jwt.secret=test-secret-test-secret-test-secret-test-secret",
         "app.security.jwt.access-token-minutes=20",
         "app.security.jwt.refresh-token-days=7",
-        "app.security.jwt.issuer=le-tacos-api-test",
-        "app.security.refresh-cookie.name=le_tacos_refresh",
+        "app.security.jwt.issuer=tacos-lab-api-test",
+        "app.security.refresh-cookie.name=tacos_lab_refresh",
         "app.security.refresh-cookie.path=/api/auth",
         "app.security.refresh-cookie.http-only=true",
         "app.security.refresh-cookie.secure=false",
@@ -48,7 +48,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         "app.cloudinary.cloud-name=test-cloud",
         "app.cloudinary.api-key=test-key",
         "app.cloudinary.api-secret=test-secret",
-        "app.cloudinary.folder=le-tacos-test"
+        "app.cloudinary.folder=tacos-lab-test"
 })
 @DisplayName("Full auth flow integration")
 class FullAuthFlowIntegrationTest {
@@ -60,7 +60,7 @@ class FullAuthFlowIntegrationTest {
     @Container
     @ServiceConnection
     static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine")
-            .withDatabaseName("le_tacos_full_auth_flow_test")
+            .withDatabaseName("tacos_lab_full_auth_flow_test")
             .withUsername("test")
             .withPassword("test");
 

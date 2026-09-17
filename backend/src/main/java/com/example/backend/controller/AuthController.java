@@ -1,11 +1,14 @@
 package com.example.backend.controller;
 
 import com.example.backend.dto.request.ChangePasswordRequest;
+import com.example.backend.dto.request.ForceChangePasswordRequest;
 import com.example.backend.dto.request.LoginRequest;
 import com.example.backend.dto.response.AdminMeResponse;
 import com.example.backend.dto.response.ApiResponse;
 import com.example.backend.dto.response.AuthResponse;
 import com.example.backend.service.AuthService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(value = "/api/auth", produces = "application/json")
+@Tag(name = "Auth", description = "Authentication and authorization endpoints")
 public class AuthController {
 
     private final AuthService authService;
@@ -59,11 +63,22 @@ public class AuthController {
     }
 
     @PostMapping("/change-password")
+    @Operation(summary = "Change password", description = "Change the current user's password. Requires providing the current password for verification.")
     public ResponseEntity<Void> changePassword(
             @Valid @RequestBody ChangePasswordRequest request,
             HttpServletResponse response
     ) {
         authService.changePassword(request, response);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/force-change-password")
+    @Operation(summary = "Force change password", description = "Change the password on first login. This endpoint is used when a user is required to change their password immediately after first login. No current password verification is required.")
+    public ResponseEntity<Void> forceChangePassword(
+            @Valid @RequestBody ForceChangePasswordRequest request,
+            HttpServletResponse response
+    ) {
+        authService.forceChangePassword(request, response);
         return ResponseEntity.noContent().build();
     }
 }

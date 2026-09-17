@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/le_tacos
+    url: jdbc:postgresql://localhost:5432/tacos_lab
     username: postgres
     password: safwene17
 
