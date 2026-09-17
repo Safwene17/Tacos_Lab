@@ -10,8 +10,6 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 @Getter
 @Setter
@@ -26,10 +24,10 @@ import org.hibernate.annotations.OnDeleteAction;
 )
 public class MediaAsset extends BaseEntity {
 
-    // DB-level cascade: deleting a MenuItem deletes all its MediaAssets
+    // Many-to-One relationship: inverse side of MenuItem.mediaAssets
+    // Cascade delete is handled by MenuItem's OneToMany configuration
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "menu_item_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private MenuItem menuItem;
 
     @Column(nullable = false, unique = true)

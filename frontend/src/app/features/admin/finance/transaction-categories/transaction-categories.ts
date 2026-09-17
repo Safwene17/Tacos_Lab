@@ -34,10 +34,13 @@ export class TransactionCategories {
 
   readonly loading = signal(false);
   readonly saving = signal(false);
+  readonly deleting = signal<string | null>(null);
   readonly error = signal<string | null>(null);
 
   readonly categories = signal<TransactionCategoryResponseDto[]>([]);
   readonly editingCategory = signal<TransactionCategoryResponseDto | null>(null);
+  readonly categoryToDelete = signal<TransactionCategoryResponseDto | null>(null);
+  readonly deleteDialogOpen = signal(false);
 
   readonly page = signal(0);
   readonly size = signal(50);
@@ -158,28 +161,39 @@ export class TransactionCategories {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  deleteCategory(category: TransactionCategoryResponseDto): void {
-    if (!category.id) {
+  askDelete(category: TransactionCategoryResponseDto): void {
+    this.categoryToDelete.set(category);
+    this.deleteDialogOpen.set(true);
+  }
+
+  closeDeleteDialog(): void {
+    if (this.deleting()) {
       return;
     }
 
-    if (category.systemKey) {
-      toast.error('Seeded system categories cannot be deleted.');
+    this.categoryToDelete.set(null);
+    this.deleteDialogOpen.set(false);
+  }
+
+  confirmDeleteCategory(): void {
+    const category = this.categoryToDelete();
+
+    if (!category?.id || this.deleting()) {
       return;
     }
 
-    const confirmed = window.confirm(`Delete category "${category.name}"?`);
-
-    if (!confirmed) {
-      return;
-    }
+    this.deleting.set(category.id);
 
     this.financeApi.deleteCategory(category.id).subscribe({
       next: () => {
+        this.deleting.set(null);
+        this.deleteDialogOpen.set(false);
+        this.categoryToDelete.set(null);
         toast.success('Category deleted successfully.');
         this.loadCategories();
       },
       error: (error: unknown) => {
+        this.deleting.set(null);
         toast.error(this.errorMessage(error));
       },
     });
