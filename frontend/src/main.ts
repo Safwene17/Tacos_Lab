@@ -6,6 +6,7 @@ import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { App } from './app/app';
 import { appRoutes } from './app/app.routes';
 import { authInterceptor } from './app/core/auth/auth.interceptor';
+import { errorInterceptor } from './app/core/error/error.interceptor';
 
 bootstrapApplication(App, {
   providers: [
@@ -19,7 +20,7 @@ bootstrapApplication(App, {
       }),
     ),
 
-    provideHttpClient(withInterceptors([authInterceptor])),
+    provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
   ],
 }).catch((error: unknown) => {
   throw error;
