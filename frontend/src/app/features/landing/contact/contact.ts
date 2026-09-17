@@ -2,10 +2,6 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { SectionTitle } from '../../../shared/components/section-title/section-title';
 import { ScrollReveal } from '../../../core/directives/scroll-reveal';
 import { Icon } from '../../../shared/components/icon/icon';
-import { I18n } from '../../../core/i18n/i18n';
-
-const WOLT_URL =
-  'https://wolt.com/en/rou/timisoara/restaurant/le-tacos-67e2deb28fc8436783be3e23';
 
 @Component({
   selector: 'app-contact',
@@ -15,6 +11,13 @@ const WOLT_URL =
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Contact {
-  readonly i18n = inject(I18n);
-  readonly woltUrl = WOLT_URL;
+  readonly contactInfo = {
+    phone: '+40 (0) 256 123 456',
+    email: 'hello@tacoslab.ro',
+    address: '42 Strada Mihai Eminescu, Timisoara, Romania 300205',
+    hours: {
+      weekdays: '11:00 AM - 11:00 PM',
+      weekends: '12:00 PM - 12:00 AM',
+    },
+  };
 }

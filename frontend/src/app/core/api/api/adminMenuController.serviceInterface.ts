@@ -149,10 +149,9 @@ export interface AdminMenuControllerApiServiceInterface {
      * @endpoint post /api/admin/menu-items/{menuItemId}/images
      * @param menuItemId 
      * @param file 
-     * @param altEn 
-     * @param altRo 
+     * @param alt
      * @param primary 
      */
-    uploadImage(menuItemId: string, file: Blob, altEn?: string, altRo?: string, primary?: boolean, extraHttpRequestParams?: any): Observable<ApiResponseAdminMediaAssetResponseDto>;
+    uploadImage(menuItemId: string, file: Blob, alt?: string, primary?: boolean, extraHttpRequestParams?: any): Observable<ApiResponseAdminMediaAssetResponseDto>;
 
 }

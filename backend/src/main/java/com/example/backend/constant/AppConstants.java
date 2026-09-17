@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 public final class AppConstants {
 
     public static final String DEFAULT_LOCALE = "en";
-    public static final String ROMANIAN_LOCALE = "ro";
 
     public static final String ADMIN_ROLE = "ROLE_ADMIN";
 

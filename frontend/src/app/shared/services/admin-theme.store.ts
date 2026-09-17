@@ -3,7 +3,7 @@ import { Injectable, computed, effect, inject, signal } from '@angular/core';
 
 export type AdminTheme = 'light' | 'dark';
 
-const STORAGE_KEY = 'le-tacos-admin-theme';
+const STORAGE_KEY = 'tacos-lab-admin-theme';
 
 @Injectable({
   providedIn: 'root',

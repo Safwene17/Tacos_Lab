@@ -59,26 +59,14 @@
 
         <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
           <label class="block">
-            <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Name EN</span>
+            <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Name</span>
             <input
               type="text"
-              formControlName="nameEn"
+              formControlName="name"
               class="mt-1 h-11 w-full rounded-lg border border-gray-300 bg-white px-4 text-theme-sm text-gray-800 outline-none transition focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
             />
-            @if (fieldError('nameEn')) {
-              <p class="mt-1 text-theme-xs text-error-600 dark:text-error-500">{{ fieldError('nameEn') }}</p>
-            }
-          </label>
-
-          <label class="block">
-            <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Name RO</span>
-            <input
-              type="text"
-              formControlName="nameRo"
-              class="mt-1 h-11 w-full rounded-lg border border-gray-300 bg-white px-4 text-theme-sm text-gray-800 outline-none transition focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
-            />
-            @if (fieldError('nameRo')) {
-              <p class="mt-1 text-theme-xs text-error-600 dark:text-error-500">{{ fieldError('nameRo') }}</p>
+            @if (fieldError('name')) {
+              <p class="mt-1 text-theme-xs text-error-600 dark:text-error-500">{{ fieldError('name') }}</p>
             }
           </label>
 
@@ -90,7 +78,7 @@
             >
               <option value="">Select category</option>
               @for (category of categoryOptions(); track category.id) {
-                <option [value]="category.id">{{ category.nameEn }}</option>
+                <option [value]="category.id">{{ category.name }}</option>
               }
             </select>
             @if (fieldError('categoryId')) {
@@ -138,21 +126,17 @@
           </label>
 
           <label class="block sm:col-span-2">
-            <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Description EN</span>
+            <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Description</span>
             <textarea
               rows="3"
-              formControlName="descriptionEn"
+              formControlName="description"
               class="mt-1 w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-theme-sm text-gray-800 outline-none transition focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
             ></textarea>
           </label>
 
           <label class="block sm:col-span-2">
-            <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Description RO</span>
-            <textarea
-              rows="3"
-              formControlName="descriptionRo"
-              class="mt-1 w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-theme-sm text-gray-800 outline-none transition focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
-            ></textarea>
+            <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Ingredients</span>
+            <app-ingredient-chips [value]="form.controls.ingredients.value" (valueChange)="form.controls.ingredients.setValue($event)"></app-ingredient-chips>
           </label>
         </div>
 
@@ -201,7 +185,7 @@
                   <div class="relative h-32 overflow-hidden bg-gray-100 dark:bg-gray-800">
                     <img
                       [src]="image.secureUrl"
-                      [alt]="image.altEn || editingItem()?.nameEn || 'Menu item image'"
+                      [alt]="image.alt || editingItem()?.name || 'Menu item image'"
                       class="h-full w-full object-cover"
                     />
 
@@ -214,11 +198,7 @@
 
                   <div class="space-y-2 p-3">
                     <p class="text-[11px] text-gray-500 dark:text-gray-400">
-                      Alt EN: {{ image.altEn || '-' }}
-                    </p>
-
-                    <p class="text-[11px] text-gray-500 dark:text-gray-400">
-                      Alt RO: {{ image.altRo || '-' }}
+                      Alt: {{ image.alt || '-' }}
                     </p>
 
                     <p class="text-[11px] text-gray-500 dark:text-gray-400">
@@ -255,21 +235,11 @@
                     @if (editingImageId() === image.id) {
                       <div class="mt-3 space-y-3 rounded-xl border border-gray-200 bg-gray-50 p-3 dark:border-gray-700 dark:bg-white/3">
                         <label class="block">
-                          <span class="text-[11px] font-medium text-gray-700 dark:text-gray-300">Alt EN</span>
+                          <span class="text-[11px] font-medium text-gray-700 dark:text-gray-300">Alt</span>
                           <input
                             type="text"
-                            [value]="editingImageAltEn()"
-                            (input)="editingImageAltEn.set($any($event.target).value ?? '')"
-                            class="mt-1 h-10 w-full rounded-lg border border-gray-300 bg-white px-3 text-[11px] text-gray-800 outline-none focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
-                          />
-                        </label>
-
-                        <label class="block">
-                          <span class="text-[11px] font-medium text-gray-700 dark:text-gray-300">Alt RO</span>
-                          <input
-                            type="text"
-                            [value]="editingImageAltRo()"
-                            (input)="editingImageAltRo.set($any($event.target).value ?? '')"
+                            [value]="editingImageAlt()"
+                            (input)="editingImageAlt.set($any($event.target).value ?? '')"
                             class="mt-1 h-10 w-full rounded-lg border border-gray-300 bg-white px-3 text-[11px] text-gray-800 outline-none focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                           />
                         </label>
@@ -355,21 +325,11 @@
 
                   <div class="grid gap-4">
                     <label class="block">
-                      <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Alt EN</span>
+                      <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Alt</span>
                       <input
                         type="text"
-                        [value]="fileAltEn()"
-                        (input)="fileAltEn.set($any($event.target).value ?? '')"
-                        class="mt-1 h-11 w-full rounded-lg border border-gray-300 bg-white px-4 text-theme-sm text-gray-800 outline-none focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
-                      />
-                    </label>
-
-                    <label class="block">
-                      <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Alt RO</span>
-                      <input
-                        type="text"
-                        [value]="fileAltRo()"
-                        (input)="fileAltRo.set($any($event.target).value ?? '')"
+                        [value]="fileAlt()"
+                        (input)="fileAlt.set($any($event.target).value ?? '')"
                         class="mt-1 h-11 w-full rounded-lg border border-gray-300 bg-white px-4 text-theme-sm text-gray-800 outline-none focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                       />
                     </label>

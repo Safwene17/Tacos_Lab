@@ -41,6 +41,7 @@ public class SecurityConfig {
                                 "/swagger-ui.html",
                                 "/actuator/health"
                         ).permitAll()
+                        .requestMatchers("/api/auth/**").authenticated()
                         .requestMatchers("/api/admin/**").hasAuthority(AppConstants.ADMIN_ROLE)
                         .anyRequest().authenticated()
                 )

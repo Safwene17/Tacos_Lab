@@ -11,8 +11,7 @@
 
 export interface AdminCategoryResponseDto { 
     id?: string;
-    nameEn?: string;
-    nameRo?: string;
+    name?: string;
     markAsNew?: boolean;
     active?: boolean;
     displayOrder?: number;

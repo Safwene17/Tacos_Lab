@@ -15,8 +15,7 @@ import type { AdminMediaAssetResponseDto } from '../../../core/api/model/adminMe
 import type { PageableDto } from '../../../core/api/model/pageable';
 
 type CategoryForm = FormGroup<{
-  nameEn: FormControl<string>;
-  nameRo: FormControl<string>;
+  name: FormControl<string>;
   displayOrder: FormControl<number | null>;
   markAsNew: FormControl<boolean>;
   active: FormControl<boolean>;
@@ -24,10 +23,8 @@ type CategoryForm = FormGroup<{
 
 type MenuItemForm = FormGroup<{
   categoryId: FormControl<string>;
-  nameEn: FormControl<string>;
-  nameRo: FormControl<string>;
-  descriptionEn: FormControl<string>;
-  descriptionRo: FormControl<string>;
+  name: FormControl<string>;
+  description: FormControl<string>;
   price: FormControl<number | null>;
   weightLabel: FormControl<string>;
   displayOrder: FormControl<number | null>;
@@ -66,11 +63,7 @@ export class MenuCategories {
   readonly totalElements = signal(0);
 
   readonly categoryForm: CategoryForm = new FormGroup({
-    nameEn: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required, Validators.maxLength(150)],
-    }),
-    nameRo: new FormControl('', {
+    name: new FormControl('', {
       nonNullable: true,
       validators: [Validators.required, Validators.maxLength(150)],
     }),
@@ -90,18 +83,11 @@ export class MenuCategories {
       nonNullable: true,
       validators: [Validators.required],
     }),
-    nameEn: new FormControl('', {
+    name: new FormControl('', {
       nonNullable: true,
       validators: [Validators.required, Validators.maxLength(180)],
     }),
-    nameRo: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required, Validators.maxLength(180)],
-    }),
-    descriptionEn: new FormControl('', {
-      nonNullable: true,
-    }),
-    descriptionRo: new FormControl('', {
+    description: new FormControl('', {
       nonNullable: true,
     }),
     price: new FormControl<number | null>(null, {
@@ -195,8 +181,7 @@ export class MenuCategories {
   openCreateCategory(): void {
     this.editingCategory.set(null);
     this.categoryForm.reset({
-      nameEn: '',
-      nameRo: '',
+      name: '',
       displayOrder: this.categories().length,
       markAsNew: false,
       active: true,
@@ -209,8 +194,7 @@ export class MenuCategories {
 
     this.editingCategory.set(category);
     this.categoryForm.reset({
-      nameEn: category.nameEn ?? '',
-      nameRo: category.nameRo ?? '',
+      name: category.name ?? '',
       displayOrder: category.displayOrder ?? 0,
       markAsNew: category.markAsNew ?? false,
       active: category.active ?? true,
@@ -224,8 +208,7 @@ export class MenuCategories {
     this.categoryFormOpen.set(false);
     this.editingCategory.set(null);
     this.categoryForm.reset({
-      nameEn: '',
-      nameRo: '',
+      name: '',
       displayOrder: 0,
       markAsNew: false,
       active: true,
@@ -239,8 +222,7 @@ export class MenuCategories {
 
     const value = this.categoryForm.getRawValue();
     const request: CategoryRequestDto = {
-      nameEn: value.nameEn.trim(),
-      nameRo: value.nameRo.trim(),
+      name: value.name.trim(),
       displayOrder: value.displayOrder ?? 0,
       markAsNew: value.markAsNew,
       active: value.active,
@@ -356,10 +338,8 @@ export class MenuCategories {
     this.editingItem.set(null);
     this.itemForm.reset({
       categoryId: category.id ?? '',
-      nameEn: '',
-      nameRo: '',
-      descriptionEn: '',
-      descriptionRo: '',
+      name: '',
+      description: '',
       price: null,
       weightLabel: '',
       displayOrder: this.categoryItems(category.id).length,
@@ -376,10 +356,8 @@ export class MenuCategories {
     this.editingItem.set(item);
     this.itemForm.reset({
       categoryId: item.categoryId ?? '',
-      nameEn: item.nameEn ?? '',
-      nameRo: item.nameRo ?? '',
-      descriptionEn: item.descriptionEn ?? '',
-      descriptionRo: item.descriptionRo ?? '',
+      name: item.name ?? '',
+      description: item.description ?? '',
       price: item.price ?? null,
       weightLabel: item.weightLabel ?? '',
       displayOrder: item.displayOrder ?? 0,
@@ -397,10 +375,8 @@ export class MenuCategories {
     this.editingItem.set(null);
     this.itemForm.reset({
       categoryId: '',
-      nameEn: '',
-      nameRo: '',
-      descriptionEn: '',
-      descriptionRo: '',
+      name: '',
+      description: '',
       price: null,
       weightLabel: '',
       displayOrder: 0,
@@ -420,10 +396,8 @@ export class MenuCategories {
     const value = this.itemForm.getRawValue();
     const request: MenuItemRequestDto = {
       categoryId: value.categoryId,
-      nameEn: value.nameEn.trim(),
-      nameRo: value.nameRo.trim(),
-      descriptionEn: value.descriptionEn.trim() || undefined,
-      descriptionRo: value.descriptionRo.trim() || undefined,
+      name: value.name.trim(),
+      description: value.description.trim() || undefined,
       price: value.price ?? 0,
       weightLabel: value.weightLabel.trim() || undefined,
       displayOrder: value.displayOrder ?? 0,
@@ -509,7 +483,7 @@ export class MenuCategories {
     const images = item.images ?? [];
     const image = images.find((current) => current.primary) ?? images[0] ?? null;
 
-    return image?.altEn || item.nameEn || 'Menu item image';
+    return image?.alt || item.name || 'Menu item image';
   }
 
   money(value?: number, currency = 'RON'): string {

@@ -14,6 +14,7 @@ import { Observable }                                        from 'rxjs';
 import { ApiResponseAdminMeResponseDto } from '../model/models';
 import { ApiResponseAuthResponseDto } from '../model/models';
 import { ChangePasswordRequestDto } from '../model/models';
+import { ForceChangePasswordRequestDto } from '../model/models';
 import { LoginRequestDto } from '../model/models';
 
 
@@ -32,6 +33,14 @@ export interface AuthControllerApiServiceInterface {
      * @param changePasswordRequestDto 
      */
     changePassword(changePasswordRequestDto: ChangePasswordRequestDto, extraHttpRequestParams?: any): Observable<{}>;
+
+    /**
+     * 
+     * 
+     * @endpoint post /api/auth/force-change-password
+     * @param forceChangePasswordRequestDto 
+     */
+    forceChangePassword(forceChangePasswordRequestDto: ForceChangePasswordRequestDto, extraHttpRequestParams?: any): Observable<{}>;
 
     /**
      * 

@@ -122,11 +122,11 @@
               <tr>
                 <td class="py-4 pr-5 align-top">
                   @if (primaryImage(item); as image) {
-                    <img
-                      [src]="image.secureUrl"
-                      [alt]="image.altEn || item.nameEn || 'Menu item image'"
-                      class="h-12 w-12 rounded-lg object-cover"
-                    />
+                      <img
+                        [src]="image.secureUrl"
+                        [alt]="image.alt || item.name || 'Menu item image'"
+                        class="h-12 w-12 rounded-lg object-cover"
+                      />
                   } @else {
                     <div class="h-12 w-12 rounded-lg bg-gray-100 dark:bg-gray-800"></div>
                   }
@@ -134,11 +134,7 @@
 
                 <td class="py-4 pr-5 align-top">
                   <p class="font-medium text-gray-800 text-theme-sm dark:text-white/90">
-                    {{ item.nameEn || '-' }}
-                  </p>
-
-                  <p class="mt-1 text-theme-xs text-gray-500 dark:text-gray-400">
-                    {{ item.nameRo || '-' }}
+                    {{ item.name || '-' }}
                   </p>
                 </td>
 
@@ -282,26 +278,14 @@
 
           <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <label class="block">
-              <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Name EN</span>
+              <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Name</span>
               <input
                 type="text"
-                formControlName="nameEn"
+                formControlName="name"
                 class="mt-1 h-11 w-full rounded-lg border border-gray-300 px-4 text-theme-sm text-gray-800 outline-none focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
               />
-              @if (fieldError('nameEn')) {
-                <p class="mt-1 text-theme-xs text-error-600">{{ fieldError('nameEn') }}</p>
-              }
-            </label>
-
-            <label class="block">
-              <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Name RO</span>
-              <input
-                type="text"
-                formControlName="nameRo"
-                class="mt-1 h-11 w-full rounded-lg border border-gray-300 px-4 text-theme-sm text-gray-800 outline-none focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
-              />
-              @if (fieldError('nameRo')) {
-                <p class="mt-1 text-theme-xs text-error-600">{{ fieldError('nameRo') }}</p>
+              @if (fieldError('name')) {
+                <p class="mt-1 text-theme-xs text-error-600">{{ fieldError('name') }}</p>
               }
             </label>
 
@@ -313,7 +297,7 @@
               >
                 <option value="">Select category</option>
                 @for (category of categoryOptions(); track category.id) {
-                  <option [value]="category.id">{{ category.nameEn }}</option>
+                  <option [value]="category.id">{{ category.name }}</option>
                 }
               </select>
               @if (fieldError('categoryId')) {
@@ -427,7 +411,7 @@
                 >
                   <img
                     [src]="image.secureUrl"
-                    [alt]="image.altEn || editingItem()?.nameEn || 'Menu item image'"
+                    [alt]="image.alt || editingItem()?.name || 'Menu item image'"
                     class="h-full w-full object-cover"
                   />
 
@@ -514,24 +498,12 @@
                 <div class="grid gap-4">
                   <label class="block">
                     <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">
-                      Alt EN
+                      Alt
                     </span>
                     <input
                       type="text"
-                      [value]="imageAltEn()"
-                      (input)="imageAltEn.set($any($event.target).value ?? '')"
-                      class="mt-1 h-11 w-full rounded-lg border border-gray-300 px-4 text-theme-sm text-gray-800 outline-none focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
-                    />
-                  </label>
-
-                  <label class="block">
-                    <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">
-                      Alt RO
-                    </span>
-                    <input
-                      type="text"
-                      [value]="imageAltRo()"
-                      (input)="imageAltRo.set($any($event.target).value ?? '')"
+                      [value]="imageAlt()"
+                      (input)="imageAlt.set($any($event.target).value ?? '')"
                       class="mt-1 h-11 w-full rounded-lg border border-gray-300 px-4 text-theme-sm text-gray-800 outline-none focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                     />
                   </label>

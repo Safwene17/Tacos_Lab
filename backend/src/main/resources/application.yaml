@@ -1,6 +1,6 @@
 spring:
   application:
-    name: le-tacos-backend
+    name: tacos-lab-backend
   servlet:
     multipart:
       max-file-size: 50MB          # Maximum size per file

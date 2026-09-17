@@ -15,8 +15,8 @@
 	<groupId>com.example</groupId>
 	<artifactId>backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>le-tacos-backend</name>
-	<description>Backend API for Le Tacos restaurant management platform</description>
+	<name>tacos-lab-backend</name>
+	<description>Backend API for Tacos Lab restaurant management platform</description>
 
 	<properties>
 		<java.version>17</java.version>

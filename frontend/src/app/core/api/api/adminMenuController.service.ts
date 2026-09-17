@@ -899,17 +899,16 @@ export class AdminMenuControllerApiService extends BaseService implements AdminM
      * @endpoint post /api/admin/menu-items/{menuItemId}/images
      * @param menuItemId 
      * @param file 
-     * @param altEn 
-     * @param altRo 
+    * @param alt
      * @param primary 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      * @param options additional options
      */
-    public uploadImage(menuItemId: string, file: Blob, altEn?: string, altRo?: string, primary?: boolean, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<ApiResponseAdminMediaAssetResponseDto>;
-    public uploadImage(menuItemId: string, file: Blob, altEn?: string, altRo?: string, primary?: boolean, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ApiResponseAdminMediaAssetResponseDto>>;
-    public uploadImage(menuItemId: string, file: Blob, altEn?: string, altRo?: string, primary?: boolean, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ApiResponseAdminMediaAssetResponseDto>>;
-    public uploadImage(menuItemId: string, file: Blob, altEn?: string, altRo?: string, primary?: boolean, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public uploadImage(menuItemId: string, file: Blob, alt?: string, primary?: boolean, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<ApiResponseAdminMediaAssetResponseDto>;
+    public uploadImage(menuItemId: string, file: Blob, alt?: string, primary?: boolean, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ApiResponseAdminMediaAssetResponseDto>>;
+    public uploadImage(menuItemId: string, file: Blob, alt?: string, primary?: boolean, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ApiResponseAdminMediaAssetResponseDto>>;
+    public uploadImage(menuItemId: string, file: Blob, alt?: string, primary?: boolean, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (menuItemId === null || menuItemId === undefined) {
             throw new Error('Required parameter menuItemId was null or undefined when calling uploadImage.');
         }
@@ -921,17 +920,8 @@ export class AdminMenuControllerApiService extends BaseService implements AdminM
 
         localVarQueryParameters = this.addToHttpParams(
             localVarQueryParameters,
-            'altEn',
-            <any>altEn,
-            QueryParamStyle.Form,
-            true,
-        );
-
-
-        localVarQueryParameters = this.addToHttpParams(
-            localVarQueryParameters,
-            'altRo',
-            <any>altRo,
+            'alt',
+            <any>alt,
             QueryParamStyle.Form,
             true,
         );

@@ -59,29 +59,15 @@
 
         <div class="grid grid-cols-1 gap-5">
           <label class="block">
-            <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Name EN</span>
+            <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Name</span>
             <input
               type="text"
-              formControlName="nameEn"
+              formControlName="name"
               class="mt-1 h-11 w-full rounded-lg border border-gray-300 bg-white px-4 text-theme-sm text-gray-800 outline-none transition focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
             />
-            @if (fieldError('nameEn')) {
+            @if (fieldError('name')) {
               <p class="mt-1 text-theme-xs text-error-600 dark:text-error-500">
-                {{ fieldError('nameEn') }}
-              </p>
-            }
-          </label>
-
-          <label class="block">
-            <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-300">Name RO</span>
-            <input
-              type="text"
-              formControlName="nameRo"
-              class="mt-1 h-11 w-full rounded-lg border border-gray-300 bg-white px-4 text-theme-sm text-gray-800 outline-none transition focus:border-admin-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
-            />
-            @if (fieldError('nameRo')) {
-              <p class="mt-1 text-theme-xs text-error-600 dark:text-error-500">
-                {{ fieldError('nameRo') }}
+                {{ fieldError('name') }}
               </p>
             }
           </label>

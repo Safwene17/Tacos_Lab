@@ -22,7 +22,7 @@ export interface TransactionResponseDto {
     employeeId?: string;
     employeeName?: string;
     menuItemId?: string;
-    menuItemNameEn?: string;
+    menuItemName?: string;
     payrollRecordId?: string;
 }
 export namespace TransactionResponseDto {

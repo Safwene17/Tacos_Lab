@@ -43,7 +43,7 @@ class AuthControllerTest {
     private static final String ADMIN_EMAIL = "admin@test.local";
     private static final String PASSWORD = "Admin12345";
     private static final String ACCESS_TOKEN = "access-token";
-    private static final String REFRESH_COOKIE_NAME = "le_tacos_refresh";
+    private static final String REFRESH_COOKIE_NAME = "tacos_lab_refresh";
     private static final String REFRESH_TOKEN = "refresh-token";
     private static final Instant EXPIRES_AT = Instant.parse("2030-01-01T00:00:00Z");
 

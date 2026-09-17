@@ -30,6 +30,7 @@ export * from './authResponse';
 export * from './categoryBreakdownResponse';
 export * from './categoryRequest';
 export * from './changePasswordRequest';
+export * from './forceChangePasswordRequest';
 export * from './dashboardSummaryResponse';
 export * from './employeeRequest';
 export * from './employeeResponse';

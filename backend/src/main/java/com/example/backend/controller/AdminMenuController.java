@@ -113,13 +113,12 @@ public class AdminMenuController {
     public ResponseEntity<ApiResponse<AdminMediaAssetResponse>> uploadImage(
             @PathVariable UUID menuItemId,
             @RequestPart("file") MultipartFile file,
-            @RequestParam(required = false) String altEn,
-            @RequestParam(required = false) String altRo,
+            @RequestParam(required = false) String alt,
             @RequestParam(required = false, defaultValue = "false") Boolean primary
     ) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.created("Image uploaded successfully",
-                        menuService.uploadMenuItemImage(menuItemId, file, altEn, altRo, primary)));
+                        menuService.uploadMenuItemImage(menuItemId, file, alt, primary)));
     }
 
     @PutMapping("/menu-items/{menuItemId}/images/{imageId}")

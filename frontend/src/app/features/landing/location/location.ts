@@ -3,7 +3,7 @@ import { DomSanitizer, type SafeResourceUrl } from '@angular/platform-browser';
 import { SectionTitle } from '../../../shared/components/section-title/section-title';
 import { ScrollReveal } from '../../../core/directives/scroll-reveal';
 import { Icon } from '../../../shared/components/icon/icon';
-import { I18n } from '../../../core/i18n/i18n';
+
 import { environment } from '../../../../environments/environment.development';
 
 const GOOGLE_MAPS_LOCATION_URL =
@@ -30,7 +30,7 @@ const GOOGLE_MAPS_EMBED_URL =
 export class Location {
   private readonly sanitizer = inject(DomSanitizer);
 
-  readonly i18n = inject(I18n);
+
   readonly mapsUrl = GOOGLE_MAPS_LOCATION_URL;
 
   readonly mapEmbedUrl: SafeResourceUrl =

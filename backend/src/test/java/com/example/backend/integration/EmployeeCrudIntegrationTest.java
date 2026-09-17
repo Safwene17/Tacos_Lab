@@ -38,7 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         "app.security.jwt.secret=test-secret-test-secret-test-secret-test-secret",
         "app.security.jwt.access-token-minutes=20",
         "app.security.jwt.refresh-token-days=7",
-        "app.security.jwt.issuer=le-tacos-api-test",
+        "app.security.jwt.issuer=tacos-lab-api-test",
         "app.security.refresh-cookie.name=le_tacos_refresh",
         "app.security.refresh-cookie.path=/api/auth",
         "app.security.refresh-cookie.http-only=true",

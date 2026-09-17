@@ -19,7 +19,7 @@ class JwtServiceTest {
 
     private static final String SECRET = "test-secret-test-secret-test-secret-test-secret";
     private static final String SHORT_SECRET = "short";
-    private static final String ISSUER = "le-tacos-test";
+    private static final String ISSUER = "tacos-lab-test";
     private static final String ADMIN_EMAIL = "admin@test.local";
     private static final String ADMIN_ROLE = "ROLE_ADMIN";
 

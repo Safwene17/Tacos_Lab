@@ -14,12 +14,22 @@ export const adminAuthGuard: CanActivateFn = (): boolean | Observable<boolean> =
   const router = inject(Router);
 
   if (authStore.isAuthenticated()) {
+    // Check if password change is required
+    if (authStore.mustChangePassword()) {
+      void router.navigateByUrl('/force-change-password');
+      return false;
+    }
     return true;
   }
 
   return restoreSession(authApi, authStore).pipe(
     map((restored) => {
       if (restored) {
+        // Check if password change is required after restoring
+        if (authStore.mustChangePassword()) {
+          void router.navigateByUrl('/force-change-password');
+          return false;
+        }
         return true;
       }
 

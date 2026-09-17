@@ -15,10 +15,8 @@ import type { PageableDto } from '../../../core/api/model/pageable';
 
 type MenuItemForm = FormGroup<{
   categoryId: FormControl<string>;
-  nameEn: FormControl<string>;
-  nameRo: FormControl<string>;
-  descriptionEn: FormControl<string>;
-  descriptionRo: FormControl<string>;
+  name: FormControl<string>;
+  description: FormControl<string>;
   price: FormControl<number | null>;
   weightLabel: FormControl<string>;
   displayOrder: FormControl<number | null>;
@@ -58,8 +56,7 @@ export class MenuItems {
   readonly itemImages = signal<AdminMediaAssetResponseDto[]>([]);
   readonly imagePreview = signal<string | null>(null);
   readonly imageFile = signal<File | null>(null);
-  readonly imageAltEn = signal('');
-  readonly imageAltRo = signal('');
+  readonly imageAlt = signal('');
   readonly imagePrimary = signal(false);
 
   readonly categoryOptions = computed(() =>
@@ -77,18 +74,11 @@ export class MenuItems {
       nonNullable: true,
       validators: [Validators.required],
     }),
-    nameEn: new FormControl('', {
+    name: new FormControl('', {
       nonNullable: true,
       validators: [Validators.required, Validators.maxLength(180)],
     }),
-    nameRo: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required, Validators.maxLength(180)],
-    }),
-    descriptionEn: new FormControl('', {
-      nonNullable: true,
-    }),
-    descriptionRo: new FormControl('', {
+    description: new FormControl('', {
       nonNullable: true,
     }),
     price: new FormControl<number | null>(null, {
@@ -186,10 +176,8 @@ export class MenuItems {
 
     this.form.reset({
       categoryId: '',
-      nameEn: '',
-      nameRo: '',
-      descriptionEn: '',
-      descriptionRo: '',
+      name: '',
+      description: '',
       price: null,
       weightLabel: '',
       displayOrder: this.items().length,
@@ -212,10 +200,8 @@ export class MenuItems {
 
     this.form.reset({
       categoryId: item.categoryId ?? '',
-      nameEn: item.nameEn ?? '',
-      nameRo: item.nameRo ?? '',
-      descriptionEn: item.descriptionEn ?? '',
-      descriptionRo: item.descriptionRo ?? '',
+      name: item.name ?? '',
+      description: item.description ?? '',
       price: item.price ?? null,
       weightLabel: item.weightLabel ?? '',
       displayOrder: item.displayOrder ?? 0,
@@ -239,10 +225,8 @@ export class MenuItems {
 
     this.form.reset({
       categoryId: '',
-      nameEn: '',
-      nameRo: '',
-      descriptionEn: '',
-      descriptionRo: '',
+      name: '',
+      description: '',
       price: null,
       weightLabel: '',
       displayOrder: 0,
@@ -261,10 +245,8 @@ export class MenuItems {
     const value = this.form.getRawValue();
     const request: MenuItemRequestDto = {
       categoryId: value.categoryId,
-      nameEn: value.nameEn.trim(),
-      nameRo: value.nameRo.trim(),
-      descriptionEn: value.descriptionEn.trim() || undefined,
-      descriptionRo: value.descriptionRo.trim() || undefined,
+      name: value.name.trim(),
+      description: value.description.trim() || undefined,
       price: value.price ?? 0,
       weightLabel: value.weightLabel.trim() || undefined,
       displayOrder: value.displayOrder ?? 0,
@@ -351,7 +333,7 @@ export class MenuItems {
   }
 
   categoryName(item: AdminMenuItemResponseDto): string {
-    return item.categoryNameEn || this.categoryOptions().find((category) => category.id === item.categoryId)?.nameEn || '-';
+    return item.categoryName || this.categoryOptions().find((category) => category.id === item.categoryId)?.name || '-';
   }
 
   money(value?: number, currency = 'RON'): string {
@@ -421,8 +403,7 @@ export class MenuItems {
 
     this.imageFile.set(file);
     this.imagePreview.set(URL.createObjectURL(file));
-    this.imageAltEn.set('');
-    this.imageAltRo.set('');
+    this.imageAlt.set('');
     this.imagePrimary.set(false);
   }
 
@@ -437,7 +418,7 @@ export class MenuItems {
     this.uploading.set(true);
 
     this.menuApi
-      .uploadImage(itemId, file, this.imageAltEn().trim() || undefined, this.imageAltRo().trim() || undefined, this.imagePrimary())
+      .uploadImage(itemId, file, this.imageAlt().trim() || undefined, this.imagePrimary())
       .pipe(finalize(() => this.uploading.set(false)))
       .subscribe({
         next: (response) => {
@@ -562,8 +543,7 @@ export class MenuItems {
 
     this.imageFile.set(null);
     this.imagePreview.set(null);
-    this.imageAltEn.set('');
-    this.imageAltRo.set('');
+    this.imageAlt.set('');
     this.imagePrimary.set(false);
 
     if (this.imageFileInput) {

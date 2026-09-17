@@ -33,8 +33,8 @@ public class FinanceMapper {
                 .notes(transaction.getNotes())
                 .employeeId(transaction.getEmployee() == null ? null : transaction.getEmployee().getId())
                 .employeeName(transaction.getEmployee() == null ? null : transaction.getEmployee().fullName())
-                .menuItemId(transaction.getMenuItem() == null ? null : transaction.getMenuItem().getId())
-                .menuItemNameEn(transaction.getMenuItem() == null ? null : transaction.getMenuItem().getNameEn())
+                    .menuItemId(transaction.getMenuItem() == null ? null : transaction.getMenuItem().getId())
+                    .menuItemName(transaction.getMenuItem() == null ? null : transaction.getMenuItem().getName())
                 .payrollRecordId(transaction.getPayrollRecord() == null ? null : transaction.getPayrollRecord().getId())
                 .build();
     }

@@ -11,10 +11,14 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -37,16 +41,14 @@ public class MenuItem extends BaseEntity {
     private Category category;
 
     @Column(nullable = false, length = 180)
-    private String nameEn;
-
-    @Column(nullable = false, length = 180)
-    private String nameRo;
+    private String name;
 
     @Column(columnDefinition = "TEXT")
-    private String descriptionEn;
+    private String description;
 
-    @Column(columnDefinition = "TEXT")
-    private String descriptionRo;
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "jsonb")
+    private List<String> ingredients = new ArrayList<>();
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;

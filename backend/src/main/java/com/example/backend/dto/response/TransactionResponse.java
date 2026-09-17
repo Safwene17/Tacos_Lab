@@ -22,7 +22,7 @@ public record TransactionResponse(
         UUID employeeId,
         String employeeName,
         UUID menuItemId,
-        String menuItemNameEn,
+                String menuItemName,
         UUID payrollRecordId
 ) {
 }

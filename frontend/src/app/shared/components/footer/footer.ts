@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { I18n } from '../../../core/i18n/i18n';
+
 import { Icon } from '../icon/icon';
 
 interface FooterLink {
-  labelKey: string;
+  label: string;
   href: string;
 }
 
@@ -18,13 +18,12 @@ const GOOGLE_MAPS_LOCATION_URL =
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Footer {
-  readonly i18n = inject(I18n);
   readonly mapsUrl = GOOGLE_MAPS_LOCATION_URL;
 
   readonly links: readonly FooterLink[] = [
-    { labelKey: 'nav.menu', href: '#menu' },
-    { labelKey: 'nav.about', href: '#about' },
-    { labelKey: 'nav.how', href: '#how-it-works' },
-    { labelKey: 'nav.order', href: '#contact' },
+    { label: 'Menu', href: '#menu' },
+    { label: 'About', href: '#about' },
+    { label: 'How It Works', href: '#how-it-works' },
+    { label: 'Order', href: '#contact' },
   ];
 }

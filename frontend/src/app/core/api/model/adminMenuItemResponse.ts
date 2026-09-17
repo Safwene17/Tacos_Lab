@@ -13,11 +13,10 @@ import { AdminMediaAssetResponseDto } from './adminMediaAssetResponse';
 export interface AdminMenuItemResponseDto { 
     id?: string;
     categoryId?: string;
-    categoryNameEn?: string;
-    nameEn?: string;
-    nameRo?: string;
-    descriptionEn?: string;
-    descriptionRo?: string;
+    categoryName?: string;
+    name?: string;
+    description?: string;
+    ingredients?: Array<string>;
     price?: number;
     currency?: string;
     weightLabel?: string;

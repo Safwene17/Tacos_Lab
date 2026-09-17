@@ -19,10 +19,7 @@ import lombok.Setter;
 public class Category extends BaseEntity {
 
     @Column(nullable = false, length = 150)
-    private String nameEn;
-
-    @Column(nullable = false, length = 150)
-    private String nameRo;
+    private String name;
 
     @Column(nullable = false)
     private boolean markAsNew = false;
