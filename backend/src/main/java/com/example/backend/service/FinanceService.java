@@ -84,11 +84,6 @@ public class FinanceService {
     @Transactional
     public void deleteCategory(UUID id) {
         TransactionCategory category = findCategory(id);
-
-        if (category.getSystemKey() != null && !category.getSystemKey().isBlank()) {
-            throw new BusinessException("Seeded system categories cannot be deleted.");
-        }
-
         category.setActive(false);
         transactionCategoryRepository.delete(category);
     }

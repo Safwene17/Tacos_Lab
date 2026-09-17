@@ -1,10 +1,11 @@
 <aside
-  class="fixed left-0 top-0 z-50 flex h-screen flex-col border-r border-gray-200 bg-white px-5 text-gray-900 transition-all duration-300 ease-in-out dark:border-gray-800 dark:bg-gray-900 lg:translate-x-0"
+  class="fixed left-0 top-0 z-50 flex h-screen flex-col border-r border-gray-200 bg-white px-5 text-gray-900 transition-all duration-300 ease-in-out dark:border-gray-800 dark:bg-gray-900"
   [ngClass]="{
-    'w-72.5': sidebar.isDesktopExpanded(),
-    'w-22.5': !sidebar.isDesktopExpanded(),
-    'translate-x-0': sidebar.isMobileOpen(),
-    '-translate-x-full': !sidebar.isMobileOpen()
+    'w-72.5': sidebar.isDesktopExpanded() && sidebar.isDesktopView(),
+    'w-22.5': !sidebar.isDesktopExpanded() && sidebar.isDesktopView(),
+    'w-64': sidebar.isMobileOpen() && !sidebar.isDesktopView(),
+    'translate-x-0': sidebar.isMobileOpen() || sidebar.isDesktopView(),
+    '-translate-x-full': !sidebar.isMobileOpen() && !sidebar.isDesktopView()
   }"
   (mouseenter)="sidebar.setHovered(true)"
   (mouseleave)="sidebar.setHovered(false)"
@@ -12,8 +13,8 @@
   <div
     class="flex h-18 items-center border-b border-gray-100 dark:border-gray-800"
     [ngClass]="{
-      'justify-start': sidebar.isDesktopExpanded(),
-      'justify-center': !sidebar.isDesktopExpanded()
+      'justify-start': sidebar.isDesktopExpanded() || sidebar.isMobileOpen(),
+      'justify-center': !sidebar.isDesktopExpanded() && !sidebar.isMobileOpen()
     }"
   >
     <a routerLink="/admin/dashboard" class="flex items-center gap-3">
@@ -23,7 +24,7 @@
         TL
       </div>
 
-      @if (sidebar.isDesktopExpanded()) {
+      @if (sidebar.isDesktopExpanded() || sidebar.isMobileOpen()) {
         <div class="leading-tight">
           <p class="text-base font-semibold text-gray-900 dark:text-white">
             Tacos Lab
@@ -37,7 +38,7 @@
   </div>
 
   <div class="flex flex-1 flex-col overflow-y-auto py-6">
-    @if (sidebar.isDesktopExpanded()) {
+    @if (sidebar.isDesktopExpanded() || sidebar.isMobileOpen()) {
       <p class="mb-4 px-3 text-xs font-medium uppercase tracking-[0.14em] text-gray-400">
         Menu
       </p>
@@ -51,8 +52,8 @@
           [routerLinkActiveOptions]="{ exact: item.path === '/admin/dashboard' }"
           class="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-white/5 dark:hover:text-white"
           [ngClass]="{
-            'justify-center': !sidebar.isDesktopExpanded(),
-            'justify-start': sidebar.isDesktopExpanded()
+            'justify-center': !sidebar.isDesktopExpanded() && !sidebar.isMobileOpen(),
+            'justify-start': sidebar.isDesktopExpanded() || sidebar.isMobileOpen()
           }"
           (click)="sidebar.closeMobileSidebar()"
         >
@@ -65,7 +66,7 @@
             <path [attr.d]="iconPath(item.icon)" />
           </svg>
 
-          @if (sidebar.isDesktopExpanded()) {
+          @if (sidebar.isDesktopExpanded() || sidebar.isMobileOpen()) {
             <span>{{ item.label }}</span>
           }
         </a>
@@ -73,14 +74,4 @@
     </nav>
   </div>
 
-  @if (sidebar.isDesktopExpanded()) {
-    <div class="mb-6 rounded-2xl bg-gray-50 p-4 dark:bg-white/4">
-      <p class="text-sm font-semibold text-gray-900 dark:text-white">
-        Need updates?
-      </p>
-      <p class="mt-1 text-xs leading-5 text-gray-500 dark:text-gray-400">
-        Dashboard data will connect to your Spring Boot API next.
-      </p>
-    </div>
-  }
 </aside>
