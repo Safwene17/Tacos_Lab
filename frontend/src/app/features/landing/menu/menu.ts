@@ -1,9 +1,9 @@
-import { HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs';
 
 import { PublicMenuControllerApiService } from '../../../core/api/api/publicMenuController.service';
+import { ErrorHandlerService } from '../../../core/error/error-handler.service';
 
 
 import type { PublicMediaAssetResponseDto } from '../../../core/api/model/publicMediaAssetResponse';
@@ -20,6 +20,7 @@ export class Menu {
   private readonly router = inject(Router);
 
   private readonly publicMenuApi = inject(PublicMenuControllerApiService);
+  private readonly errorHandler = inject(ErrorHandlerService);
 
   readonly menuGroups = signal<PublicMenuCategoryGroupResponseDto[]>([]);
   readonly loadingMenu = signal(false);
@@ -78,7 +79,8 @@ export class Menu {
           this.menuGroups.set(response.data.categories ?? []);
         },
         error: (error: unknown) => {
-          this.menuError.set(this.errorMessage(error));
+          const appError = this.errorHandler.parseError(error);
+          this.menuError.set(appError.message);
         },
       });
   }
@@ -112,17 +114,5 @@ export class Menu {
 
   retry(): void {
     this.loadMenu();
-  }
-
-  private errorMessage(error: unknown): string {
-    if (error instanceof HttpErrorResponse) {
-      return error.error?.message ?? `Request failed with status ${error.status}.`;
-    }
-
-    if (error instanceof Error) {
-      return error.message;
-    }
-
-    return 'Unexpected error.';
   }
 }

@@ -1,9 +1,9 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { finalize } from 'rxjs';
 
 import { PublicMenuControllerApiService } from '../../../core/api/api/publicMenuController.service';
+import { ErrorHandlerService } from '../../../core/error/error-handler.service';
 
 import { Footer } from '../../../shared/components/footer/footer';
 import { Navbar } from '../../../shared/components/navbar/navbar';
@@ -24,6 +24,7 @@ export class ProductDetail {
   private readonly router = inject(Router);
 
   private readonly publicMenuApi = inject(PublicMenuControllerApiService);
+  private readonly errorHandler = inject(ErrorHandlerService);
 
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
@@ -115,7 +116,8 @@ export class ProductDetail {
           }
         },
         error: (error: unknown) => {
-          this.error.set(this.errorMessage(error));
+          const appError = this.errorHandler.parseError(error);
+          this.error.set(appError.message);
         },
       });
   }
@@ -153,17 +155,5 @@ export class ProductDetail {
     }
 
     return 'bg-emerald-400/15 text-emerald-300';
-  }
-
-  private errorMessage(error: unknown): string {
-    if (error instanceof HttpErrorResponse) {
-      return error.error?.message ?? `Request failed with status ${error.status}.`;
-    }
-
-    if (error instanceof Error) {
-      return error.message;
-    }
-
-    return 'Unexpected error.';
   }
 }

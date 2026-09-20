@@ -7,6 +7,8 @@ import { App } from './app/app';
 import { appRoutes } from './app/app.routes';
 import { authInterceptor } from './app/core/auth/auth.interceptor';
 import { errorInterceptor } from './app/core/error/error.interceptor';
+import { environment } from './environments/environment';
+import { provideApi } from './app/core/api/provide-api';
 
 bootstrapApplication(App, {
   providers: [
@@ -21,6 +23,12 @@ bootstrapApplication(App, {
     ),
 
     provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
+    
+    // Provide API with environment-based base URL
+    provideApi({
+      basePath: environment.apiBaseUrl,
+      withCredentials: true,
+    }),
   ],
 }).catch((error: unknown) => {
   throw error;

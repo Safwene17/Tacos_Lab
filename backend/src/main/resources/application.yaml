@@ -14,6 +14,9 @@ spring:
     url: ${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 2
 
   jpa:
     open-in-view: false
@@ -30,7 +33,7 @@ spring:
     locations: classpath:migration
 
 server:
-  port: ${SERVER_PORT}
+  port: ${PORT:8080}
 
 springdoc:
   api-docs:
