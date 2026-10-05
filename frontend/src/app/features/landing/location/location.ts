@@ -4,7 +4,7 @@ import { SectionTitle } from '../../../shared/components/section-title/section-t
 import { ScrollReveal } from '../../../core/directives/scroll-reveal';
 import { Icon } from '../../../shared/components/icon/icon';
 
-import { environment } from '../../../../environments/environment.development';
+import { environment } from '../../../../environments/environment';
 
 const GOOGLE_MAPS_LOCATION_URL =
   'https://maps.app.goo.gl/wkhX9Sz9M5fp9c7K7';
