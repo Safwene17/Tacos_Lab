@@ -12,5 +12,5 @@ import { Icon } from '../../../shared/components/icon/icon';
 })
 export class Hero {
 
-  readonly heroImage = '/assets/images/hero.jpg';
+  readonly heroImage = '/assets/images/hero-le-tacos1.jpg';
 }
