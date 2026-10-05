@@ -23,10 +23,9 @@ WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 
 # Set JVM options for 512MB RAM environment (Render free tier)
-# -Xmx350m: Max heap size (leaves ~150MB for overhead)
-# -Xss512k: Stack size per thread
-# -XX:MaxMetaspaceSize=100m: Metadata/class definitions
-ENV JAVA_TOOL_OPTIONS="-Xmx350m -Xss512k -XX:MaxMetaspaceSize=100m"
+# Heap + metaspace + code cache must leave room for thread stacks and native memory,
+# otherwise the container is OOM-killed during startup without any log output.
+ENV JAVA_TOOL_OPTIONS="-Xmx256m -Xss512k -XX:MaxMetaspaceSize=128m -XX:ReservedCodeCacheSize=64m -XX:+UseSerialGC -XX:TieredStopAtLevel=1"
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
