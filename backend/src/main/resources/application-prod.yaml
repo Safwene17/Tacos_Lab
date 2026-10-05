@@ -1,0 +1,122 @@
+spring:
+  # Production-level JPA & Hibernate settings
+  jpa:
+    # Never show SQL in production (memory & security)
+    show-sql: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        # Disable SQL formatting to reduce memory overhead
+        format_sql: false
+        # Use batch inserts/updates for better performance
+        jdbc:
+          batch_size: 20
+          fetch_size: 50
+          time_zone: UTC
+        # Connection pooling tuning for Render's 512MB limit
+        hikari:
+          maximum_pool_size: 3
+          minimum_idle: 1
+
+  # Disable Swagger/OpenAPI docs in production
+  springdoc:
+    swagger-ui:
+      enabled: false
+    api-docs:
+      enabled: false
+
+  # Server configuration
+  server:
+    # Compression for responses to reduce bandwidth
+    compression:
+      enabled: true
+      min-response-size: 1024
+      mime-types:
+        - application/json
+        - application/xml
+        - text/html
+        - text/xml
+        - text/plain
+    # Timeout settings
+    tomcat:
+      threads:
+        max: 10          # Limit threads for 512MB constraint
+        min-spare: 2
+      max-connections: 50
+      accept-count: 10
+      connection-timeout: 20000   # 20 seconds
+      max-http-post-size: 104857600  # 100MB (from application.yaml)
+
+logging:
+  # Production: INFO level only (no DEBUG logging)
+  level:
+    root: WARN
+    com.example.backend: INFO
+    org.springframework.boot: INFO
+    org.springframework.security: WARN
+    org.springframework.web: WARN
+  # Use JSON logging format for better parsing in production logs
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+management:
+  # Lock down actuator in production
+  endpoints:
+    web:
+      exposure:
+        include: health
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: when-authorized
+  # Add slow query logging
+  metrics:
+    export:
+      simple:
+        enabled: true
+
+# App-specific production configurations
+app:
+  security:
+    # JWT settings (inherited from env vars in application.yaml)
+    jwt:
+      secret: ${JWT_SECRET}
+      access-token-minutes: ${JWT_ACCESS_TOKEN_MINUTES}
+      refresh-token-days: ${JWT_REFRESH_TOKEN_DAYS}
+      issuer: ${JWT_ISSUER}
+    refresh-cookie:
+      name: ${REFRESH_COOKIE_NAME}
+      path: ${REFRESH_COOKIE_PATH}
+      http-only: true
+      secure: true  # MUST be true in production (HTTPS only)
+      same-site: ${REFRESH_COOKIE_SAME_SITE}  # Should be 'None' for cross-domain
+
+  cors:
+    # Only allow specific frontend origin (from env var)
+    allowed-origins:
+      - ${CORS_ALLOWED_ORIGIN}
+    allowed-methods:
+      - GET
+      - POST
+      - PUT
+      - PATCH
+      - DELETE
+      - OPTIONS
+    allowed-headers:
+      - Authorization
+      - Content-Type
+      - Accept
+    allow-credentials: true
+    max-age: 3600  # Cache CORS preflight for 1 hour
+
+  admin:
+    email: ${ADMIN_EMAIL}
+    initial-password: ${ADMIN_INITIAL_PASSWORD}
+
+  cloudinary:
+    # Image storage (inherited from env vars)
+    cloud-name: ${CLOUDINARY_CLOUD_NAME}
+    api-key: ${CLOUDINARY_API_KEY}
+    api-secret: ${CLOUDINARY_API_SECRET}
+    folder: ${CLOUDINARY_FOLDER}
