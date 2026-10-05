@@ -36,6 +36,7 @@
     "@angular/forms": "^21.1.0",
     "@angular/platform-browser": "^21.1.0",
     "@angular/router": "^21.1.0",
+    "@popperjs/core": "^2.11.8",
     "@tailwindcss/vite": "^4.2.4",
     "apexcharts": "^5.13.0",
     "flatpickr": "^4.6.13",
